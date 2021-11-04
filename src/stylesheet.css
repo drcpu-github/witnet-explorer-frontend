@@ -1,0 +1,133 @@
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.btn-labeled:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0;
+}
+
+.cell-fit {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 1rem !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.cell-fit-padding-tight {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0.5rem !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.cell-fit-padding-wide {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 2rem !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.cell-fit-padding-very-wide {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 3rem !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.cell-fit-no-padding {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.cell-truncate {
+    max-width: 1px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: none;
+}
+
+/* stylings for cards */
+.cell-fit-card {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    width: 1px;
+    white-space: nowrap;
+    border: none;
+}
+
+.padding-horizontal {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.padding-horizontal-wide {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+}
+
+.padding-small {
+    padding-left: 0px !important;
+    padding-right: 1rem !important;
+}
+
+.no-padding {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.padding-medium {
+    padding-left: 0px !important;
+    padding-right: 1.5rem !important;
+}
+
+.padding-large {
+    padding-left: 0px !important;
+    padding-right: 2rem !important;
+}
+
+.no-border {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.row-card {
+    border-radius: 0.5rem !important;
+    box-shadow: 0rem .5rem 1rem rgba(0,0,0,.15) !important;
+    border: 1px solid rgba(0,0,0,.125);
+    background-clip: border-box;
+}
+
+.custom-tooltip {
+    margin: 0px;
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(204, 204, 204);
+    white-space: nowrap;
+}
+
+.navbar-color {
+    background-color: #12243a;
+}
+
+.mr-sm {
+    margin-right: "1rem";
+}
