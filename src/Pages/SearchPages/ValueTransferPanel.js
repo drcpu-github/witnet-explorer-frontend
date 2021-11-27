@@ -35,7 +35,7 @@ export default class ValueTransferPanel extends Component {
                 <tbody>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1" fixedWidth/>{"Transaction"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             <Link to={txn_link}>{transaction.txn_hash}</Link>
@@ -43,7 +43,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" className="mr-1" fixedWidth/>{"Block"}
+                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             <Link to={block_link}>{transaction.block_hash}</Link>
@@ -51,7 +51,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" className="mr-1" fixedWidth/>{"Fee"}
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {Formatter.formatWitValue(transaction.fee, 2)}
@@ -59,7 +59,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "feather"]} size="sm" className="mr-1" fixedWidth/>{"Weight"}
+                            <FontAwesomeIcon icon={["fas", "feather"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Weight"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {Formatter.formatValue(transaction.weight, 0)}
@@ -67,7 +67,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} size="sm" className="mr-1" fixedWidth/>{"Priority"}
+                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Priority"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {Formatter.formatValue(transaction.priority, 0)}
@@ -75,7 +75,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" className="mr-1" fixedWidth/>{"Timestamp"}
+                            <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {transaction_time}
@@ -83,7 +83,7 @@ export default class ValueTransferPanel extends Component {
                     </tr>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1" fixedWidth/>{"Status"}
+                            <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {transaction.status}
@@ -138,8 +138,8 @@ export default class ValueTransferPanel extends Component {
                                         {
                                             idx < data.output_addresses.length
                                                 ? data.output_addresses[idx][3]
-                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" className="mr-1"/>
-                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" className="mr-1"/>
+                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                 : ""
                                         }
                                         {
@@ -172,8 +172,8 @@ export default class ValueTransferPanel extends Component {
                                     <td class="cell-fit" style={{"borderTop": "none", "width": "15%"}}>
                                         {
                                             output[3]
-                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" className="mr-1"/>
-                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" className="mr-1"/>
+                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                         }
                                         {
                                             output[3]
@@ -253,8 +253,8 @@ export default class ValueTransferPanel extends Component {
                                                     ? TimeConverter.convertUnixTimestamp(output[1], "full")
                                                     : "";
                                                 var output_timelocked = output[2]
-                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" className="mr-1"/>
-                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" className="mr-1"/>;
+                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>;
 
                                                 output_idx = output_idx + 1;
 

@@ -15,7 +15,7 @@ export default class Tally extends Component {
                     return (
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", icon]} size="sm" className="mr-1" fixedWidth/>{label}
+                                <FontAwesomeIcon icon={["fas", icon]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{label}
                             </td>
                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                 <Link to={address_link}>{address}</Link>
@@ -63,7 +63,7 @@ export default class Tally extends Component {
                                     <tbody>
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1" fixedWidth/>{"Transaction"}
+                                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                                             </td>
                                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                                 <Link to={transaction_link}>{transaction.txn_hash}</Link>
@@ -71,7 +71,7 @@ export default class Tally extends Component {
                                         </tr>
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" className="mr-1" fixedWidth/>{"Block"}
+                                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                                             </td>
                                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                                 <Link to={block_link}>{transaction.block_hash}</Link>
@@ -81,7 +81,7 @@ export default class Tally extends Component {
                                         {this.generateAddressRows("bolt", "Liars", transaction.liar_addresses)}
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide cell-truncate" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" className="mr-1" fixedWidth/>{"Result"}
+                                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Result"}
                                             </td>
                                             <td class="cell-fit-no-padding" style={tally_style}>
                                                 {transaction.tally}
@@ -89,7 +89,7 @@ export default class Tally extends Component {
                                         </tr>
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" className="mr-1" fixedWidth/>{"Timestamp"}
+                                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
                                             </td>
                                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                                 {TimeConverter.convertUnixTimestamp(transaction.time, "full") + " (epoch: " + transaction.epoch + ")"}
@@ -97,7 +97,7 @@ export default class Tally extends Component {
                                         </tr>
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1" fixedWidth/>{"Status"}
+                                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                                             </td>
                                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                                 {transaction.status}

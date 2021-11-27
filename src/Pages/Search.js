@@ -109,7 +109,7 @@ export default class Search extends Component{
                                 <tbody>
                                     <tr style={{"line-height": "20px"}}>
                                         <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
-                                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
                                         </td>
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                             <Link to={txn_link}>{data.txn_hash}</Link>
@@ -117,7 +117,7 @@ export default class Search extends Component{
                                     </tr>
                                     <tr style={{"line-height": "20px"}}>
                                         <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
-                                            <FontAwesomeIcon icon={["fas", "wallet"]} size="sm" className="mr-1"/>{"Status"}
+                                            <FontAwesomeIcon icon={["fas", "wallet"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Status"}
                                         </td>
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                             {data.status}
@@ -142,7 +142,7 @@ export default class Search extends Component{
                                 <tbody>
                                     <tr style={{"line-height": "20px"}}>
                                         <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
-                                            <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" className="mr-1"/>{"Error"}
+                                            <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Error"}
                                         </td>
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                             {error}

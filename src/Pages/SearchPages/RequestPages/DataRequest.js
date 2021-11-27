@@ -17,7 +17,7 @@ export default class DataRequest extends Component {
                     <tbody>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1" fixedWidth/>{"Transaction"}
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                             </td>
                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                 <Link to={txn_link}>{transaction.txn_hash}</Link>
@@ -25,7 +25,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" className="mr-1" fixedWidth/>{"Block"}
+                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                             </td>
                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                 <Link to={block_link}>{transaction.block_hash}</Link>
@@ -38,7 +38,7 @@ export default class DataRequest extends Component {
                                     return (
                                         <tr style={{"line-height": "20px"}}>
                                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1" fixedWidth/>{"Addresses"}
+                                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Addresses"}
                                             </td>
                                             <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                                                 <Link to={address_link}>{address}</Link>
@@ -60,7 +60,7 @@ export default class DataRequest extends Component {
                         }
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" className="mr-1" fixedWidth/>{"Timestamp"}
+                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {TimeConverter.convertUnixTimestamp(transaction.txn_time, "full") + " (epoch: " + transaction.txn_epoch + ")"}
@@ -68,7 +68,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1" fixedWidth/>{"Status"}
+                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {transaction.status}
@@ -88,7 +88,7 @@ export default class DataRequest extends Component {
                     <tbody>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "search"]} size="sm" className="mr-1" fixedWidth/>{"Witnesses"}
+                                <FontAwesomeIcon icon={["fas", "search"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Witnesses"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data_request.witnesses}
@@ -96,7 +96,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" className="mr-1" fixedWidth/>{"Reward"}
+                                <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Reward"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {Formatter.formatWitValue(data_request.witness_reward, 0)}
@@ -104,7 +104,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "handshake"]} size="sm" className="mr-1" fixedWidth/>{"Collateral"}
+                                <FontAwesomeIcon icon={["far", "handshake"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Collateral"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {Formatter.formatWitValue(data_request.collateral, 2)}
@@ -112,7 +112,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "percentage"]} size="sm" className="mr-1" fixedWidth/>{"Consensus"}
+                                <FontAwesomeIcon icon={["fas", "percentage"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Consensus"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data_request.consensus_percentage + "%"}
@@ -120,7 +120,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" className="mr-1" fixedWidth/>{"Fee"}
+                                <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {Formatter.formatWitValue(data_request.commit_and_reveal_fee, 0)}
@@ -128,7 +128,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "feather"]} size="sm" className="mr-1" fixedWidth/>{"Weight"}
+                                <FontAwesomeIcon icon={["fas", "feather"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Weight"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {Formatter.formatValue(data_request.weight, 0)}
@@ -147,7 +147,7 @@ export default class DataRequest extends Component {
                 return([
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "link"]} size="sm" className="mr-1" fixedWidth/>{"URL"}
+                            <FontAwesomeIcon icon={["fas", "link"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"URL"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {data.url}
@@ -155,7 +155,7 @@ export default class DataRequest extends Component {
                     </tr>,
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "scroll"]} size="sm" className="mr-1" fixedWidth/>{"Script"}
+                            <FontAwesomeIcon icon={["fas", "scroll"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Script"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {data.script}
@@ -167,7 +167,7 @@ export default class DataRequest extends Component {
             retrievals =
                 <tr style={{"line-height": "20px"}}>
                     <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                        <FontAwesomeIcon icon={["fas", "link"]} size="sm" className="mr-1" fixedWidth/>{"Source"}
+                        <FontAwesomeIcon icon={["fas", "link"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Source"}
                     </td>
                     <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                         {"RNG request"}
@@ -181,7 +181,7 @@ export default class DataRequest extends Component {
                         {retrievals}
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" className="mr-1" fixedWidth/>{"Aggregate"}
+                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Aggregate"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data_request.aggregate}
@@ -189,7 +189,7 @@ export default class DataRequest extends Component {
                         </tr>
                         <tr style={{"line-height": "20px"}}>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" className="mr-1" fixedWidth/>{"Tally"}
+                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Tally"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data_request.tally}

@@ -13,11 +13,11 @@ export default class MintPanel extends Component {
         var txn_link = "/search/" + data.txn_hash;
 
         return (
-            <Table style={{"marginBottom": "0px"}}>
+            <Table style={{"borderCollapse": "separate", "marginBottom": "0px"}}>
                 <tbody>
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" className="mr-1" fixedWidth/>{"Block"}
+                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             <Link to={block_link}>{data.block_hash}</Link>
@@ -25,7 +25,7 @@ export default class MintPanel extends Component {
                     </tr>
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1" fixedWidth/>{"Transaction"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             <Link to={txn_link}>{data.txn_hash}</Link>
@@ -33,7 +33,7 @@ export default class MintPanel extends Component {
                     </tr>
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" className="mr-1" fixedWidth/>{"Time"}
+                            <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {TimeConverter.convertUnixTimestamp(data.txn_time, "full") + " (epoch: " + data.txn_epoch + ")"}
@@ -41,7 +41,7 @@ export default class MintPanel extends Component {
                     </tr>
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1" fixedWidth/>{"Status"}
+                            <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                             {data.status}

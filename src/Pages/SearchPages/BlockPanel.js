@@ -17,7 +17,7 @@ export default class BlockPanel extends Component {
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" className="mr-1" fixedWidth/>{"Block"}
+                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 <Link to={block_link}>{data.block_hash}</Link>
@@ -25,7 +25,7 @@ export default class BlockPanel extends Component {
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" className="mr-1" fixedWidth/>{"Time"}
+                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {TimeConverter.convertUnixTimestamp(data.time, "full") + " (epoch: " + data.epoch + ")"}
@@ -33,7 +33,7 @@ export default class BlockPanel extends Component {
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1" fixedWidth/>{"Miner"}
+                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Miner"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 <Link to={miner_link}>{miner}</Link>
@@ -41,7 +41,7 @@ export default class BlockPanel extends Component {
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1" fixedWidth/>{"Status"}
+                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data.status}
@@ -61,13 +61,13 @@ export default class BlockPanel extends Component {
                     <thead>
                         <tr>
                             <th class="cell-fit-padding-wide cell-truncate">
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                             </th>
                             <th class="cell-fit-padding-wide cell-truncate">
-                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Address"}
+                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Address"}
                             </th>
                             <th class="cell-fit-no-padding" style={{"textAlign": "right"}}>
-                                <FontAwesomeIcon icon={["fas", "coins"]} size="sm" className="mr-1"/>{"Output"}
+                                <FontAwesomeIcon icon={["fas", "coins"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Output"}
                             </th>
                             <th class="cell-fit-no-padding" style={{"borderTop": "none", "borderBottom": "none"}}>
                                 {""}
@@ -112,25 +112,25 @@ export default class BlockPanel extends Component {
                 <thead>
                     <tr>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                         </th>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Source"}
+                            <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Source"}
                         </th>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Destination"}
+                            <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Destination"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" className="mr-1"/>{"Value"}
+                            <FontAwesomeIcon icon={["fas", "coins"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Value"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" className="mr-1"/>{"Fee"}
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Fee"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} size="sm" className="mr-1"/>{"Priority"}
+                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Priority"}
                         </th>
                         <th class="cell-fit-no-padding" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "lock"]} size="sm" className="mr-1"/>{"Locked"}
+                            <FontAwesomeIcon icon={["fas", "lock"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Locked"}
                         </th>
                     </tr>
                 </thead>
@@ -197,25 +197,25 @@ export default class BlockPanel extends Component {
                 <thead>
                     <tr>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                         </th>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Requester"}
+                            <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Requester"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["far", "handshake"]} size="sm" className="mr-1"/>{"Collateral"}
+                            <FontAwesomeIcon icon={["far", "handshake"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Collateral"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "percentage"]} size="sm" className="mr-1"/>{"Consensus"}
+                            <FontAwesomeIcon icon={["fas", "percentage"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Consensus"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "search"]} size="sm" className="mr-1"/>{"Witnesses"}
+                            <FontAwesomeIcon icon={["fas", "search"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Witnesses"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" className="mr-1"/>{"Reward"}
+                            <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Reward"}
                         </th>
                         <th class="cell-fit-no-padding" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" className="mr-1"/>{"Total fee"}
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Total fee"}
                         </th>
                     </tr>
                 </thead>
@@ -290,10 +290,10 @@ export default class BlockPanel extends Component {
                                     <thead>
                                         <tr>
                                             <th class="cell-fit padding-horizontal-wide">
-                                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                                             </th>
                                             <th class="cell-fit-padding-wide">
-                                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Committer"}
+                                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Committer"}
                                             </th>
                                         </tr>
                                     </thead>
@@ -349,16 +349,16 @@ export default class BlockPanel extends Component {
                                     <thead>
                                         <tr>
                                             <th class="cell-fit padding-horizontal-wide" style={{"textAlign": "center"}}>
-                                                <FontAwesomeIcon icon={["fas", "check"]} size="sm" className="mr-1"/>{"Success"}
+                                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Success"}
                                             </th>
                                             <th class="cell-fit-padding-wide">
-                                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                                             </th>
                                             <th class="cell-fit-padding-wide">
-                                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" className="mr-1"/>{"Revealer"}
+                                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Revealer"}
                                             </th>
                                             <th class="cell-fit-no-padding">
-                                                <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" className="mr-1"/>{"Result"}
+                                                <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Result"}
                                             </th>
                                         </tr>
                                     </thead>
@@ -406,22 +406,22 @@ export default class BlockPanel extends Component {
                 <thead>
                     <tr>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["far", "check"]} size="sm" className="mr-1"/>{"Success"}
+                            <FontAwesomeIcon icon={["far", "check"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Success"}
                         </th>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Transaction"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
                         </th>
                         <th class="cell-fit-padding-wide">
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" className="mr-1"/>{"Data request"}
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Data request"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "times"]} size="sm" className="mr-1"/>{"Errors"}
+                            <FontAwesomeIcon icon={["fas", "times"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Errors"}
                         </th>
                         <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" className="mr-1"/>{"Liars"}
+                            <FontAwesomeIcon icon={["fas", "bolt"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Liars"}
                         </th>
                         <th class="cell-fit-no-padding">
-                            <FontAwesomeIcon icon={["far", "eye"]} size="sm" className="mr-1"/>{"Result"}
+                            <FontAwesomeIcon icon={["far", "eye"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Result"}
                         </th>
                     </tr>
                 </thead>
