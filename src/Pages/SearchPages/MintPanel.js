@@ -47,33 +47,34 @@ export default class MintPanel extends Component {
                             {data.status}
                         </td>
                     </tr>
-                    <tr style={{"line-height": "20px"}}>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" className="mr-1" fixedWidth/>{"Outputs"}
-                        </td>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none", "width": "100%"}}>
-                            <Table style={{"marginBottom": "0px"}}>
-                                {
-                                    data.mint_outputs.map(function(output){
-                                        var address_link = "/search/" + output[0];
-                                        return (
-                                            <tr>
-                                                <td class="cell-fit-no-padding" style={{"borderTop": "none", "textAlign": "right"}}>
-                                                    {Formatter.formatWitValue(output[1], 2)}
-                                                </td>
-                                                <td class="cell-fit-no-padding" style={{"borderTop": "none", "textAlign": "center", "width": "5%"}}>
-                                                    <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
-                                                </td>
-                                                <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "90%"}}>
-                                                    <Link to={address_link}>{output[0]}</Link>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                }
-                            </Table>
-                        </td>
-                    </tr>
+                    {
+                        data.mint_outputs.map(function(output, idx){
+                            var address_link = "/search/" + output[0];
+                            console.log(Formatter.formatWitValue(output[1], 2).padStart(10, " "));
+                            return (
+                                <tr style={{"line-height": "20px"}}>
+                                    <td class="cell-fit-padding-wide">
+                                        {
+                                            idx === 0
+                                                ? <span><FontAwesomeIcon icon={["fas", "coins"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Outputs"}</span>
+                                                : ""
+                                        }
+                                    </td>
+                                    <td class="cell-fit-no-padding">
+                                        <span style={{"white-space": "pre"}}>
+                                            {Formatter.formatWitValue(output[1], 2).padStart(10, " ")}
+                                        </span>
+                                        <span style={{"paddingLeft": "20px"}}>
+                                            <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
+                                        </span>
+                                        <span style={{"paddingLeft": "20px"}}>
+                                            <Link to={address_link}>{output[0]}</Link>
+                                        </span>
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
                 </tbody>
             </Table>
         );
