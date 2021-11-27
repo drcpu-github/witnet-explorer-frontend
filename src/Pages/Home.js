@@ -121,7 +121,7 @@ export default class Home extends Component{
         var table_rows = [
             [["fas", "hammer"], "WIT minted", (supply.blocks_minted_reward + supply.locked_wits_by_requests) / 1E9],
             [["fas", "fire"], "WIT burned", supply.blocks_missing_reward / 1E9],
-            [["fas", "unlock"], "Free supply", supply.current_unlocked_supply / 1E9],
+            [["fas", "unlock"], "Circulating supply", supply.current_unlocked_supply / 1E9],
             [["fas", "lock"], "Locked supply", supply.current_locked_supply / 1E9],
             [["fas", "gem"], "Total supply", (supply.maximum_supply - supply.blocks_missing_reward) / 1E9]
         ];
