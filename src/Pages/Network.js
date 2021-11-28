@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-import { Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import ErrorCard from "../Components/ErrorCard";
+import SpinnerCard from "../Components/SpinnerCard";
 
 import DataService from "../Services/DataService";
 import TimeConverter from "../Services/TimeConverter";
@@ -180,30 +183,6 @@ export default class Network extends Component {
         );
     }
 
-    generateSpinnerCard() {
-        return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "40vh"}}>
-                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                    <Card.Text>
-                        <Spinner animation="border" />
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    generateErrorCard() {
-        return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "40vh"}}>
-                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                    <Card.Text>
-                        <span>{this.state.error_value}</span>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        );
-    }
-
     componentDidMount() {
         this.getNetwork();
         // run every half hour
@@ -220,10 +199,10 @@ export default class Network extends Component {
         let rollback_card, summary_card, block_card, data_request_card;
         if (error_value === "") {
             if (loading) {
-                rollback_card = this.generateSpinnerCard();
-                summary_card = this.generateSpinnerCard();
-                block_card = this.generateSpinnerCard();
-                data_request_card = this.generateSpinnerCard();
+                rollback_card = <SpinnerCard/>;
+                summary_card = <SpinnerCard/>;
+                block_card = <SpinnerCard/>;
+                data_request_card = <SpinnerCard/>;
             }
             else{
                 rollback_card = this.generateRollbackCard();
@@ -233,10 +212,10 @@ export default class Network extends Component {
             }
         }
         else {
-            rollback_card = this.generateErrorCard();
-            summary_card = this.generateErrorCard();
-            block_card = this.generateErrorCard();
-            data_request_card = this.generateErrorCard();
+            rollback_card = <ErrorCard errorValue={error_value}/>;
+            summary_card = <ErrorCard errorValue={error_value}/>;
+            block_card = <ErrorCard errorValue={error_value}/>;
+            data_request_card = <ErrorCard errorValue={error_value}/>;
         }
 
         return(

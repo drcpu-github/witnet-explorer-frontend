@@ -1,8 +1,11 @@
 import React, { Component, PureComponent } from "react";
 import { Link } from "react-router-dom";
-import { Card, Col, Container, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { ResponsiveContainer, CartesianGrid, ComposedChart, XAxis, YAxis, Label, ReferenceLine, Scatter, ScatterChart, Tooltip, Bar } from "recharts";
+
+import ErrorCard from "../Components/ErrorCard";
+import SpinnerCard from "../Components/SpinnerCard";
 
 import DataService from "../Services/DataService";
 import Formatter from "../Services/Formatter";
@@ -296,30 +299,6 @@ export default class TAPI extends Component {
         );
     }
 
-    generateSpinnerCard() {
-        return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "85vh"}}>
-                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                    <Card.Text>
-                        <Spinner animation="border"/>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    generateErrorCard() {
-        return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "85vh"}}>
-                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                    <Card.Text>
-                        <span>{this.state.error_value}</span>
-                    </Card.Text>
-                </Card.Body>
-            </Card>
-        );
-    }
-
     componentDidMount() {
         this.initTapi();
         // run every 5 minutes
@@ -336,14 +315,14 @@ export default class TAPI extends Component {
         let tapiPanels;
         if (error_value === "") {
             if (loading) {
-                tapiPanels = this.generateSpinnerCard();
+                tapiPanels = <SpinnerCard/>;
             }
             else{
                 tapiPanels = this.generateTapiPanels();
             }
         }
         else {
-            tapiPanels = this.generateErrorCard();
+            tapiPanels = <ErrorCard errorValue={error_value}/>;
         }
 
         return(
