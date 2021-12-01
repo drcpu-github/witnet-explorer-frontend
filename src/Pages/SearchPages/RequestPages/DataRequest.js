@@ -12,131 +12,127 @@ export default class DataRequest extends Component {
         var txn_link = "/search/" + transaction.txn_hash;
         var block_link = "/search/" + transaction.block_hash;
         return (
-            <Container className="mr-0 ml-0 p-0">
-                <Table style={{"marginBottom": "0px"}}>
-                    <tbody>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
-                            </td>
-                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                <Link to={txn_link}>{transaction.txn_hash}</Link>
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
-                            </td>
-                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                <Link to={block_link}>{transaction.block_hash}</Link>
-                            </td>
-                        </tr>
-                        {
-                            transaction.addresses.map(function(address, idx){
-                                var address_link = "/search/" + address;
-                                if (idx === 0) {
-                                    return (
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Addresses"}
-                                            </td>
-                                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                                <Link to={address_link}>{address}</Link>
-                                            </td>
-                                        </tr>
-                                    );
-                                }
-                                else {
-                                    return (
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}></td>
-                                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                                <Link to={address_link}>{address}</Link>
-                                            </td>
-                                        </tr>
-                                    );
-                                }
-                            })
-                        }
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {TimeConverter.convertUnixTimestamp(transaction.txn_time, "full") + " (epoch: " + transaction.txn_epoch + ")"}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {transaction.status}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}/>
-                    </tbody>
-                </Table>
-            </Container>
+            <Table style={{"marginBottom": "0px"}}>
+                <tbody>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
+                        </td>
+                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                            <Link to={txn_link}>{transaction.txn_hash}</Link>
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
+                        </td>
+                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                            <Link to={block_link}>{transaction.block_hash}</Link>
+                        </td>
+                    </tr>
+                    {
+                        transaction.addresses.map(function(address, idx){
+                            var address_link = "/search/" + address;
+                            if (idx === 0) {
+                                return (
+                                    <tr style={{"line-height": "20px"}}>
+                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                                            <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Addresses"}
+                                        </td>
+                                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                                            <Link to={address_link}>{address}</Link>
+                                        </td>
+                                    </tr>
+                                );
+                            }
+                            else {
+                                return (
+                                    <tr style={{"line-height": "20px"}}>
+                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}></td>
+                                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                                            <Link to={address_link}>{address}</Link>
+                                        </td>
+                                    </tr>
+                                );
+                            }
+                        })
+                    }
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {TimeConverter.convertUnixTimestamp(transaction.txn_time, "full") + " (epoch: " + transaction.txn_epoch + ")"}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {transaction.status}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}/>
+                </tbody>
+            </Table>
         );
     }
 
      generateDataRequestCard(data_request) {
         return (
-            <Container className="mr-0 ml-0 p-0">
-                <Table style={{"marginBottom": "0px"}}>
-                    <tbody>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "search"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Witnesses"}
-                            </td>
+            <Table style={{"marginBottom": "0px"}}>
+                <tbody>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "search"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Witnesses"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {data_request.witnesses}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                    <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Reward"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {Formatter.formatWitValue(data_request.witness_reward, 0)}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["far", "handshake"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Collateral"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {Formatter.formatWitValue(data_request.collateral, 2)}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "percentage"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Consensus"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {data_request.consensus_percentage + "%"}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {Formatter.formatWitValue(data_request.commit_and_reveal_fee, 0)}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "feather"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Weight"}
+                        </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data_request.witnesses}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Reward"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {Formatter.formatWitValue(data_request.witness_reward, 0)}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "handshake"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Collateral"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {Formatter.formatWitValue(data_request.collateral, 2)}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "percentage"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Consensus"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data_request.consensus_percentage + "%"}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {Formatter.formatWitValue(data_request.commit_and_reveal_fee, 0)}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "feather"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Weight"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {Formatter.formatValue(data_request.weight, 0)}
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Container>
+                            {Formatter.formatValue(data_request.weight, 0)}
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
         );
     }
 
@@ -175,35 +171,31 @@ export default class DataRequest extends Component {
                 </tr>;
         }
         return (
-            <Container className="mr-0 ml-0 p-0">
-                <Table style={{"marginBottom": "0px"}}>
-                    <tbody>
-                        {retrievals}
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Aggregate"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data_request.aggregate}
-                            </td>
-                        </tr>
-                        <tr style={{"line-height": "20px"}}>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Tally"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data_request.tally}
-                            </td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Container>
+            <Table style={{"marginBottom": "0px"}}>
+                <tbody>
+                    {retrievals}
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Aggregate"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {data_request.aggregate}
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Tally"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            {data_request.tally}
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
         );
     }
 
     render() {
-        console.log(this.props.data);
-
         return (
             <Container fluid className="pl-0 pr-0 mt-2">
                 <Row>
