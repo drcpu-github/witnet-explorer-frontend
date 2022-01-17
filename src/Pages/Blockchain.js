@@ -68,7 +68,7 @@ export default class Reputation extends Component{
 
     updateBlockchain() {
         if (!this.state.loading) {
-            DataService.getBlockchain("update", this.state.last_confirmed_block + 1)
+            DataService.getBlockchain("append", this.state.last_confirmed_block + 1)
             .then(response => {
                 // Remove the reverted blocks
                 var reverted = response.reverted;
@@ -149,7 +149,7 @@ export default class Reputation extends Component{
                 appending : true
             });
 
-            DataService.getBlockchain("append", this.state.epochs[this.state.epochs.length-1])
+            DataService.getBlockchain("prepend", this.state.epochs[this.state.epochs.length-1])
             .then(response => {
                 for (var block = 0; block < response.blockchain.length; block++) {
                     this.setState({
