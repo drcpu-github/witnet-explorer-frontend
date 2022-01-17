@@ -3,6 +3,8 @@ import { Card, Container, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import ErrorCard from "../../Components/ErrorCard";
+
 import DataService from "../../Services/DataService";
 import Formatter from "../../Services/Formatter";
 import TimeConverter from "../../Services/TimeConverter";
@@ -552,24 +554,7 @@ export default class AddressPanel extends Component {
         else {
             return (
                 <Container fluid style={{"padding": "0px"}}>
-                    <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
-                        <Card.Body className="p-3">
-                            <Card.Text>
-                                <Table hover responsive>
-                                    <tbody>
-                                        <tr>
-                                            <td class="cell-fit" style={{"borderTop": "none"}}>
-                                                {"Error"}
-                                            </td>
-                                            <td class="cell-fit" style={{"borderTop": "none", "width": "100%"}}>
-                                                {error_value}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                    <ErrorCard errorValue={error_value}/>;
                 </Container>
             );
         }
