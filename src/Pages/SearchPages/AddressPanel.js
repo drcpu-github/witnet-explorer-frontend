@@ -168,17 +168,20 @@ export default class AddressPanel extends Component {
                             const destination_link = "/search/" + value_transfer[5];
 
                             let icon;
-                            if (value_transfer[9] ===  true) { // reverted
+                            if (value_transfer[10] ===  true) { // reverted
                                 icon = <FontAwesomeIcon icon={["fas", "exclamation"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                             }
                             else {
-                                if (value_transfer[0] === 0) { // Merge or split transaction to the same address
+                                // Merge or split transaction to the same address
+                                if (value_transfer[0] === 0) {
                                     icon = <FontAwesomeIcon icon={["fas", "equals"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
-                                else if (value_transfer[0] === 1) { // Incoming transaction
+                                // Incoming transaction
+                                else if (value_transfer[0] === 1) {
                                     icon = <FontAwesomeIcon icon={["fas", "plus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
-                                else if  (value_transfer[0] === 2) {  // Outgoing transaction
+                                // Outgoing transaction
+                                else if  (value_transfer[0] === 2) {
                                     icon = <FontAwesomeIcon icon={["fas", "minus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
                             }
