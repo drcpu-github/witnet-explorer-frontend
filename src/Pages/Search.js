@@ -4,10 +4,12 @@ import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, Container, Table } from "react-bootstrap";
 
-import DataRequestReport from "./SearchPages/RequestPages/DataRequestReport"
 import AddressPanel from "./SearchPages/AddressPanel"
 import BlockPanel from "./SearchPages/BlockPanel"
+import DataRequestReport from "./SearchPages/DataRequestPages/DataRequestReport"
+import DataRequestHistoryPanel from "./SearchPages/DataRequestHistoryPanel"
 import MintPanel from "./SearchPages/MintPanel"
+import RadHistoryPanel from "./SearchPages/RadHistoryPanel"
 import ValueTransferPanel from "./SearchPages/ValueTransferPanel"
 
 import DataService from "../Services/DataService";
@@ -180,6 +182,14 @@ export default class Search extends Component{
                 // If not, check if it was a transaction related to a data request
                 else if (search_response.type === "data_request_report") {
                     searchResultPanel = <DataRequestReport type={search_response.transaction_type} data={search_response}/>
+                }
+                else if (search_response.type === "data_request_history") {
+                    if (search_response.hasOwnProperty("data_request_parameters")) {
+                        searchResultPanel = <DataRequestHistoryPanel data={search_response}/>
+                    }
+                    else {
+                        searchResultPanel = <RadHistoryPanel data={search_response}/>
+                    }
                 }
                 // If not, check if it was a mint transaction
                 else if (search_response.type === "mint_txn") {

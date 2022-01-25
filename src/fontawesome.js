@@ -47,6 +47,7 @@ import {
     faMoneyBillAlt,
     faAddressCard,
     faClock,
+    faFile,
 } from '@fortawesome/free-regular-svg-icons';
 
 import {
@@ -98,4 +99,5 @@ library.add(
     faLongArrowAltRight,
     faLink,
     faScroll,
+    faFile,
 );
