@@ -10,6 +10,8 @@ import TimeConverter from "../../../Services/TimeConverter"
 export default class DataRequest extends Component {
      generateTransactionCard(transaction) {
         var txn_link = "/search/" + transaction.txn_hash;
+        var data_request_bytes_hash_link = "/search/" + transaction.data_request_bytes_hash;
+        var RAD_bytes_hash_link = "/search/" + transaction.RAD_bytes_hash;
         var block_link = "/search/" + transaction.block_hash;
         return (
             <Table style={{"marginBottom": "0px"}}>
@@ -20,6 +22,22 @@ export default class DataRequest extends Component {
                         </td>
                         <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
                             <Link to={txn_link}>{transaction.txn_hash}</Link>
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Bytes hash"}
+                        </td>
+                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                            <Link to={data_request_bytes_hash_link}>{transaction.data_request_bytes_hash}</Link>
+                        </td>
+                    </tr>
+                    <tr style={{"line-height": "20px"}}>
+                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"RAD hash"}
+                        </td>
+                        <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
+                            <Link to={RAD_bytes_hash_link}>{transaction.RAD_bytes_hash}</Link>
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}>
