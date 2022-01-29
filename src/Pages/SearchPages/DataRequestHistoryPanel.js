@@ -93,9 +93,9 @@ export default class DataRequestHistoryPanel extends Component {
     generateDataRequestCard(data_request_txns) {
         return (
             <Container fluid>
-                <Table hover responsive>
-                    <thead>
-                        <tr>
+                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "50vh"}}>
+                    <thead style={{"border": "none"}}>
+                        <tr class="th-fixed">
                             <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
                                 <FontAwesomeIcon icon={["far", "check"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Success"}
                             </th>
@@ -116,7 +116,7 @@ export default class DataRequestHistoryPanel extends Component {
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{"border": "none"}}>
                         {
                             data_request_txns.map(function(data){
                                 const txn_link = "/search/" + data[4];
@@ -189,9 +189,7 @@ export default class DataRequestHistoryPanel extends Component {
                         <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                             <Card.Body className="p-1">
                                 <Card.Text>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        {this.generateDataRequestCard(this.props.data.history)}
-                                    </Scrollbars>
+                                    {this.generateDataRequestCard(this.props.data.history)}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
