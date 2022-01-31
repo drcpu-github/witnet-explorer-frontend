@@ -9,6 +9,9 @@ import TimeConverter from "../../Services/TimeConverter";
 
 export default class DataRequestHistoryPanel extends Component {
     generateDetailsCard(data) {
+        const bytes_hash_link = "/search/" + data.bytes_hash;
+        const RAD_bytes_hash_link = "/search/" + data.RAD_bytes_hash;
+
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
                 <Table responsive style={{"marginBottom": "0px"}}>
@@ -23,10 +26,18 @@ export default class DataRequestHistoryPanel extends Component {
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Hash"}
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Bytes hash"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data.bytes_hash}
+                                <Link to={bytes_hash_link}>{data.bytes_hash}</Link>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"RAD hash"}
+                            </td>
+                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                                <Link to={RAD_bytes_hash_link}>{data.RAD_bytes_hash}</Link>
                             </td>
                         </tr>
                         <tr>
