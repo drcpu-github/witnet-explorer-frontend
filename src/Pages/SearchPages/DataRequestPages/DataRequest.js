@@ -4,6 +4,8 @@ import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import DataRequestRadScript from "./DataRequestRadScript";
+
 import Formatter from "../../../Services/Formatter";
 import TimeConverter from "../../../Services/TimeConverter"
 
@@ -154,65 +156,6 @@ export default class DataRequest extends Component {
         );
     }
 
-    generateRadCard(data_request) {
-        let retrievals;
-        if (data_request.txn_kind === "HTTP-GET") {
-            retrievals = data_request.retrieve.map(function(data){
-                return([
-                    <tr style={{"line-height": "20px"}}>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "link"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"URL"}
-                        </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {data.url}
-                        </td>
-                    </tr>,
-                    <tr style={{"line-height": "20px"}}>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "scroll"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Script"}
-                        </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {data.script}
-                        </td>
-                    </tr>
-                ]);
-            })
-        } else if (data_request.txn_kind === "RNG") {
-            retrievals =
-                <tr style={{"line-height": "20px"}}>
-                    <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                        <FontAwesomeIcon icon={["fas", "link"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Source"}
-                    </td>
-                    <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                        {"RNG request"}
-                    </td>
-                </tr>;
-        }
-        return (
-            <Table style={{"marginBottom": "0px"}}>
-                <tbody>
-                    {retrievals}
-                    <tr style={{"line-height": "20px"}}>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Aggregate"}
-                        </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {data_request.aggregate}
-                        </td>
-                    </tr>
-                    <tr style={{"line-height": "20px"}}>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Tally"}
-                        </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {data_request.tally}
-                        </td>
-                    </tr>
-                </tbody>
-            </Table>
-        );
-    }
-
     render() {
         return (
             <Container fluid className="pl-0 pr-0 mt-2">
@@ -242,7 +185,7 @@ export default class DataRequest extends Component {
                             <Card.Body className="p-3">
                                 <Card.Text>
                                     <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"35vh"}>
-                                        {this.generateRadCard(this.props.data)}
+                                        <DataRequestRadScript data_request={this.props.data}/>
                                     </Scrollbars>
                                 </Card.Text>
                             </Card.Body>
