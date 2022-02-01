@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Card, Container, Table } from "react-bootstrap";
+import { Card, Container, Tab, Table, Tabs } from "react-bootstrap";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import DataRequestRadScript from "./DataRequestPages/DataRequestRadScript";
 
 import Formatter from "../../Services/Formatter";
 import TimeConverter from "../../Services/TimeConverter";
@@ -49,7 +51,7 @@ export default class RadHistoryPanel extends Component {
 
     generateDataRequestCard(data_request_txns) {
         return (
-            <Container fluid>
+            <Container fluid style={{"marginTop": "1rem", "height": "50vh"}}>
                 <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "50vh"}}>
                     <thead style={{"border": "none"}}>
                         <tr class="th-fixed">
@@ -141,7 +143,7 @@ export default class RadHistoryPanel extends Component {
     render() {
         return (
             <Container fluid style={{"padding": "0px"}}>
-                <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
+                <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
                     <Card.Body className="p-1">
                         <Card.Text>
                             <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"10vh"} autoHeightMax={"10vh"}>
@@ -150,10 +152,21 @@ export default class RadHistoryPanel extends Component {
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
+                <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
                     <Card.Body className="p-1">
                         <Card.Text>
-                            {this.generateDataRequestCard(this.props.data.history)}
+                            <Tabs defaultActiveKey="history" id="uncontrolled-tab-example">
+                                <Tab eventKey="history" title="History">
+                                    {this.generateDataRequestCard(this.props.data.history)}
+                                </Tab>
+                                <Tab eventKey="rad_script" title="RAD script">
+                                    <Container fluid style={{"marginTop": "1rem", "height": "50vh"}}>
+                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"50vh"} autoHeightMax={"50vh"}>
+                                            <DataRequestRadScript data_request={this.props.data.RAD_data}/>
+                                        </Scrollbars>
+                                    </Container>
+                                </Tab>
+                            </Tabs>
                         </Card.Text>
                     </Card.Body>
                 </Card>
