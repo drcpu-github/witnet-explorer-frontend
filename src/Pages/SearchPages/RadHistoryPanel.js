@@ -17,7 +17,7 @@ export default class RadHistoryPanel extends Component {
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "file"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Type"}
+                                <FontAwesomeIcon icon={["far", "file"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"History"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data.hash_type.replaceAll("_", " ")}
@@ -25,7 +25,7 @@ export default class RadHistoryPanel extends Component {
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Hash"}
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Rad hash"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data.bytes_hash}
