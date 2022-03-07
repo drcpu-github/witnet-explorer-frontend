@@ -20,20 +20,24 @@ export default class DataRequestHistoryPanel extends Component {
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "file"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"History type"}
+                                <FontAwesomeIcon icon={["far", "file"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"History"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                 {data.hash_type.replaceAll("_", " ")}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Bytes hash"}
-                            </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                <Link to={bytes_hash_link}>{data.bytes_hash}</Link>
-                            </td>
-                        </tr>
+                        {
+                            data.bytes_hash === data.RAD_bytes_hash
+                                ? <span></span>
+                                : <tr>
+                                    <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                                        <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Request hash"}
+                                    </td>
+                                    <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                                        <Link to={bytes_hash_link}>{data.bytes_hash}</Link>
+                                    </td>
+                                </tr>
+                        }
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"RAD hash"}
