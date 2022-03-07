@@ -17,8 +17,8 @@ export default class Network extends Component {
             loading : true,
             error_value: "",
             rollback_rows: [],
-            unique_miners: 0,
-            unique_dr_solvers: 0,
+            miners: 0,
+            data_request_solvers: 0,
             block_rows: [],
             data_request_rows: [],
             last_updated : "",
@@ -34,10 +34,10 @@ export default class Network extends Component {
                 loading: false,
                 error_value: "",
                 rollback_rows: this.generateRollbackRows(response.rollbacks),
-                unique_miners: response.unique_miners,
-                unique_dr_solvers: response.unique_dr_solvers,
-                block_rows: this.generateNodeRows(response.top_100_miners, "blocks"),
-                data_request_rows: this.generateNodeRows(response.top_100_dr_solvers, "dr_solvers"),
+                miners: response.miners,
+                data_request_solvers: response.data_request_solvers,
+                block_rows: this.generateNodeRows(response.miner_top_100, "blocks"),
+                data_request_rows: this.generateNodeRows(response.data_request_solver_top_100, "dr_solvers"),
                 last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "hour"),
             });
         })
@@ -76,7 +76,7 @@ export default class Network extends Component {
         });
     }
 
-    generateSummaryCard(unique_miners, unique_dr_solvers) {
+    generateSummaryCard(miners, data_request_solvers) {
         return (
             <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "40vh"}}>
                 <Card.Title style={{marginBottom: "0px", paddingLeft: "10px"}}>
@@ -88,18 +88,18 @@ export default class Network extends Component {
                     <Card.Text>
                         <Row>
                             <Col xs={8} style={{paddingLeft: "20px"}}>
-                                {"Nodes that mined at least 1 block"}
+                                {"Mined at least 1 block"}
                             </Col>
                             <Col xs={2} className="text-center" style={{paddingLeft: "20px"}}>
-                                {this.state.unique_miners.toLocaleString("en-GB")}
+                                {this.state.miners.toLocaleString("en-GB")}
                             </Col>
                         </Row>
                         <Row>
                             <Col xs={8} style={{paddingLeft: "20px"}}>
-                                {"Nodes that solved at least 1 data request"}
+                                {"Solved at least 1 data request"}
                             </Col>
                             <Col xs={2} className="text-center" style={{paddingLeft: "20px"}}>
-                                {this.state.unique_dr_solvers.toLocaleString("en-GB")}
+                                {this.state.data_request_solvers.toLocaleString("en-GB")}
                             </Col>
                         </Row>
                     </Card.Text>
