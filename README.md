@@ -3,13 +3,13 @@ This repository contains all code to create the frontend for the Witnet Explorer
 
 ## Dependencies
 
-You'll have to install Node.js. Currently the frontend has only been tested with the newest version of Node.js, v17.x.
+You'll have to install Node.js. Currently the frontend has been tested with the newest version of Node.js, v18.x.
 ```
-curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 ```
 Install the nodejs package with your favorite package manager (e.g., apt):
 ```
-sudo apt-get install nodejs
+sudo apt-get install -y nodejs
 ```
 
 ## Setup
