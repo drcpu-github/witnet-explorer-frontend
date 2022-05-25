@@ -8,7 +8,7 @@ import Blockchain from './Pages/Blockchain';
 import Transactions from './Pages/Transactions';
 import Network from './Pages/Network';
 import Reputation from './Pages/Reputation';
-import Richlist from './Pages/Richlist';
+import Balances from './Pages/Balances';
 import TAPI from './Pages/TAPI';
 import Info from './Pages/Info';
 
@@ -32,7 +32,7 @@ class WitnetExplorer extends React.Component{
                                     <Nav.Link href="/transactions">Transactions</Nav.Link>
                                     <Nav.Link href="/network">Network</Nav.Link>
                                     <Nav.Link href="/reputation">Reputation</Nav.Link>
-                                    <Nav.Link href="/richlist">Richlist</Nav.Link>
+                                    <Nav.Link href="/balances">Balances</Nav.Link>
                                     <Nav.Link href="/tapi">TAPI</Nav.Link>
                                     <Nav.Link href="/info">Info</Nav.Link>
                                     </Nav>
@@ -47,7 +47,7 @@ class WitnetExplorer extends React.Component{
                                 <Route path="/transactions" component={Transactions}/>
                                 <Route path="/network" component={Network}/>
                                 <Route path="/reputation" component={Reputation}/>
-                                <Route path="/richlist" component={Richlist}/>
+                                <Route path="/balances" component={Balances}/>
                                 <Route path="/tapi" component={TAPI}/>
                                 <Route path="/info" component={Info}/>
                             </Switch>
