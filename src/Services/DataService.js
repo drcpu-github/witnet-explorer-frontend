@@ -19,8 +19,8 @@ class DataService {
         return fetch("/api/reputation").then(response => response.json());
     }
 
-    getRichlist(start, stop) {
-        return fetch("/api/richlist?start=" + start + "&stop=" + stop).then(response => response.json());
+    getBalances(start, stop) {
+        return fetch("/api/balances?start=" + start + "&stop=" + stop).then(response => response.json());
     }
 
     getHome() {

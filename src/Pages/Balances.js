@@ -9,7 +9,7 @@ import SpinnerCard from "../Components/SpinnerCard";
 import DataService from "../Services/DataService";
 import TimeConverter from "../Services/TimeConverter";
 
-export default class Richlist extends Component{
+export default class Balances extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -25,17 +25,17 @@ export default class Richlist extends Component{
             balance_rows: [],
         }
 
-        this.getRichlist = this.getRichlist.bind(this);
+        this.getBalances = this.getBalances.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
-    getRichlist() {
-        DataService.getRichlist(this.state.balance_rows.length, this.state.balance_rows.length + 1000)
+    getBalances() {
+        DataService.getBalances(this.state.balance_rows.length, this.state.balance_rows.length + 1000)
         .then(response => {
-            var new_balance_rows = this.generateRichlistRows(response.richlist, response.balances_sum);
+            var new_balance_rows = this.generateBalanceRows(response.balance_list, response.balances_sum);
             this.setState({
-                balances: [...this.state.balances, ...response.richlist],
+                balances: [...this.state.balances, ...response.balance_list],
                 balance_rows: [...this.state.balance_rows, ...new_balance_rows],
                 total_pages: this.state.total_pages + Math.ceil(new_balance_rows.length / this.state.rows_per_page),
                 loading: false,
@@ -46,12 +46,12 @@ export default class Richlist extends Component{
         .catch(e => {
             console.log(e);
             this.setState({
-                error_value: "Could not fetch rich list!"
+                error_value: "Could not fetch balance list!"
             });
         });
     }
 
-    generateRichlistRows(balances, balances_sum) {
+    generateBalanceRows(balances, balances_sum) {
         var balance_rows = balances.map(function(balance){
             var api_link = "/search/" + balance[0];
             var balance_link = <Link to={api_link}>{balance[0]}</Link>
@@ -83,11 +83,11 @@ export default class Richlist extends Component{
         });
 
         if (paginator.current_page >= this.state.total_pages - 2) {
-            this.getRichlist();
+            this.getBalances();
         }
     }
 
-    generateRichlistCard(){
+    generateBalancesCard(){
         var row_start = (this.state.current_page - 1) * this.state.rows_per_page;
         var row_stop = this.state.current_page * this.state.rows_per_page;
 
@@ -137,7 +137,7 @@ export default class Richlist extends Component{
     }
 
     componentDidMount() {
-        this.getRichlist();
+        this.getBalances();
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
@@ -149,22 +149,22 @@ export default class Richlist extends Component{
     render() {
         const { loading, error_value } = this.state;
 
-        let richlist_list_card;
+        let balances_card;
         if (error_value === "") {
             if (loading) {
-                richlist_list_card = <SpinnerCard/>;
+                balances_card = <SpinnerCard/>;
             }
             else{
-                richlist_list_card = this.generateRichlistCard();
+                balances_card = this.generateBalancesCard();
             }
         }
         else {
-            richlist_list_card = <ErrorCard errorValue={error_value}/>;
+            balances_card = <ErrorCard errorValue={error_value}/>;
         }
 
         return(
             <Container fluid>
-                {richlist_list_card}
+                {balances_card}
             </Container>
         );
     }
