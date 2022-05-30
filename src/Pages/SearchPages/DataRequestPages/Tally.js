@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Container, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import TimeConverter from "../../../Services/TimeConverter"
@@ -58,54 +57,52 @@ export default class Tally extends Component {
                 <Card className="w-100 shadow p-1 bg-white rounded">
                     <Card.Body className="p-2">
                         <Card.Text>
-                            <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"70vh"}>
-                                <Table style={{"marginBottom": "0px"}}>
-                                    <tbody>
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
-                                            </td>
-                                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                                <Link to={transaction_link}>{transaction.txn_hash}</Link>
-                                            </td>
-                                        </tr>
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
-                                            </td>
-                                            <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                                <Link to={block_link}>{transaction.block_hash}</Link>
-                                            </td>
-                                        </tr>
-                                        {this.generateAddressRows("times", "Errors", transaction.error_addresses)}
-                                        {this.generateAddressRows("bolt", "Liars", transaction.liar_addresses)}
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide cell-truncate" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "calculator"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Result"}
-                                            </td>
-                                            <td class="cell-fit-no-padding" style={tally_style}>
-                                                {transaction.tally}
-                                            </td>
-                                        </tr>
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
-                                            </td>
-                                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                                {TimeConverter.convertUnixTimestamp(transaction.time, "full") + " (epoch: " + transaction.epoch + ")"}
-                                            </td>
-                                        </tr>
-                                        <tr style={{"line-height": "20px"}}>
-                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
-                                            </td>
-                                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                                {transaction.status}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-                            </Scrollbars>
+                            <Table responsive style={{ "borderCollapse": "separate", "marginBottom": "0px", "display": "block", "overflow": "auto", "maxHeight": "75vh" }}>
+                                <tbody>
+                                    <tr style={{ "line-height": "20px" }}>
+                                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Transaction"}
+                                        </td>
+                                        <td class="cell-fit-no-padding cell-truncate" style={{ "borderTop": "none", "width": "100%" }}>
+                                            <Link to={transaction_link}>{transaction.txn_hash}</Link>
+                                        </td>
+                                    </tr>
+                                    <tr style={{ "line-height": "20px" }}>
+                                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Block"}
+                                        </td>
+                                        <td class="cell-fit-no-padding cell-truncate" style={{ "borderTop": "none", "width": "100%" }}>
+                                            <Link to={block_link}>{transaction.block_hash}</Link>
+                                        </td>
+                                    </tr>
+                                    {this.generateAddressRows("times", "Errors", transaction.error_addresses)}
+                                    {this.generateAddressRows("bolt", "Liars", transaction.liar_addresses)}
+                                    <tr style={{ "line-height": "20px" }}>
+                                        <td class="cell-fit-padding-wide cell-truncate" style={{ "borderTop": "none" }}>
+                                            <FontAwesomeIcon icon={["fas", "calculator"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Result"}
+                                        </td>
+                                        <td class="cell-fit-no-padding" style={tally_style}>
+                                            {transaction.tally}
+                                        </td>
+                                    </tr>
+                                    <tr style={{ "line-height": "20px" }}>
+                                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                            <FontAwesomeIcon icon={["far", "clock"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Timestamp"}
+                                        </td>
+                                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                                            {TimeConverter.convertUnixTimestamp(transaction.time, "full") + " (epoch: " + transaction.epoch + ")"}
+                                        </td>
+                                    </tr>
+                                    <tr style={{ "line-height": "20px" }}>
+                                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                            <FontAwesomeIcon icon={["fas", "check"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Status"}
+                                        </td>
+                                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                                            {transaction.status}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
                         </Card.Text>
                     </Card.Body>
                 </Card>

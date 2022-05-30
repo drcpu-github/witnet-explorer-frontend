@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Container, Spinner, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataService from "../Services/DataService";
@@ -12,7 +11,7 @@ export default class Reputation extends Component{
     constructor(props) {
         super(props);
 
-        this.onScrollStop = this.onScrollStop.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
         this.updateBlockchain = this.updateBlockchain.bind(this);
 
         this.state = {
@@ -132,11 +131,10 @@ export default class Reputation extends Component{
         }
     }
 
-    setScrollbarRef(scrollbar) {
-        this.scrollbar = scrollbar;
-    }
+    handleScroll(event) {
+        const { scrollHeight, scrollTop, clientHeight } = event.target;
+        const scroll = scrollHeight - scrollTop - clientHeight;
 
-    onScrollStop() {
         // If we reached the end of the blockchain, do not send requests anymore
         if (this.state.epochs[this.state.epochs.length-1] <= 1) {
             return;
@@ -144,7 +142,7 @@ export default class Reputation extends Component{
 
         // Prevent rounding errors and fetch a bit upfront
         // Also make sure we are not launching the same request twice by checking the appending value
-        if (this.state.appending === false && this.scrollbar.getValues().top >= 0.99) {
+        if (this.state.appending === false && scroll <= 100) {
             this.setState({
                 appending : true
             });
@@ -171,83 +169,80 @@ export default class Reputation extends Component{
 
     generateBlockchainCard() {
         return (
-            <Table style={{"border-collapse": "separate", "border-spacing": "15px"}}>
-                <tbody>
+            <Table responsive style={{borderCollapse: "separate", marginBottom: "0rem", borderSpacing: "5px 15px"}}>
+                <tbody style={{display: "block", maxHeight: "85vh", overflow: "auto"}} onScroll={this.handleScroll}>
                     {
                         this.state.blocks.map(function(block){
                             var block_link = "/search/" + block[0];
                             var address_link = "/search/" + block[3];
 
                             return (
-                                <tr class="row-card" style={{"line-height": "20px"}}>
-                                    <td class="cell-fit-card padding-horizontal no-border">
-                                        <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                <tr class="row-card">
+                                    <td class="cell-fit-card" title="Timestamp" style={{"paddingLeft": "1rem", "paddingRight": "0rem"}}>
+                                        <FontAwesomeIcon icon={["far", "clock"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card padding-small" title="Timestamp">
                                         {TimeConverter.convertUnixTimestamp(block[2], "full")}
                                     </td>
-                                    <td class="cell-fit-card padding-small no-border" title="Epoch">
-                                        <FontAwesomeIcon icon={["fas", "history"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                    <td class="cell-fit-card no-padding" title="Epoch">
+                                        <FontAwesomeIcon icon={["fas", "history"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card padding-small" title="Epoch">
                                         {block[1]}
                                     </td>
-                                    <td class="cell-fit-card padding-small cell-truncate" style={{"width": "25%"}}>
-                                        <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                    <td class="cell-fit-card no-padding" title="Block hash">
+                                        <FontAwesomeIcon icon={["fas", "cubes"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Block hash">
                                         <Link to={block_link}>{block[0]}</Link>
                                     </td>
-                                    <td class="cell-fit-card padding-small cell-truncate" style={{"width": "25%"}}>
-                                        <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                    <td class="cell-fit-card no-padding" title="Miner">
+                                        <FontAwesomeIcon icon={["fas", "user"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Miner">
                                         <Link to={address_link}>{block[3]}</Link>
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "8%", "textAlign": "right"}} title="Fee">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {Formatter.formatWitValue(block[9], 0)}
-                                        </span>
+                                    <td class="cell-fit-card no-padding" title="Fee">
+                                        <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm"/>
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "4%", "textAlign": "right"}} title="Value transfer">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {block[4]}
-                                        </span>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Fee">
+                                        {Formatter.formatWitValue(block[9], 0)}
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "4%", "textAlign": "right"}} title="Data request">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {block[5]}
-                                        </span>
+                                    <td class="cell-fit-card no-padding" title="Value transfer">
+                                        <FontAwesomeIcon icon={["fas", "coins"]} size="sm"/>
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "5%", "textAlign": "right"}} title="Commit">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["far", "handshake"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {block[6]}
-                                        </span>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Value transfer">
+                                        {block[4]}
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "5%", "textAlign": "right"}} title="Reveal">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["far", "eye"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {block[7]}
-                                        </span>
+                                    <td class="cell-fit-card no-padding" title="Data request">
+                                        <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm"/>
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"width": "4%", "textAlign": "right"}} title="Tally">
-                                        <span style={{"float": "left"}}>
-                                            <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        </span>
-                                        <span style={{"float": "right"}}>
-                                            {block[8]}
-                                        </span>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Data request">
+                                        {block[5]}
                                     </td>
-                                    <td class="cell-fit-card padding-small" style={{"textAlign": "center"}} title="Confirmed">
-                                        {block[10]
-                                            ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
-                                            : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
+                                    <td class="cell-fit-card no-padding" title="Commit">
+                                        <FontAwesomeIcon icon={["far", "handshake"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Commit">
+                                        {block[6]}
+                                    </td>
+                                    <td class="cell-fit-card no-padding" title="Reveal">
+                                        <FontAwesomeIcon icon={["far", "eye"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Reveal">
+                                        {block[7]}
+                                    </td>
+                                    <td class="cell-fit-card no-padding" title="Tally">
+                                        <FontAwesomeIcon icon={["fas", "calculator"]} size="sm"/>
+                                    </td>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Tally">
+                                        {block[8]}
+                                    </td>
+                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "center" }} title={block[10] ? "Confirmed" : "Unconfirmed"}>
+                                        {
+                                            block[10]
+                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
+                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
                                         }
                                     </td>
                                 </tr>
@@ -278,13 +273,9 @@ export default class Reputation extends Component{
 
         return(
             <Container fluid>
-                <Scrollbars hideTracksWhenNotNeeded style={{height: "85vh"}} ref={this.setScrollbarRef.bind(this)} onScrollStop={this.onScrollStop.bind(this)}>
-                    <Container fluid>
-                        {this.loading_spinner}
-                        {this.blockchain}
-                        {this.appending_spinner}
-                    </Container>
-                </Scrollbars>
+                {this.loading_spinner}
+                {this.blockchain}
+                {this.appending_spinner}
             </Container>
         );
     }

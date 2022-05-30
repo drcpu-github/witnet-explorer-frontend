@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import TimeConverter from "../../../Services/TimeConverter"
@@ -126,11 +125,9 @@ export default class Reveal extends Component {
         }
 
         return (
-            <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"75vh"}>
-                <Container fluid className="pl-0 pr-0 mt-2">
-                    {rows}
-                </Container>
-            </Scrollbars>
+            <Container fluid className="pl-0 pr-0 mt-2" style={{ "display": "block", "overflow": "auto", "maxHeight": "75vh" }}>
+                {rows}
+            </Container>
         );
     }
 

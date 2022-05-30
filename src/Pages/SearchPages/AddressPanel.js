@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Card, Container, Spinner, Tab, Table, Tabs } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ErrorCard from "../../Components/ErrorCard";
@@ -90,7 +89,7 @@ export default class AddressPanel extends Component {
             <Container fluid>
                 <Table>
                     <tbody>
-                        <tr style={{"line-height": "20px"}}>
+                        <tr>
                             <td style={{"padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap"}}>
                                 <FontAwesomeIcon icon={["fas", "user"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Account"}
                             </td>
@@ -98,7 +97,7 @@ export default class AddressPanel extends Component {
                                 <a href={address_link}>{data.address}</a>
                             </td>
                         </tr>
-                        <tr style={{"line-height": "20px"}}>
+                        <tr>
                             <td style={{"padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap"}}>
                                 <FontAwesomeIcon icon={["fas", "wallet"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Balance"}
                             </td>
@@ -110,7 +109,7 @@ export default class AddressPanel extends Component {
                                 }
                             </td>
                         </tr>
-                        <tr style={{"line-height": "20px"}}>
+                        <tr>
                             <td style={{"padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap"}}>
                                 <FontAwesomeIcon icon={["fas", "star"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Reputation"}
                             </td>
@@ -131,9 +130,9 @@ export default class AddressPanel extends Component {
 
     generateValueTransferCard(value_transfers) {
         return (
-            <Table hover responsive>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
                 <thead>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr class="th-fixed">
                         <th class="cell-fit">
                             <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
                         </th>
@@ -187,7 +186,7 @@ export default class AddressPanel extends Component {
                             }
 
                             return (
-                                <tr style={{"line-height": "20px"}}>
+                                <tr>
                                     <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
                                         {icon}<a href={txn_link}>{value_transfer[1]}</a>
                                     </td>
@@ -235,9 +234,9 @@ export default class AddressPanel extends Component {
 
     generateBlocksCard(blocks) {
         return (
-            <Table hover responsive>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
                 <thead>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr class="th-fixed">
                         <th class="cell-fit">
                             <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Block"}
                         </th>
@@ -276,8 +275,8 @@ export default class AddressPanel extends Component {
                             const block_link = "/search/" + block[0];
 
                             return (
-                                <tr style={{"line-height": "20px"}}>
-                                    <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
+                                <tr>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
                                         <a href={block_link}>{block[0]}</a>
                                     </td>
                                     <td class="cell-fit">
@@ -318,13 +317,13 @@ export default class AddressPanel extends Component {
 
     generateDataRequestsSolvedCard(data_requests_solved) {
         return (
-            <Table hover responsive>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
                 <thead>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
                             <FontAwesomeIcon icon={["fas", "check"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Success"}
                         </th>
-                        <th class="cell-fit">
+                        <th class="cell-fit" style={{ "width": "30%" }}>
                             <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Data request"}
                         </th>
                         <th class="cell-fit">
@@ -333,7 +332,7 @@ export default class AddressPanel extends Component {
                         <th class="cell-fit" style={{"textAlign": "right"}}>
                             <FontAwesomeIcon icon={["far", "handshake"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Collateral"}
                         </th>
-                        <th class="cell-fit">
+                        <th class="cell-fit" style={{ "width": "30%" }}>
                             <FontAwesomeIcon icon={["far", "eye"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Result"}
                         </th>
                         <th class="cell-fit" style={{"textAlign": "center"}}>
@@ -350,7 +349,7 @@ export default class AddressPanel extends Component {
                             const data_request_link = "/search/" + data_request_solved[1];
 
                             return (
-                                <tr style={{"line-height": "20px"}}>
+                                <tr>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
                                             data_request_solved[0]
@@ -395,16 +394,16 @@ export default class AddressPanel extends Component {
 
     generateDataRequestsLaunchedCard(data_requests_launched) {
         return (
-            <Table hover responsive>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
                 <thead>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
                             <FontAwesomeIcon icon={["fas", "check"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Success"}
                         </th>
-                        <th class="cell-fit">
+                        <th class="cell-fit" style={{ "width": "20%" }}>
                             <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Data request"}
                         </th>
-                        <th class="cell-fit">
+                        <th class="cell-fit" style={{ "width": "20%" }}>
                             <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
                         </th>
                         <th class="cell-fit" style={{"textAlign": "right"}}>
@@ -425,7 +424,7 @@ export default class AddressPanel extends Component {
                         <th class="cell-fit" style={{"textAlign": "center"}}>
                             <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Liars"}
                         </th>
-                        <th class="cell-fit">
+                        <th class="cell-fit" style={{ "width": "20%" }}>
                             <FontAwesomeIcon icon={["far", "eye"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Result"}
                         </th>
                     </tr>
@@ -436,7 +435,7 @@ export default class AddressPanel extends Component {
                             const data_request_link = "/search/" + data_request_launched[1];
 
                             return (
-                                <tr style={{"line-height": "20px"}}>
+                                <tr>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
                                             data_request_launched[0]
@@ -504,48 +503,40 @@ export default class AddressPanel extends Component {
                             <Card.Text>
                                 <Tabs defaultActiveKey="value_transfers" id="uncontrolled-tab-example" onSelect={this.handleSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
                                     <Tab eventKey="value_transfers" title="Transactions">
-                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                            <Container fluid>
-                                                {
-                                                    address_value_transfers === null
-                                                        ? <Spinner animation="border" />
-                                                        : this.generateValueTransferCard(address_value_transfers)
-                                                }
-                                            </Container>
-                                        </Scrollbars>
+                                        <Container fluid style={{height: "55vh"}}>
+                                            {
+                                                address_value_transfers === null
+                                                    ? <Spinner animation="border" />
+                                                    : this.generateValueTransferCard(address_value_transfers)
+                                            }
+                                        </Container>
                                     </Tab>
                                     <Tab eventKey="blocks" title="Blocks">
-                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                            <Container fluid>
-                                                {
-                                                    address_blocks === null
-                                                        ? <Spinner animation="border" />
-                                                        : this.generateBlocksCard(address_blocks)
-                                                }
-                                            </Container>
-                                        </Scrollbars>
+                                        <Container fluid style={{ height: "55vh" }}>
+                                            {
+                                                address_blocks === null
+                                                    ? <Spinner animation="border" />
+                                                    : this.generateBlocksCard(address_blocks)
+                                            }
+                                        </Container>
                                     </Tab>
                                     <Tab eventKey="data_requests_solved" title="Data requests solved">
-                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                            <Container fluid>
-                                                {
-                                                    address_data_requests_solved === null
-                                                        ? <Spinner animation="border" />
-                                                        : this.generateDataRequestsSolvedCard(address_data_requests_solved)
-                                                }
-                                            </Container>
-                                        </Scrollbars>
+                                        <Container fluid style={{ height: "55vh" }}>
+                                            {
+                                                address_data_requests_solved === null
+                                                    ? <Spinner animation="border" />
+                                                    : this.generateDataRequestsSolvedCard(address_data_requests_solved)
+                                            }
+                                        </Container>
                                     </Tab>
                                     <Tab eventKey="data_requests_launched" title="Data requests launched">
-                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                            <Container fluid>
-                                                {
-                                                    address_data_requests_launched === null
-                                                        ? <Spinner animation="border" />
-                                                        : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
-                                                }
-                                            </Container>
-                                        </Scrollbars>
+                                        <Container fluid style={{ height: "55vh" }}>
+                                            {
+                                                address_data_requests_launched === null
+                                                    ? <Spinner animation="border" />
+                                                    : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
+                                            }
+                                        </Container>
                                     </Tab>
                                 </Tabs>
                             </Card.Text>

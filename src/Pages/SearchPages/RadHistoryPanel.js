@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Container, Tab, Table, Tabs } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataRequestRadScript from "./DataRequestPages/DataRequestRadScript";
@@ -13,7 +12,7 @@ export default class RadHistoryPanel extends Component {
     generateDetailsCard(data) {
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
-                <Table responsive style={{"marginBottom": "0px"}}>
+                <Table responsive style={{ "marginBottom": "0px", "display": "block", "overflow": "auto", "height": "15vh" }}>
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -146,9 +145,7 @@ export default class RadHistoryPanel extends Component {
                 <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
                     <Card.Body className="p-1">
                         <Card.Text>
-                            <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"10vh"} autoHeightMax={"10vh"}>
-                                {this.generateDetailsCard(this.props.data)}
-                            </Scrollbars>
+                            {this.generateDetailsCard(this.props.data)}
                         </Card.Text>
                     </Card.Body>
                 </Card>
@@ -160,10 +157,8 @@ export default class RadHistoryPanel extends Component {
                                     {this.generateDataRequestCard(this.props.data.history)}
                                 </Tab>
                                 <Tab eventKey="rad_script" title="RAD script">
-                                    <Container fluid style={{"marginTop": "1rem", "height": "50vh"}}>
-                                        <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"50vh"} autoHeightMax={"50vh"}>
-                                            <DataRequestRadScript data_request={this.props.data.RAD_data}/>
-                                        </Scrollbars>
+                                    <Container fluid style={{ "marginTop": "1rem", "height": "50vh", "display": "block", "overflow": "auto" }}>
+                                        <DataRequestRadScript data_request={this.props.data.RAD_data} />
                                     </Container>
                                 </Tab>
                             </Tabs>

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Container, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Formatter from "../../Services/Formatter";
@@ -13,9 +12,9 @@ export default class MintPanel extends Component {
         var txn_link = "/search/" + data.txn_hash;
 
         return (
-            <Table style={{"borderCollapse": "separate", "marginBottom": "0px"}}>
-                <tbody>
-                    <tr style={{"line-height": "20px"}}>
+            <Table style={{ "borderCollapse": "separate", "marginBottom": "0px" }}>
+                <tbody style={{ display: "block", maxHeight: "75vh", overflow: "auto" }}>
+                    <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                             <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                         </td>
@@ -23,7 +22,7 @@ export default class MintPanel extends Component {
                             <Link to={block_link}>{data.block_hash}</Link>
                         </td>
                     </tr>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                             <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                         </td>
@@ -31,7 +30,7 @@ export default class MintPanel extends Component {
                             <Link to={txn_link}>{data.txn_hash}</Link>
                         </td>
                     </tr>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                             <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
                         </td>
@@ -39,7 +38,7 @@ export default class MintPanel extends Component {
                             {TimeConverter.convertUnixTimestamp(data.txn_time, "full") + " (epoch: " + data.txn_epoch + ")"}
                         </td>
                     </tr>
-                    <tr style={{"line-height": "20px"}}>
+                    <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                             <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                         </td>
@@ -52,7 +51,7 @@ export default class MintPanel extends Component {
                             var address_link = "/search/" + output[0];
                             console.log(Formatter.formatWitValue(output[1], 2).padStart(10, " "));
                             return (
-                                <tr style={{"line-height": "20px"}}>
+                                <tr>
                                     <td class="cell-fit-padding-wide">
                                         {
                                             idx === 0
@@ -86,11 +85,7 @@ export default class MintPanel extends Component {
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                     <Card.Body className="p-1">
                         <Card.Text>
-                            <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"50vh"}>
-                                <Container fluid>
-                                    {this.generateDetailsCard(this.props.data)}
-                                </Container>
-                            </Scrollbars>
+                            {this.generateDetailsCard(this.props.data)}
                         </Card.Text>
                     </Card.Body>
                 </Card>

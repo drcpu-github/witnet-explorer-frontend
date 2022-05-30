@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataRequestRadScript from "./DataRequestPages/DataRequestRadScript";
@@ -16,7 +15,7 @@ export default class DataRequestHistoryPanel extends Component {
 
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
-                <Table responsive style={{"marginBottom": "0px"}}>
+                <Table responsive style={{ "marginBottom": "0px", "display": "block", "overflow": "auto", "height": "15vh" }}>
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -67,7 +66,7 @@ export default class DataRequestHistoryPanel extends Component {
     generateParametersCard(data) {
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
-                <Table responsive style={{"marginBottom": "0px"}}>
+                <Table responsive style={{ "marginBottom": "0px", "display": "block", "overflow": "auto", "height": "15vh" }}>
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -182,9 +181,7 @@ export default class DataRequestHistoryPanel extends Component {
                         <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
                             <Card.Body className="p-1">
                                 <Card.Text>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"15vh"} autoHeightMax={"15vh"}>
-                                        {this.generateDetailsCard(this.props.data)}
-                                    </Scrollbars>
+                                    {this.generateDetailsCard(this.props.data)}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
@@ -193,9 +190,7 @@ export default class DataRequestHistoryPanel extends Component {
                         <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
                             <Card.Body className="p-1">
                                 <Card.Text>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"15vh"} autoHeightMax={"15vh"}>
-                                        {this.generateParametersCard(this.props.data.data_request_parameters)}
-                                    </Scrollbars>
+                                    {this.generateParametersCard(this.props.data.data_request_parameters)}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
@@ -211,10 +206,8 @@ export default class DataRequestHistoryPanel extends Component {
                                             {this.generateDataRequestCard(this.props.data.history)}
                                         </Tab>
                                         <Tab eventKey="rad_script" title="RAD script">
-                                            <Container fluid style={{"marginTop": "1rem", "height": "50vh"}}>
-                                                <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"50vh"} autoHeightMax={"50vh"}>
-                                                    <DataRequestRadScript data_request={this.props.data.RAD_data}/>
-                                                </Scrollbars>
+                                            <Container fluid style={{ "marginTop": "1rem", "height": "50vh", "display": "block", "overflow": "auto" }}>
+                                                <DataRequestRadScript data_request={this.props.data.RAD_data}/>
                                             </Container>
                                         </Tab>
                                     </Tabs>

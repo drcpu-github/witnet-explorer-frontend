@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Container, Form, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Formatter from "../../Services/Formatter";
@@ -302,7 +301,7 @@ export default class ValueTransferPanel extends Component {
                     id="showUtxos"
                     inline={true}
                     checked={this.state.showUtxos}
-                    onChange={(checked: boolean) => {
+                    onChange={checked => {
                         this.setState({ showUtxos: !this.state.showUtxos })
                     }}
                     label="Show UTXO's"
@@ -317,17 +316,19 @@ export default class ValueTransferPanel extends Component {
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                     <Card.Body className="p-3">
                         <Card.Text>
-                            <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"75vh"}>
-                                <Container fluid>
-                                    {this.generateDetailsCard(this.props.data)}
-                                    {
-                                        this.state.showUtxos
-                                            ? this.generateInputOutputUtxos(this.props.data)
-                                            : this.generateInputOutputAddresses(this.props.data)
-                                    }
-                                    {this.generateUtxoCheck()}
-                                </Container>
-                            </Scrollbars>
+                            <Container fluid style={{display: "block", maxHeight: "75vh", overflow: "auto" }}>
+                                {
+                                    this.generateDetailsCard(this.props.data)
+                                }
+                                {
+                                    this.state.showUtxos
+                                        ? this.generateInputOutputUtxos(this.props.data)
+                                        : this.generateInputOutputAddresses(this.props.data)
+                                }
+                                {
+                                    this.generateUtxoCheck()
+                                }
+                            </Container>
                         </Card.Text>
                     </Card.Body>
                 </Card>

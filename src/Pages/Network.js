@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
-import { Card, Col, Container, Row } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
+import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ErrorCard from "../Components/ErrorCard";
@@ -33,7 +31,7 @@ export default class Network extends Component {
             this.setState({
                 loading: false,
                 error_value: "",
-                rollback_rows: this.generateRollbackRows(response.rollbacks),
+                rollback_rows: this.generateRollbackContainer(response.rollbacks),
                 miners: response.miners,
                 data_request_solvers: response.data_request_solvers,
                 block_rows: this.generateNodeRows(response.miner_top_100, "blocks"),
@@ -49,31 +47,50 @@ export default class Network extends Component {
         });
     }
 
-    generateRollbackRows(row_data) {
-        return row_data.map(function(data){
-            return (
-                <Row>
-                    <Col xs="auto" style={{paddingLeft: "20px"}}>
-                        {TimeConverter.convertUnixTimestamp(data[0], "full")}
-                    </Col>
-                    <Col xs="auto" className="text-center" style={{paddingLeft: "20px"}}>
-                        <FontAwesomeIcon icon={['fas', 'history']} size="sm"/>
-                        {" "}
-                        {data[1].toLocaleString("en-GB")}
-                    </Col>
-                    <Col xs="auto" className="text-center" style={{paddingLeft: "20px"}}>
-                        <FontAwesomeIcon icon={['fas', 'history']} size="sm"/>
-                        {" "}
-                        {data[2].toLocaleString("en-GB")}
-                    </Col>
-                    <Col xs="auto" className="text-center" style={{paddingLeft: "20px"}}>
-                        <FontAwesomeIcon icon={['fas', 'cubes']} size="sm"/>
-                        {" "}
-                        {data[3].toLocaleString("en-GB")}
-                    </Col>
-                </Row>
-            );
-        });
+    generateRollbackContainer(row_data) {
+        return (
+            <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
+                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
+                    <tbody style={{"border": "none"}}>
+                        {
+                            row_data.map(function(data){
+                                return(
+                                    <tr>
+                                        <td class="cell-fit-padding-wide" style={{"textAlign": "left"}}>
+                                            {TimeConverter.convertUnixTimestamp(data[0], "full")}
+                                        </td>
+                                        <td class="padding-wide" style={{"textAlign": "center", "border": "none"}}>
+                                            <span style={{"float": "left"}}>
+                                                <FontAwesomeIcon icon={['fas', 'history']} style={{"marginRight": "0.25rem"}} size="sm"/>
+                                            </span>
+                                            <span style={{"float": "right"}}>
+                                                {data[1].toLocaleString("en-GB")}
+                                            </span>
+                                        </td>
+                                        <td class="padding-wide" style={{"textAlign": "center", "border": "none"}}>
+                                            <span style={{"float": "left"}}>
+                                                <FontAwesomeIcon icon={['fas', 'history']} style={{"marginRight": "0.25rem"}} size="sm"/>
+                                            </span>
+                                            <span style={{"float": "right"}}>
+                                                {data[2].toLocaleString("en-GB")}
+                                            </span>
+                                        </td>
+                                        <td class="padding-wide" style={{"textAlign": "center", "border": "none"}}>
+                                            <span style={{"float": "left"}}>
+                                                <FontAwesomeIcon icon={['fas', 'cubes']} style={{"marginRight": "0.25rem"}} size="sm"/>
+                                            </span>
+                                            <span style={{"float": "right"}}>
+                                                {data[3].toLocaleString("en-GB")}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+            </Container>
+        );
     }
 
     generateSummaryCard(miners, data_request_solvers) {
@@ -86,22 +103,28 @@ export default class Network extends Component {
                 </Card.Title>
                 <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
                     <Card.Text>
-                        <Row>
-                            <Col xs={8} style={{paddingLeft: "20px"}}>
-                                {"Mined at least 1 block"}
-                            </Col>
-                            <Col xs={2} className="text-center" style={{paddingLeft: "20px"}}>
-                                {this.state.miners.toLocaleString("en-GB")}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={8} style={{paddingLeft: "20px"}}>
-                                {"Solved at least 1 data request"}
-                            </Col>
-                            <Col xs={2} className="text-center" style={{paddingLeft: "20px"}}>
-                                {this.state.data_request_solvers.toLocaleString("en-GB")}
-                            </Col>
-                        </Row>
+                        <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
+                            <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
+                                <tbody>
+                                    <tr>
+                                        <td class="cell-fit">
+                                            {"Mined at least 1 block"}
+                                        </td>
+                                        <td class="cell-fit">
+                                            {this.state.miners.toLocaleString("en-GB")}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cell-fit">
+                                            {"Solved at least 1 data request"}
+                                        </td>
+                                        <td class="cell-fit">
+                                            {this.state.data_request_solvers.toLocaleString("en-GB")}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </Container>
                     </Card.Text>
                 </Card.Body>
                 <Card.Text style={{padding: "0.75rem", position: "relative"}}>
@@ -114,25 +137,38 @@ export default class Network extends Component {
     }
 
     generateNodeRows(row_data, type) {
-        return row_data.map(function(data){
-            var api_link = "/search/" + data[0];
-            var address_link = <Link to={api_link}>{data[0]}</Link>
-
-            return (
-                <Row>
-                    <Col xs="auto" style={{paddingLeft: "20px"}}>
-                        {address_link}
-                    </Col>
-                    <Col xs="auto" className="text-center" style={{paddingLeft: "20px"}}>
-                        {type === "blocks" 
-                            ? <FontAwesomeIcon icon={['fas', 'cubes']} size="sm"/>
-                            : <FontAwesomeIcon icon={['fas', 'align-justify']} size="sm"/>}
-                        {" "}
-                        {data[1].toLocaleString("en-GB")}
-                    </Col>
-                </Row>
-            );
-        });
+        return (
+            <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
+                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh", "marginBottom": "0rem"}}>
+                    <tbody>
+                        {
+                            row_data.map(function(data){
+                                var api_link = "/search/" + data[0];
+                                return (
+                                    <tr>
+                                        <td class="cell-fit">
+                                            <a href={api_link}>{data[0]}</a>
+                                        </td>
+                                        <td class="padding-wide" style={{"border": "none"}}>
+                                            <span style={{"float": "left"}}>
+                                                {
+                                                    type === "blocks"
+                                                        ? <FontAwesomeIcon icon={['fas', 'cubes']} style={{"marginRight": "0.25rem"}} size="sm"/>
+                                                        : <FontAwesomeIcon icon={['fas', 'align-justify']} style={{"marginRight": "0.25rem"}} size="sm"/>
+                                                }
+                                            </span>
+                                            <span style={{"float": "right"}}>
+                                                {data[1].toLocaleString("en-GB")}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+            </Container>
+        )
     }
 
     generateRollbackCard() {
@@ -143,13 +179,11 @@ export default class Network extends Component {
                         {"Most recent rollbacks"}
                     </h5>
                 </Card.Title>
-                <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"35vh"}>
-                    <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                        <Card.Text>
-                            {this.state.rollback_rows}
-                        </Card.Text>
-                    </Card.Body>
-                </Scrollbars>
+                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
+                    <Card.Text>
+                        {this.state.rollback_rows}
+                    </Card.Text>
+                </Card.Body>
                 <Card.Text style={{padding: "0.75rem", position: "relative"}}>
                     <small className="text-muted" style={{position: "absolute", bottom: 0}}>
                         Last updated: {this.state.last_updated}
@@ -167,13 +201,11 @@ export default class Network extends Component {
                         {type === "blocks" ? "Top 100 mining nodes" : "Top 100 data request solvers"}
                     </h5>
                 </Card.Title>
-                <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"35vh"}>
-                    <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
-                        <Card.Text>
-                            {type === "blocks" ? this.state.block_rows : this.state.data_request_rows}
-                        </Card.Text>
-                    </Card.Body>
-                </Scrollbars>
+                <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
+                    <Card.Text>
+                        {type === "blocks" ? this.state.block_rows : this.state.data_request_rows}
+                    </Card.Text>
+                </Card.Body>
                 <Card.Text style={{padding: "0.75rem", position: "relative"}}>
                     <small className="text-muted" style={{position: "absolute", bottom: 0}}>
                         Last updated: {this.state.last_updated}
@@ -220,7 +252,7 @@ export default class Network extends Component {
 
         return(
             <Container fluid>
-                <Row style={{paddingLeft: "50px", paddingRight: "50px", height: "43vh"}}>
+                <Row style={{paddingLeft: "50px", paddingRight: "50px", height: "44vh"}}>
                     <Col>
                         {rollback_card}
                     </Col>
@@ -228,7 +260,7 @@ export default class Network extends Component {
                         {summary_card}
                     </Col>
                 </Row>
-                <Row style={{paddingLeft: "50px", paddingRight: "50px", height: "43vh"}}>
+                <Row style={{paddingLeft: "50px", paddingRight: "50px", height: "44vh"}}>
                     <Col>
                         {block_card}
                     </Col>
