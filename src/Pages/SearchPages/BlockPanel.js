@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Container, Tab, Table, Tabs } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Formatter from "../../Services/Formatter";
@@ -495,46 +494,34 @@ export default class BlockPanel extends Component {
                         <Card.Text>
                             <Tabs defaultActiveKey="mint" id="uncontrolled-tab-example" style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
                                 <Tab eventKey="mint" title="Mint">
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
-                                            {this.generateMintCard(this.props.data.mint_txn)}
-                                        </Container>
-                                    </Scrollbars>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
+                                        {this.generateMintCard(this.props.data.mint_txn)}
+                                    </Container>
                                 </Tab>
                                 <Tab eventKey="value_transfer" title={value_transfer_tab_title}>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
-                                            {this.generateValueTransferCard(this.props.data.value_transfer_txns)}
-                                        </Container>
-                                    </Scrollbars>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
+                                        {this.generateValueTransferCard(this.props.data.value_transfer_txns)}
+                                    </Container>
                                 </Tab>
                                 <Tab eventKey="data_request" title={data_request_tab_title}>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
-                                            {this.generateDataRequestCard(this.props.data.data_request_txns)}
-                                        </Container>
-                                    </Scrollbars>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
+                                        {this.generateDataRequestCard(this.props.data.data_request_txns)}
+                                    </Container>
                                 </Tab>
                                 <Tab eventKey="commit" title={commit_tab_title}>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
                                             {this.generateCommitCard(this.props.data.commit_txns)}
                                         </Container>
-                                    </Scrollbars>
                                 </Tab>
                                 <Tab eventKey="reveal" title={reveal_tab_title}>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
-                                            {this.generateRevealCard(this.props.data.reveal_txns)}
-                                        </Container>
-                                    </Scrollbars>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
+                                        {this.generateRevealCard(this.props.data.reveal_txns)}
+                                    </Container>
                                 </Tab>
                                 <Tab eventKey="tally" title={tally_tab_title}>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMin={"55vh"} autoHeightMax={"55vh"}>
-                                        <Container fluid>
-                                            {this.generateTallyCard(this.props.data.tally_txns)}
-                                        </Container>
-                                    </Scrollbars>
+                                    <Container fluid style={{ display: "block", height: "55vh", overflow: "auto" }}>
+                                        {this.generateTallyCard(this.props.data.tally_txns)}
+                                    </Container>
                                 </Tab>
                             </Tabs>
                         </Card.Text>

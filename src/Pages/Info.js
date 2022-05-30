@@ -1,152 +1,164 @@
 import React, { Component } from "react";
-import { Card, Container, Col, Row } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
+import { Card, Container, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default class Info extends Component {
     render() {
         return(
             <Container>
-                <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"85vh"}>
-                    <Container style={{paddingLeft : "50px", paddingRight : "50px"}}>
-                        <Card className="shadow p-2 mb-3 bg-white rounded">
-                            <Container>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['fas', 'desktop']} size="sm"/>{" Official website and overview"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                <Card className="shadow mb-3 bg-white rounded">
+                    <Table responsive style={{borderCollapse: "separate", marginBottom: "0rem", paddingLeft: "3rem"}}>
+                        <tbody style={{display: "block", maxHeight: "40vh", overflow: "auto"}}>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['fas', 'desktop']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Official website and overview"}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://witnet.io"}>{"https://witnet.io"}</a>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://witnet.io/about"}>{"https://witnet.io/about"}</a>
-                                    </Col>
-                                </Row>
-                                <br/>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['fas', 'wallet']} size="sm"/>{" Official desktop wallet for Linux, Mac and Windows"}
-                                    </Col>
-                                    <Col xs={6}>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr/>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['fas', 'wallet']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Official desktop wallet for Linux, Mac and Windows"}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://sheikah.app"}>{"https://sheikah.app"}</a>
-                                    </Col>
-                                </Row>
-                                <br/>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['fas', 'book']} size="sm"/>{" Community maintained documentation"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr/>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['fas', 'book']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Community maintained documentation"}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://docs.witnet.io"}>{"https://docs.witnet.io"}</a>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </Card>
-                    </Container>
-                </Scrollbars>
-                <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"85vh"}>
-                    <Container style={{paddingLeft : "50px", paddingRight : "50px"}}>
-                        <Card className="shadow p-2 mb-3 bg-white rounded">
-                            <Container>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['far', 'address-card']} size="sm"/>{" Contact me"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Card>
+                <Card className="shadow mb-3 bg-white rounded">
+                    <Table responsive style={{borderCollapse: "separate", marginBottom: "0rem", paddingLeft: "3rem"}}>
+                        <tbody style={{display: "block", maxHeight: "40vh", overflow: "auto"}}>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['far', 'address-card']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Contact me"}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"mailto: drcpu@protonmail.com"}>{"drcpu@protonmail.com"}</a>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://github.com/drcpu-github"}>{"https://github.com/drcpu-github"}</a>
-                                    </Col>
-                                </Row>
-                                <br/>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['fab', 'osi']} size="sm"/>{" Source code "}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr/>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['fab', 'osi']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Source code "}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://github.com/drcpu-github/witnet-explorer-backend"}>{"https://github.com/drcpu-github/witnet-explorer-backend"}</a>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         <a href={"https://github.com/drcpu-github/witnet-explorer-frontend"}>{"https://github.com/drcpu-github/witnet-explorer-frontend"}</a>
-                                    </Col>
-                                </Row>
-                                <br/>
-                                <Row>
-                                    <Col xs={12}>
-                                        <FontAwesomeIcon icon={['fas', 'hand-holding-usd']} size="sm"/>{" Donations to keep the explorer running are always welcome"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr/>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span>
+                                        <FontAwesomeIcon icon={['fas', 'hand-holding-usd']} style={{marginRight: "0.25rem"}} size="sm"/>
+                                    </span>
+                                    <span>
+                                        {"Donations to keep the explorer running are always welcome"}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         {"BTC 1DNXyT83VJeUVuZSp7eu8bxjBGTWmrbdeV"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         {"ETH 0xf8FD5c2F5fb7436455FA1671683b6379dBA4F472"}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={1}>
-                                        {""}
-                                    </Col>
-                                    <Col xs={11}>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="cell-fit" style={{border: "none"}}>
+                                    <span style={{paddingLeft: "3rem"}}>
                                         {"WIT wit1wnulrrj42jelsnhgm6u286marclem2s9456hhu"}
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </Card>
-                    </Container>
-                </Scrollbars>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Card>
             </Container>
         );
     }

@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { ResponsiveContainer, CartesianGrid, ComposedChart, XAxis, YAxis, Label, ReferenceLine, Scatter, ScatterChart, Tooltip, Bar } from "recharts";
 
 import ErrorCard from "../Components/ErrorCard";
@@ -103,8 +102,8 @@ export default class TAPI extends Component {
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{marginTop: "15px"}}>
                 <Card.Body style={{padding: "10px"}}>
-                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"40vh"}>
-                        <Table style={{"marginBottom": "0px"}}>
+                    <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "40vh"}}>
+                        <Table responsive style={{"display": "block", "overflow": "auto", "height": "30vh", "marginBottom": "0rem"}}>
                             <tbody>
                                 <tr style={{"line-height": "20px"}}>
                                     <td class="cell-fit" style={{"border": "none"}}>
@@ -179,7 +178,7 @@ export default class TAPI extends Component {
                                 </tr>
                             </tbody>
                         </Table>
-                    </Scrollbars>
+                    </Container>
                 </Card.Body>
             </Card>
         );

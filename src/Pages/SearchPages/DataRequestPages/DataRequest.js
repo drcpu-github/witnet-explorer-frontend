@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
-import { Scrollbars } from "react-custom-scrollbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataRequestRadScript from "./DataRequestRadScript";
@@ -184,9 +183,9 @@ export default class DataRequest extends Component {
                         <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                             <Card.Body className="p-3">
                                 <Card.Text>
-                                    <Scrollbars hideTracksWhenNotNeeded autoHeight autoHeightMax={"35vh"}>
+                                    <Container fluid style={{ "padding": "0", "maxHeight": "40vh", "display": "block", "overflow": "auto" }}>
                                         <DataRequestRadScript data_request={this.props.data}/>
-                                    </Scrollbars>
+                                    </Container>
                                 </Card.Text>
                             </Card.Body>
                         </Card>
