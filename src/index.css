@@ -6,7 +6,7 @@
 }
 
 html, body {
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   font-family: "courier-prime-v1-latin-regular";
 }
