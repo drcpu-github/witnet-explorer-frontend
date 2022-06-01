@@ -21,6 +21,9 @@
     "recharts": "^2.1.5",
     "web-vitals": "^2.1.2"
   },
+  "devDependencies": {
+    "react-scripts": "^5.0.1"
+  },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
