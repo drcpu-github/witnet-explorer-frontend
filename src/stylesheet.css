@@ -1,3 +1,23 @@
+@font-face {
+  font-family: "courier-prime-v1-latin-regular";
+  src: url("./Fonts/courier-prime-v1-latin-regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  font-family: "courier-prime-v1-latin-regular";
+}
+
+body {
+  margin: 0;
+  font-size : 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .btn-labeled {
     padding-top: 0;
     padding-bottom: 0;
