@@ -88,12 +88,12 @@ export default class Reputation extends Component{
                         });
                     }
                 }
-                // Append or modify the blockchain
+
+                // Update confirmed status of blocks in the chain
                 var current_confirmed_block = this.state.last_confirmed_block;
                 var blockchain = response.blockchain;
                 for (var j = 0; j < blockchain.length; j++) {
                     var idx2 = this.state.epochs.indexOf(blockchain[j][1]);
-                    // Update confirmed status
                     if (idx2 !== -1) {
                         // Only update confirmed blocks
                         if (blockchain[j][10] === true) {
@@ -111,14 +111,20 @@ export default class Reputation extends Component{
                             });
                         }
                     }
-                    // Append block
-                    else {
+                }
+
+                // Prepend new blocks
+                for (var k = current_confirmed_block - 1; k >= 0; k--) {
+                    var idx3 = this.state.epochs.indexOf(blockchain[k][1]);
+                    // Update confirmed status
+                    if (idx3 === -1) {
                         this.setState({
-                            blocks: [blockchain[j], ...this.state.blocks],
-                            epochs: [blockchain[j][1], ...this.state.epochs]
+                            blocks: [blockchain[k], ...this.state.blocks],
+                            epochs: [blockchain[k][1], ...this.state.epochs]
                         });
                     }
                 }
+
                 this.blockchain = this.generateBlockchainCard();
                 this.setState({
                     last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "full"),
