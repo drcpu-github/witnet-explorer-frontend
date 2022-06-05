@@ -6,6 +6,7 @@ import ErrorCard from "../Components/ErrorCard";
 import SpinnerCard from "../Components/SpinnerCard";
 
 import DataService from "../Services/DataService";
+import Formatter from "../Services/Formatter";
 import TimeConverter from "../Services/TimeConverter";
 
 export default class Network extends Component {
@@ -36,6 +37,8 @@ export default class Network extends Component {
                 data_request_solvers: response.data_request_solvers,
                 block_rows: this.generateNodeRows(response.miner_top_100, "blocks"),
                 data_request_rows: this.generateNodeRows(response.data_request_solver_top_100, "dr_solvers"),
+                average_ars_balance: Formatter.formatValueRound(response.average_ars_balance / 1E9, 0),
+                average_reputed_balance: Formatter.formatValueRound(response.average_reputed_balance / 1E9, 0),
                 last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "hour"),
             });
         })
@@ -50,7 +53,7 @@ export default class Network extends Component {
     generateRollbackContainer(row_data) {
         return (
             <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
-                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
+                <Table responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
                     <tbody style={{"border": "none"}}>
                         {
                             row_data.map(function(data){
@@ -93,7 +96,7 @@ export default class Network extends Component {
         );
     }
 
-    generateSummaryCard(miners, data_request_solvers) {
+    generateSummaryCard() {
         return (
             <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "40vh"}}>
                 <Card.Title style={{marginBottom: "0px", paddingLeft: "10px"}}>
@@ -104,22 +107,38 @@ export default class Network extends Component {
                 <Card.Body style={{paddingTop: "10px", paddingBottom: "0px"}}>
                     <Card.Text>
                         <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
-                            <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
+                            <Table responsive style={{"display": "block", "overflow": "auto", "height": "30vh"}}>
                                 <tbody>
                                     <tr>
                                         <td class="cell-fit">
-                                            {"Mined at least 1 block"}
+                                            {"Nodes with at least 1 block mined"}
                                         </td>
-                                        <td class="cell-fit">
+                                        <td class="cell-fit" style={{ "textAlign": "right" }}>
                                             {this.state.miners.toLocaleString("en-GB")}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="cell-fit">
-                                            {"Solved at least 1 data request"}
+                                            {"Nodes with at least 1 data request solved"}
                                         </td>
-                                        <td class="cell-fit">
+                                        <td class="cell-fit" style={{ "textAlign": "right" }}>
                                             {this.state.data_request_solvers.toLocaleString("en-GB")}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cell-fit">
+                                            {"Average balance of ARS nodes"}
+                                        </td>
+                                        <td class="cell-fit" style={{ "textAlign": "right" }}>
+                                            {this.state.average_ars_balance.toLocaleString("en-GB")}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cell-fit">
+                                            {"Average balance of reputed nodes"}
+                                        </td>
+                                        <td class="cell-fit" style={{ "textAlign": "right" }}>
+                                            {this.state.average_reputed_balance.toLocaleString("en-GB")}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -139,7 +158,7 @@ export default class Network extends Component {
     generateNodeRows(row_data, type) {
         return (
             <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "30vh"}}>
-                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "30vh", "marginBottom": "0rem"}}>
+                <Table responsive style={{"display": "block", "overflow": "auto", "height": "30vh", "marginBottom": "0rem"}}>
                     <tbody>
                         {
                             row_data.map(function(data){
