@@ -208,7 +208,7 @@ export default class Search extends Component{
         return(
             <div>
                 <div style={{paddingLeft : "50px", paddingRight : "50px"}} className="input-group mb-3">
-                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" search_value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed}/>
+                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" search_value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed} autoFocus/>
                     <div className="input-group-append">
                         <Link to={"/search/" + search_value} className="btn btn-outline-secondary">
                             <FontAwesomeIcon icon={['fas', 'search']} size="sm"/> Search
