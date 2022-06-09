@@ -225,7 +225,7 @@ export default class Home extends Component{
         return(
             <Container fluid style={{paddingLeft: "50px", paddingRight: "50px"}}>
                 <div className="input-group mb-4">
-                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed}/>
+                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed} autoFocus/>
                     <div className="input-group-append">
                         <Link to={"/search/" + search_value} className="btn btn-outline-secondary">
                             <FontAwesomeIcon icon={['fas', 'search']} size="sm" style={{"marginRight": "0.25rem"}}/>{"Search"}
