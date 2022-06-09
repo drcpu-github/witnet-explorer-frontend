@@ -18,31 +18,49 @@ export default class BlockPanel extends Component {
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                                 <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
                                 <Link to={block_link}>{data.block_hash}</Link>
+                            </td>
+                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"DR weight"}
+                            </td>
+                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                                {data.dr_weight}
                             </td>
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                                 <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
                                 {TimeConverter.convertUnixTimestamp(data.time, "full") + " (epoch: " + data.epoch + ")"}
+                            </td>
+                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                <FontAwesomeIcon icon={["fas", "coins"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"VT weight"}
+                            </td>
+                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                                {data.vt_weight}
                             </td>
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                                 <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Miner"}
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
                                 <Link to={miner_link}>{miner}</Link>
+                            </td>
+                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                <FontAwesomeIcon icon={["fas", "feather"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Block weight"}
+                            </td>
+                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                                {data.block_weight}
                             </td>
                         </tr>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                                 <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
                                 {data.status}
                             </td>
                         </tr>
@@ -451,7 +469,7 @@ export default class BlockPanel extends Component {
                                     <td class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
                                         {tally_txn.num_liar_addresses}
                                     </td>
-                                    <td class="cell-fit-no-padding cell-truncate" style={{"width": "20%"}}>
+                                    <td class="cell-fit-no-padding cell-truncate" style={{"width": "30%"}}>
                                         {tally_txn.tally_translation}
                                     </td>
                                 </tr>
