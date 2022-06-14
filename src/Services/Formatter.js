@@ -1,5 +1,5 @@
 class Formatter {
-    formatValue(value, decimals) {
+    formatValue(value) {
         return value.toLocaleString();
     }
 
