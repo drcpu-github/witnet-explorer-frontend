@@ -14,6 +14,7 @@ export default class ValueTransferPanel extends Component {
 
         this.state = {
             showUtxos: false,
+            showNanoWitValues: false,
         };
     }
 
@@ -53,7 +54,11 @@ export default class ValueTransferPanel extends Component {
                             <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {Formatter.formatWitValue(transaction.fee, 2)}
+                            {
+                                this.state.showNanoWitValues
+                                    ? Formatter.formatValue(transaction.fee) + " nWIT"
+                                    : Formatter.formatWitValue(transaction.fee, 2)
+                            }
                         </td>
                     </tr>
                     <tr>
@@ -93,7 +98,7 @@ export default class ValueTransferPanel extends Component {
         );
     }
 
-    generateInputOutputAddresses(data) {
+    generateInputOutputAddresses(data, showNanoWitValues) {
         return (
             <Table>
                 <tbody>
@@ -110,7 +115,11 @@ export default class ValueTransferPanel extends Component {
                                         <Link to={input_link}>{input[0]}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
-                                        {Formatter.formatWitValue(input[1], 2)}
+                                        {
+                                            showNanoWitValues
+                                                ? Formatter.formatValue(input[1]) + " nWIT"
+                                                : Formatter.formatWitValue(input[1], 2)
+                                        }
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "center", "width": "10%"}}>
                                         {
@@ -129,7 +138,9 @@ export default class ValueTransferPanel extends Component {
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
                                         {
                                             idx < data.output_addresses.length
-                                                ? Formatter.formatWitValue(data.output_addresses[idx][1], 2)
+                                                ? showNanoWitValues
+                                                    ? Formatter.formatValue(data.output_addresses[idx][1]) + " nWIT"
+                                                    : Formatter.formatWitValue(data.output_addresses[idx][1], 2)
                                                 : ""
                                         }
                                     </td>
@@ -166,7 +177,11 @@ export default class ValueTransferPanel extends Component {
                                         <Link to={output_link}>{output[0]}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
-                                        {Formatter.formatWitValue(output[1], 2)}
+                                        {
+                                            showNanoWitValues
+                                                ? Formatter.formatValue(output[1]) + " nWIT"
+                                                : Formatter.formatWitValue(output[1], 2)
+                                        }
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "width": "15%"}}>
                                         {
@@ -189,7 +204,7 @@ export default class ValueTransferPanel extends Component {
         );
     }
 
-    generateInputOutputUtxos(data) {
+    generateInputOutputUtxos(data, showNanoWitValues) {
         let output_idx = 0;
 
         return (
@@ -205,7 +220,9 @@ export default class ValueTransferPanel extends Component {
                                             var input_address_link = <Link to={"/search/" + input_address}>{input_address}</Link>;
 
                                             var input_utxo_rows = data.input_utxos[key].map(function(input){
-                                                var input_value = Formatter.formatWitValue(input[0], 2);
+                                                var input_value = showNanoWitValues
+                                                    ? Formatter.formatValue(input[0]) + " nWIT"
+                                                    : Formatter.formatWitValue(input[0], 2);
                                                 var input_utxo_link = <Link to={"/search/" + input[1]}>{input[2] + ":" + input[1]}</Link>;
                                                 return (
                                                     <tr>
@@ -247,7 +264,9 @@ export default class ValueTransferPanel extends Component {
 
                                             var output_utxo_rows = data.output_utxos[key].map(function(output){
                                                 var output_text = output_idx + ":" + data.txn_hash;
-                                                var output_value = Formatter.formatWitValue(output[0], 2);
+                                                var output_value = showNanoWitValues
+                                                    ? Formatter.formatValue(output[0]) + " nWIT"
+                                                    : Formatter.formatWitValue(output[0], 2);
                                                 var output_timelock = output[2]
                                                     ? TimeConverter.convertUnixTimestamp(output[1], "full")
                                                     : "";
@@ -310,6 +329,22 @@ export default class ValueTransferPanel extends Component {
         );
     }
 
+    generateNanoWitValuesCheck() {
+        return (
+            <Form>
+                <Form.Check
+                    id="showNanoWitValues"
+                    inline={true}
+                    checked={this.state.showNanoWitValues}
+                    onChange={checked => {
+                        this.setState({ showNanoWitValues: !this.state.showNanoWitValues })
+                    }}
+                    label="Show values in nWIT"
+                />
+            </Form>
+        );
+    }
+
     render() {
         return (
             <Container fluid style={{"padding": "0px"}}>
@@ -322,11 +357,14 @@ export default class ValueTransferPanel extends Component {
                                 }
                                 {
                                     this.state.showUtxos
-                                        ? this.generateInputOutputUtxos(this.props.data)
-                                        : this.generateInputOutputAddresses(this.props.data)
+                                        ? this.generateInputOutputUtxos(this.props.data, this.state.showNanoWitValues)
+                                        : this.generateInputOutputAddresses(this.props.data, this.state.showNanoWitValues)
                                 }
                                 {
                                     this.generateUtxoCheck()
+                                }
+                                {
+                                    this.generateNanoWitValuesCheck()
                                 }
                             </Container>
                         </Card.Text>
