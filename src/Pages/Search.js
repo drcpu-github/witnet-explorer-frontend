@@ -83,20 +83,38 @@ export default class Search extends Component{
                 loading: true
             });
 
-            DataService.searchHash(value)
-            .then(response => {
-                this.setState({
-                    loading: false,
-                    search_response: response
-                });
-            })
-            .catch(e => {
-                console.log(e);
-                this.setState({
-                    loading: false,
-                    error_value: "Search value not found!"
-                });
-            });
+            if (Number.isInteger(Number(value)) && value.length <= 8) {
+                DataService.searchEpoch(value)
+                    .then(response => {
+                        this.setState({
+                            loading: false,
+                            search_response: response
+                        });
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.setState({
+                            loading: false,
+                            error_value: "Search value not found!"
+                        });
+                    });
+            }
+            else {
+                DataService.searchHash(value)
+                    .then(response => {
+                        this.setState({
+                            loading: false,
+                            search_response: response
+                        });
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.setState({
+                            loading: false,
+                            error_value: "Search value not found!"
+                        });
+                    });
+            }
         }
     }
 
@@ -134,7 +152,7 @@ export default class Search extends Component{
         );
     }
 
-    generateErrorPanel(error) {
+    generateErrorPanel(error, suppressError=false) {
         return (
             <Container fluid style={{"padding": "0px"}}>
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
@@ -143,9 +161,13 @@ export default class Search extends Component{
                             <Table>
                                 <tbody>
                                     <tr style={{"line-height": "20px"}}>
-                                        <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
-                                            <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Error"}
-                                        </td>
+                                        {
+                                            suppressError ?
+                                                <td style = {{ "border": "none"}}></td> :
+                                                <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
+                                                    <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Error"}
+                                                </td>
+                                        }
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                             {error}
                                         </td>
@@ -174,6 +196,10 @@ export default class Search extends Component{
                 // Check if the transaction is still pending or if an unknown hash was supplied
                 if (search_response.status === "pending" || search_response.status === "unknown hash") {
                     searchResultPanel = this.generateTransactionPanel(search_response);
+                }
+                // If not, check if it was a block
+                else if (search_response.type === "RnV0dXJlIGVwb2No") {
+                    searchResultPanel = this.generateErrorPanel(atob(search_response.value), true);
                 }
                 // If not, check if it was a block
                 else if (search_response.type === "block") {
