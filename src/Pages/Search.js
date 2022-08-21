@@ -83,20 +83,38 @@ export default class Search extends Component{
                 loading: true
             });
 
-            DataService.searchHash(value)
-            .then(response => {
-                this.setState({
-                    loading: false,
-                    search_response: response
-                });
-            })
-            .catch(e => {
-                console.log(e);
-                this.setState({
-                    loading: false,
-                    error_value: "Search value not found!"
-                });
-            });
+            if (Number.isInteger(Number(value)) && value.length <= 8) {
+                DataService.searchEpoch(value)
+                    .then(response => {
+                        this.setState({
+                            loading: false,
+                            search_response: response
+                        });
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.setState({
+                            loading: false,
+                            error_value: "Search value not found!"
+                        });
+                    });
+            }
+            else {
+                DataService.searchHash(value)
+                    .then(response => {
+                        this.setState({
+                            loading: false,
+                            search_response: response
+                        });
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.setState({
+                            loading: false,
+                            error_value: "Search value not found!"
+                        });
+                    });
+            }
         }
     }
 

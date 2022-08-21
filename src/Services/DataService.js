@@ -7,6 +7,10 @@ class DataService {
         return fetch("/api/address?value=" + address + "&tab=" + tab).then(response => response.json());
     }
 
+    searchEpoch(epoch) {
+        return fetch("/api/epoch?value=" + epoch).then(response => response.json());
+    }
+
     getBlockchain(action="init", block=-1) {
         var fetch_str = "/api/blockchain?action=" + action
         if (block !== -1) {
