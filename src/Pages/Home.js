@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import HistoryTypeahead from "../Components/HistoryTypeahead"
+
 import DataService from "../Services/DataService";
 import Formatter from "../Services/Formatter";
 import TimeConverter from "../Services/TimeConverter";
@@ -11,15 +13,11 @@ export default class Home extends Component{
     constructor(props) {
         super(props);
 
-        this.onChangeSearch = this.onChangeSearch.bind(this);
-        this.handleEnterPressed = this.handleEnterPressed.bind(this);
-
         this.getHomePageData = this.getHomePageData.bind(this);
 
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
         this.state = {
-            search_value: "",
             update_timestamp: "",
             window_width: 0,
             window_height: 0,
@@ -48,18 +46,6 @@ export default class Home extends Component{
     componentWillUnmount() {
         clearInterval(this.interval_id);
         window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-
-    onChangeSearch(search) {
-        this.setState({
-            search_value : search.target.value
-        });
-    }
-
-    handleEnterPressed(target) {
-        if (target.charCode === 13) {
-            window.open("/search/" + this.state.search_value, "_self");
-        }
     }
 
     getHomePageData() {
@@ -220,18 +206,11 @@ export default class Home extends Component{
     }
 
     render() {
-        const { search_value, update_timestamp } = this.state;
+        const { update_timestamp } = this.state;
 
         return(
             <Container fluid style={{paddingLeft: "50px", paddingRight: "50px"}}>
-                <div className="input-group mb-4">
-                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed} autoFocus/>
-                    <div className="input-group-append">
-                        <Link to={"/search/" + search_value} className="btn btn-outline-secondary">
-                            <FontAwesomeIcon icon={['fas', 'search']} size="sm" style={{"marginRight": "0.25rem"}}/>{"Search"}
-                        </Link>
-                    </div>
-                </div>
+                <HistoryTypeahead/>
                 <Row xs={1} md={2} lg={4}>
                     <Col>
                         <Card className="shadow pt-3 pb-2 pl-4 pr-4 mb-4 bg-white rounded">
