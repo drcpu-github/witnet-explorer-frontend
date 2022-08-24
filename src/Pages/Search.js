@@ -4,6 +4,8 @@ import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, Container, Table } from "react-bootstrap";
 
+import HistoryTypeahead from "../Components/HistoryTypeahead"
+
 import AddressPanel from "./SearchPages/AddressPanel"
 import BlockPanel from "./SearchPages/BlockPanel"
 import DataRequestReport from "./SearchPages/DataRequestPages/DataRequestReport"
@@ -60,6 +62,7 @@ export default class Search extends Component{
     }
 
     onChangeSearch(search) {
+        console.log("onChangeSearch: " + search)
         this.setState({
             search_value: search.target.value
         });
@@ -231,20 +234,11 @@ export default class Search extends Component{
             searchResultPanel = this.generateErrorPanel(error_value);
         }
 
-        return(
-            <div>
-                <div style={{paddingLeft : "50px", paddingRight : "50px"}} className="input-group mb-3">
-                    <input type="text" className="form-control" placeholder="Search an address, transaction, data request or block" search_value={search_value} onChange={this.onChangeSearch} onKeyPress={this.handleEnterPressed} autoFocus/>
-                    <div className="input-group-append">
-                        <Link to={"/search/" + search_value} className="btn btn-outline-secondary">
-                            <FontAwesomeIcon icon={['fas', 'search']} size="sm"/> Search
-                        </Link>
-                    </div>
-                </div>
-                <div style={{paddingLeft : "50px", paddingRight : "50px"}}>
-                    {searchResultPanel}
-                </div>
-            </div>
+        return (
+            <Container fluid style={{ paddingLeft: "50px", paddingRight: "50px", height: "100%" }}>
+                <HistoryTypeahead/>
+                {searchResultPanel}
+            </Container>
         );
     };
 }
