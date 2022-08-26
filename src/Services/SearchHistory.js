@@ -1,10 +1,10 @@
 class SearchHistory {
     getHistory() {
-        return JSON.parse(localStorage.getItem("search-history")).reverse() || []
+        return JSON.parse(localStorage.getItem("search-history") || "[]").reverse()
     }
 
     addToHistory(item) {
-        var history = JSON.parse(localStorage.getItem("search-history")) || []
+        var history = JSON.parse(localStorage.getItem("search-history") || "[]")
         if (history.includes(item)) {
             const index = history.indexOf(item);
             history.splice(index, 1);
