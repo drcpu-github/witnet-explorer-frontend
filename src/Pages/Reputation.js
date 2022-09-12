@@ -30,8 +30,8 @@ export default class Reputation extends Component{
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
-    getReputation() {
-        DataService.getReputation()
+    getReputation(epoch) {
+        DataService.getReputation(epoch)
         .then(response => {
             var new_reputation_rows = this.generateReputationRows(response.reputation, response.total_reputation);
             this.reputation_chart = this.generateChart(response.reputation, "linear");
@@ -40,7 +40,7 @@ export default class Reputation extends Component{
                 total_pages: Math.ceil(response.reputation.length / this.state.rows_per_page),
                 loading : false,
                 error_value : "",
-                last_updated : TimeConverter.convertUnixTimestamp(response.last_updated, "hour")
+                last_updated : TimeConverter.convertUnixTimestamp(response.last_updated, "full")
             });
         })
         .catch(e => {
@@ -65,7 +65,7 @@ export default class Reputation extends Component{
                         {reputation[1]}
                     </td>
                     <td className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
-                        {(reputation[2] / total_reputation * 100).toFixed(4) + "%"}
+                        {reputation[2].toFixed(4) + "%"}
                     </td>
                 </tr>
             );
@@ -153,7 +153,15 @@ export default class Reputation extends Component{
     }
 
     componentDidMount() {
-        this.getReputation();
+        const search = window.location.search;
+        const params = new URLSearchParams(search);
+
+        let epoch = "";
+        if (params.has("epoch")) {
+            epoch = params.get("epoch");
+        }
+
+        this.getReputation(epoch);
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
