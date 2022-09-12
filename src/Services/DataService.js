@@ -19,8 +19,13 @@ class DataService {
         return fetch(fetch_str).then(response => response.json());
     }
 
-    getReputation() {
-        return fetch("/api/reputation").then(response => response.json());
+    getReputation(epoch) {
+        if (epoch === "") {
+            return fetch("/api/reputation").then(response => response.json());
+        }
+        else {
+            return fetch("/api/reputation?epoch=" + epoch).then(response => response.json());
+        }
     }
 
     getBalances(start, stop) {
