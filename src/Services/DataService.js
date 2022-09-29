@@ -4,7 +4,14 @@ class DataService {
     }
 
     searchAddress(address, tab="transactions") {
-        return fetch("/api/address?value=" + address + "&tab=" + tab).then(response => response.json());
+        return fetch("/api/address?value=" + address + "&tab=" + tab).then(response => {
+            if (response.headers.get("Content-Type") === "application/json") {
+                return response.json();
+            }
+            else {
+                return response.blob();
+            }
+        });
     }
 
     searchEpoch(epoch) {

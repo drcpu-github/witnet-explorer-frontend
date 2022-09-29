@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Container, Spinner, Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Container, Image, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ErrorCard from "../../Components/ErrorCard";
@@ -22,6 +22,8 @@ export default class AddressPanel extends Component {
             address_blocks: null,
             address_data_requests_solved: null,
             address_data_requests_launched: null,
+            address_reputation: null,
+            address_reputation_type: null,
             error_value: "",
         };
 
@@ -43,6 +45,9 @@ export default class AddressPanel extends Component {
         }
         else if (tab === "data_requests_launched" && this.state.address_data_requests_launched === null) {
             this.loadData(this.state.address, "data_requests_launched");
+        }
+        else if (tab === "reputation" && this.state.address_reputation === null) {
+            this.loadData(this.state.address, "reputation");
         }
     }
 
@@ -73,6 +78,22 @@ export default class AddressPanel extends Component {
                 this.setState({
                     address_data_requests_launched: response.data_requests_launched,
                 });
+            }
+            else if (tab === "reputation") {
+                // A proper image was returned
+                if (response.type === "image/png") {
+                    this.setState({
+                        address_reputation: URL.createObjectURL(response),
+                        address_reputation_type: response.type,
+                    });
+                }
+                // A JSON object with an error message was returned
+                else {
+                    this.setState({
+                        address_reputation: response.error,
+                        address_reputation_type: response.type,
+                    });
+                }
             }
         })
         .catch(e => {
@@ -479,8 +500,30 @@ export default class AddressPanel extends Component {
         );
     }
 
+    generateReputationCard() {
+        if (this.state.address_reputation_type === "image/png") {
+            return (
+                <Container fluid style={{ display: "block", maxHeight: "55vh", overflowX: "auto", overflowY: "hidden"}}>
+                    <Image
+                        src={this.state.address_reputation}
+                        id={"reputation-" + this.state.address}
+                        alt={"Reputation plot for " + this.state.address}
+                        style={{ maxHeight: "54vh" }}
+                    />
+                </Container>
+            );
+        }
+        else {
+            return (
+                <Container fluid>
+                    {this.state.address_reputation}
+                </Container>
+            );
+        }
+    }
+
     render() {
-        const { address_details, address_value_transfers, address_blocks, address_data_requests_solved, address_data_requests_launched, error_value } = this.state;
+        const { address_details, address_value_transfers, address_blocks, address_data_requests_solved, address_data_requests_launched, address_reputation, error_value } = this.state;
 
         if (error_value === "") {
             return (
@@ -535,6 +578,15 @@ export default class AddressPanel extends Component {
                                                 address_data_requests_launched === null
                                                     ? <Spinner animation="border" />
                                                     : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
+                                            }
+                                        </Container>
+                                    </Tab>
+                                    <Tab eventKey="reputation" title="Reputation">
+                                        <Container fluid style={{ height: "55vh" }}>
+                                            {
+                                                address_reputation === null
+                                                    ? <Spinner animation="border" />
+                                                    : this.generateReputationCard()
                                             }
                                         </Container>
                                     </Tab>
