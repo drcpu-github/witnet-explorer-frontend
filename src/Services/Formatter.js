@@ -11,6 +11,24 @@ class Formatter {
         });
     }
 
+    // This function will reduce the number of decimal digits for every magnitude
+    // For example:
+    //    x digits when value is smaller than 10
+    //    x - 1 digits if the value is between 10 and 100
+    //    x - 2 digits if the value is between 100 and 1000
+    formatValueReducingDecimals(value, decimals) {
+        for (var i = 0; i < decimals; i++) {
+            if (value < Math.pow(10, i + 1)) {
+                var rounded_value = Math.round((value + Number.EPSILON) * Math.pow(10, decimals - i)) / Math.pow(10, decimals - i);
+                return rounded_value.toLocaleString(undefined, {
+                    minimumFractionDigits: decimals - i,
+                    maximumFractionDigits: decimals - i
+                });
+            }
+        }
+        return Math.round(value).toLocaleString();
+    }
+
     formatValueSuffix(value, decimals) {
         if (value > 1E9) {
             var billions = value / 1E9;

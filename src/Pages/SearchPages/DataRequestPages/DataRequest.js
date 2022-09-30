@@ -136,10 +136,18 @@ export default class DataRequest extends Component {
                     </tr>
                     <tr style={{"line-height": "20px"}}>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Miner fee"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {Formatter.formatWitValue(data_request.commit_and_reveal_fee, 0)}
+                            {Formatter.formatWitValue(data_request.miner_fee, 0)}
+                        </td>
+                    </tr>
+                    <tr style={{ "line-height": "20px" }}>
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Priority"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                            {Formatter.formatValueReducingDecimals(data_request.priority, 3)}
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}>
