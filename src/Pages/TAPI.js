@@ -74,14 +74,16 @@ export default class TAPI extends Component {
             // Create new map
             let tapi_update = {...this.state.tapi_data};
             // Remove the matching TAPI
-            for (var key in tapi_update) {
-                if (key === response["tapi_id"]) {
-                    tapi_update.delete(key);
-                    break;
+            for (var tapi_key in Object.keys(response)) {
+                for (var key in tapi_update) {
+                    if (key === response[tapi_key]["tapi_id"]) {
+                        tapi_update.delete(key);
+                        break;
+                    }
                 }
-            }
-            // Push the updated TAPI
-            tapi_update[response["tapi_id"]] = response;
+                // Push the updated TAPI
+                tapi_update[response[tapi_key]["tapi_id"]] = response[tapi_key];
+            };
             this.setState({
                 loading: false,
                 tapi_data: tapi_update,
