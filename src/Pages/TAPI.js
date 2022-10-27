@@ -254,8 +254,9 @@ export default class TAPI extends Component {
     generateTapiPanels() {
         // First set the default active TAPI to the first one
         let activeTapi;
-        if ("1" in this.state.tapi_data) {
-            activeTapi = this.state.tapi_data["1"]["title"].replace(" ", "_");
+        if (Object.keys(this.state.tapi_data).length > 0) {
+            const first_key = Object.keys(this.state.tapi_data)[0];
+            activeTapi = this.state.tapi_data[first_key]["title"].replace(" ", "_");
         }
         else {
             activeTapi = "";
