@@ -180,3 +180,10 @@ body {
     background: rgba(0,0,0,0.3);
     border-radius: 10px;
 }
+
+.flex-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
