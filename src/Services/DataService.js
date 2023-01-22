@@ -43,8 +43,8 @@ class DataService {
         return fetch("/api/home").then(response => response.json());
     }
 
-    getPendingTransactions() {
-        return fetch("/api/pending").then(response => response.json());
+    getMempool() {
+        return fetch("/api/mempool?key=history").then(response => response.json());
     }
 
     getNetwork() {

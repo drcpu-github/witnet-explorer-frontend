@@ -5,7 +5,7 @@ import { Navbar, Nav } from 'react-bootstrap'
 import Home from './Pages/Home';
 import Search from './Pages/Search';
 import Blockchain from './Pages/Blockchain';
-import Transactions from './Pages/Transactions';
+import Mempool from './Pages/Mempool';
 import Network from './Pages/Network';
 import Reputation from './Pages/Reputation';
 import Balances from './Pages/Balances';
@@ -29,7 +29,7 @@ class WitnetExplorer extends React.Component{
                                     <Nav className="mr-auto">
                                     <Nav.Link href="/search">Search</Nav.Link>
                                     <Nav.Link href="/blockchain">Blockchain</Nav.Link>
-                                    <Nav.Link href="/transactions">Transactions</Nav.Link>
+                                    <Nav.Link href="/mempool">Mempool</Nav.Link>
                                     <Nav.Link href="/network">Network</Nav.Link>
                                     <Nav.Link href="/reputation">Reputation</Nav.Link>
                                     <Nav.Link href="/balances">Balances</Nav.Link>
@@ -44,7 +44,7 @@ class WitnetExplorer extends React.Component{
                                 <Route exact path="/search" component={Search}/>
                                 <Route exact path="/search/:hash" component={Search}/>
                                 <Route path="/blockchain" component={Blockchain}/>
-                                <Route path="/transactions" component={Transactions}/>
+                                <Route path="/mempool" component={Mempool}/>
                                 <Route path="/network" component={Network}/>
                                 <Route path="/reputation" component={Reputation}/>
                                 <Route path="/balances" component={Balances}/>
