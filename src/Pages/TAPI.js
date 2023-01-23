@@ -317,7 +317,7 @@ export default class TAPI extends Component {
         let tapiPanels;
         if (error_value === "") {
             if (loading) {
-                tapiPanels = <SpinnerCard/>;
+                tapiPanels = <SpinnerCard height="85vh"/>;
             }
             else{
                 tapiPanels = this.generateTapiPanels();

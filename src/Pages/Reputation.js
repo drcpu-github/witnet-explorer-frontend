@@ -176,8 +176,8 @@ export default class Reputation extends Component{
         let reputation_list_card, reputation_chart_card;
         if (error_value === "") {
             if (loading) {
-                reputation_list_card = <SpinnerCard/>;
-                reputation_chart_card = <SpinnerCard/>;
+                reputation_list_card = <SpinnerCard height="85vh"/>;
+                reputation_chart_card = <SpinnerCard height="85vh"/>;
             }
             else{
                 reputation_list_card = this.generateReputationCard();

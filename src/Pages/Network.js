@@ -545,7 +545,7 @@ export default class Network extends Component {
         let data_card;
         if (error_value === null) {
             if (loading) {
-                data_card = <SpinnerCard/>;
+                data_card = <SpinnerCard height="75vh"/>;
             }
             else {
                 if (active_tab === "data_requests") {
