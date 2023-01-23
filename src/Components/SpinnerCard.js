@@ -12,7 +12,7 @@ class SpinnerCard extends Component {
 
     render() {
         return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "85vh"}}>
+            <Card className="shadow p-2 mb-2 bg-white rounded" style={{ height: this.props.height }}>
                 <Card.Body className="pt-3 pb-0">
                     <Card.Text>
                         <Spinner animation="border" />

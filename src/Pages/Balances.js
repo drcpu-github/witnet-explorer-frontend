@@ -152,7 +152,7 @@ export default class Balances extends Component{
         let balances_card;
         if (error_value === "") {
             if (loading) {
-                balances_card = <SpinnerCard/>;
+                balances_card = <SpinnerCard height="85vh"/>;
             }
             else{
                 balances_card = this.generateBalancesCard();
