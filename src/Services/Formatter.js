@@ -30,15 +30,15 @@ class Formatter {
     }
 
     formatValueSuffix(value, decimals) {
-        if (value > 1E9) {
+        if (value >= 1E9) {
             var billions = value / 1E9;
             return this.formatValueRound(billions, decimals) + "B";
         }
-        else if (value > 1E6) {
+        else if (value >= 1E6) {
             var millions = value / 1E6;
             return this.formatValueRound(millions, decimals) + "M";
         }
-        else if (value > 1E3) {
+        else if (value >= 1E3) {
             var thousands = value / 1E3;
             return this.formatValueRound(thousands, decimals) + "K";
         }
