@@ -47,7 +47,7 @@ class DataService {
         return fetch("/api/mempool?key=history").then(response => response.json());
     }
 
-    getNetwork(key, start_epoch = null, stop_epoch = null) {
+    getNetwork(key, start_epoch, stop_epoch) {
         if (start_epoch !== null && stop_epoch !== null)
             return fetch("/api/network?key=" + key + "&start-epoch=" + start_epoch + "&stop-epoch=" + stop_epoch).then(response => response.json());
         else if (start_epoch !== null)
