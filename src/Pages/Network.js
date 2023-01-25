@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Container, Tab, Table, Tabs } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Label, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -41,6 +41,8 @@ export default class Network extends Component {
         super(props);
         this.state = {
             loading: true,
+            start_epoch: null,
+            stop_epoch: null,
             error_value: null,
             period_data: null,
             aggregation: null,
@@ -52,10 +54,13 @@ export default class Network extends Component {
 
         this.getNetwork = this.getNetwork.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.setStartEpoch = this.setStartEpoch.bind(this);
+        this.setStopEpoch = this.setStopEpoch.bind(this);
     }
 
     getNetwork(key) {
-        DataService.getNetwork(key)
+        DataService.getNetwork(key, this.state.start_epoch, this.state.stop_epoch)
         .then(response => {
             this.setState({
                 loading: false,
@@ -89,7 +94,7 @@ export default class Network extends Component {
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -112,19 +117,31 @@ export default class Network extends Component {
     generateCompositionCard() {
         const period_data = this.state.period_data;
         var named_data = this.state.plot_data.map(function(data, idx) {
-            return (
-                {
-                    "epochs": period_data[idx],
-                    "composition_http_get": data[1] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
-                    "composition_http_post": data[2] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
-                    "composition_rng": data[3] / data[0] * 100,
-                }
-            );
+            if (data[1] + data[2] === 0 || data[0] === 0) {
+                return (
+                    {
+                        "epochs": period_data[idx],
+                        "composition_http_get": 0,
+                        "composition_http_post": 0,
+                        "composition_rng": 0,
+                    }
+                );
+            }
+            else {
+                return (
+                    {
+                        "epochs": period_data[idx],
+                        "composition_http_get": data[1] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
+                        "composition_http_post": data[2] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
+                        "composition_rng": data[3] / data[0] * 100,
+                    }
+                );
+            }
         });
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -155,7 +172,7 @@ export default class Network extends Component {
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -183,21 +200,33 @@ export default class Network extends Component {
     generateLieCard() {
         const period_data = this.state.period_data;
         var named_data = this.state.plot_data.map(function (data, idx) {
-            console.log(data);
-            return (
-                {
-                    "epochs": period_data[idx],
-                    "truth": (data[0] - data.slice(1, 4).reduce((a, b) => a + b)) / data[0] * 100,
-                    "error": data[1] / data[0] * 100,
-                    "no_reveal": data[2] / data[0] * 100,
-                    "no_consensus": data[3] / data[0] * 100,
-                }
-            );
+            if (data[0] === 0) {
+                return (
+                    {
+                        "epochs": period_data[idx],
+                        "truth": 0,
+                        "error": 0,
+                        "no_reveal": 0,
+                        "no_consensus": 0,
+                    }
+                );
+            }
+            else {
+                return (
+                    {
+                        "epochs": period_data[idx],
+                        "truth": (data[0] - data.slice(1, 4).reduce((a, b) => a + b)) / data[0] * 100,
+                        "error": data[1] / data[0] * 100,
+                        "no_reveal": data[2] / data[0] * 100,
+                        "no_consensus": data[3] / data[0] * 100,
+                    }
+                );
+            }
         });
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -232,7 +261,7 @@ export default class Network extends Component {
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -268,7 +297,7 @@ export default class Network extends Component {
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
                 <Card.Body class="flex-container" style={{ padding: 0 }}>
-                    <div style={{ "box-sizing": "border-box", "width": "33%", height: "75vh" }}>
+                    <div style={{ "box-sizing": "border-box", "width": "33%", height: "70vh" }}>
                         <ResponsiveContainer width="100%">
                             <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -283,7 +312,7 @@ export default class Network extends Component {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                    <div style={{ "box-sizing": "border-box", "width": "calc(66% - 40px)", "margin-left": "40px", height: "75vh" }}>
+                    <div style={{ "box-sizing": "border-box", "width": "calc(66% - 40px)", "margin-left": "40px", height: "70vh" }}>
                         <ResponsiveContainer width="100%">
                             <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -339,7 +368,7 @@ export default class Network extends Component {
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <ResponsiveContainer width="100%">
                         <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -371,7 +400,7 @@ export default class Network extends Component {
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
                 <Card.Body class="flex-container" style={{ padding: 0 }}>
-                    <div style={{ "box-sizing": "border-box", "width": "66%", "height": "75vh" }}>
+                    <div style={{ "box-sizing": "border-box", "width": "66%", "height": "70vh" }}>
                         <ResponsiveContainer width="100%">
                             <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -427,7 +456,7 @@ export default class Network extends Component {
     generateRollbackCard() {
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "75vh" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <Table hover responsive style={{ "border-collapse": "separate", "display": "block", "height": "70vh", "overflow-y": "scroll", "margin": "0px" }}>
                         <thead>
                             <tr class="th-fixed">
@@ -491,6 +520,25 @@ export default class Network extends Component {
         });
     }
 
+    handleClick() {
+        this.getNetwork(tab_request_map[this.state.active_tab]);
+        this.setState({
+            loading: true,
+        });
+    }
+
+    setStartEpoch(change) {
+        this.setState({
+            start_epoch: change.target.value,
+        });
+    }
+
+    setStopEpoch(change) {
+        this.setState({
+            stop_epoch: change.target.value,
+        });
+    }
+
     render() {
         const { loading, error_value, active_tab } = this.state;
 
@@ -544,6 +592,19 @@ export default class Network extends Component {
 
         return(
             <Container fluid>
+                <Form>
+                    <Row className="mb-1">
+                        <Form.Group as={Col} id="start-epoch" md="3" className="mb-1">
+                            <Form.Control type="text" placeholder="Start epoch" onChange={this.setStartEpoch}/>
+                        </Form.Group>
+                        <Form.Group as={Col} id="stop-epoch" md="3" className="mb-1">
+                            <Form.Control type="text" placeholder="Stop epoch" onChange={this.setStopEpoch}/>
+                        </Form.Group>
+                        <Button as={Col} variant="outline-secondary" md="1" type="submit" className="mb-1" onClick={this.handleClick}>
+                            Submit
+                        </Button>
+                    </Row>
+                </Form>
                 <Tabs defaultActiveKey="data_requests" id="network-tabs" onSelect={this.handleSelect}>
                     <Tab eventKey="data_requests" title="Data requests">
                         {data_card}
