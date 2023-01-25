@@ -98,7 +98,7 @@ export default class Network extends Component {
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                 <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                             </XAxis>
                             <YAxis width={50}>
@@ -145,7 +145,7 @@ export default class Network extends Component {
                     <ResponsiveContainer width="100%">
                         <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                 <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                             </XAxis>
                             <YAxis width={40} ticks={[0, 20, 40, 60, 80, 100]} domain={[0, 100]} tickFormatter={value => { return value + "%" }}>
@@ -176,7 +176,7 @@ export default class Network extends Component {
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                 <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                             </XAxis>
                             <YAxis width={50}>
@@ -230,7 +230,7 @@ export default class Network extends Component {
                     <ResponsiveContainer width="100%">
                         <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                 <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                             </XAxis>
                             <YAxis width={40} ticks={[0, 20, 40, 60, 80, 100]} domain={[0, 100]} tickFormatter={value => { return value + "%" }}>
@@ -265,7 +265,7 @@ export default class Network extends Component {
                     <ResponsiveContainer width="100%">
                         <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                 <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                             </XAxis>
                             <YAxis width={50}>
@@ -301,7 +301,7 @@ export default class Network extends Component {
                         <ResponsiveContainer width="100%">
                             <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                     <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                                 </XAxis>
                                 <YAxis width={50}>
@@ -316,7 +316,7 @@ export default class Network extends Component {
                         <ResponsiveContainer width="100%">
                             <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2) }}>
+                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
                                     <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
                                 </XAxis>
                                 <YAxis width={50} scale="log" domain={['auto', 'auto']}>
