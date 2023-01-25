@@ -11,6 +11,14 @@ class Formatter {
         });
     }
 
+    formatValueFloor(value, decimals) {
+        var floored_value = Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        return floored_value.toLocaleString(undefined, {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
+
     // This function will reduce the number of decimal digits for every magnitude
     // For example:
     //    x digits when value is smaller than 10
@@ -29,21 +37,33 @@ class Formatter {
         return Math.round(value).toLocaleString();
     }
 
-    formatValueSuffix(value, decimals) {
+    formatValueSuffix(value, decimals, round=true) {
         if (value >= 1E9) {
             var billions = value / 1E9;
-            return this.formatValueRound(billions, decimals) + "B";
+            if (round)
+                return this.formatValueRound(billions, decimals) + "B";
+            else
+                return this.formatValueFloor(billions, decimals) + "B";
         }
         else if (value >= 1E6) {
             var millions = value / 1E6;
-            return this.formatValueRound(millions, decimals) + "M";
+            if (round)
+                return this.formatValueRound(millions, decimals) + "M";
+            else
+                return this.formatValueFloor(millions, decimals) + "M";
         }
         else if (value >= 1E3) {
             var thousands = value / 1E3;
-            return this.formatValueRound(thousands, decimals) + "K";
+            if (round)
+                return this.formatValueRound(thousands, decimals) + "K";
+            else
+                return this.formatValueFloor(thousands, decimals) + "K";
         }
         else {
-            return value;
+            if (round)
+                return this.formatValueRound(value, decimals);
+            else
+                return this.formatValueFloor(value, decimals);
         }
     }
 
