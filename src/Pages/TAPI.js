@@ -214,6 +214,16 @@ export default class TAPI extends Component {
     }
 
     generateTapiAcceptanceScatter(start_epoch, grouped_acceptance) {
+        // Short-circuit for when the TAPI has not started yet
+        if (grouped_acceptance.length === 0)
+        {
+            return (
+                <Card className="shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px", width: "100%" }}>
+                    <Card.Body style={{ padding: "10px" }}/>
+                </Card>
+            );
+        }
+
         // Convert acceptance 32-bit integers to binary
         var acceptance = [];
         for (let i = 0; i < grouped_acceptance.length - 1; i++) {
