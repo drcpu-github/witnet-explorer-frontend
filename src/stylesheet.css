@@ -182,13 +182,13 @@ body {
 }
 
 .flex-container {
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .img-pixels {
-  width: 100%;
-  image-rendering: pixelated;
+    width: 100%;
+    image-rendering: pixelated;
 }

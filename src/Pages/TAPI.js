@@ -45,9 +45,9 @@ export default class TAPI extends Component {
 
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{marginTop: "15px"}}>
-                <Card.Body style={{padding: "10px"}}>
-                    <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "40vh"}}>
-                        <Table responsive style={{"display": "block", "overflow": "auto", "height": "30vh", "marginBottom": "0rem"}}>
+                <Card.Body style={{ padding: "10px", height: "45vh"}}>
+                    <Container fluid style={{"margin": "0rem", "padding": "0rem", "height": "45vh"}}>
+                        <Table responsive style={{"display": "block", "overflow": "auto", "height": "45vh", "marginBottom": "0rem"}}>
                             <tbody>
                                 <tr style={{"line-height": "20px"}}>
                                     <td class="cell-fit" style={{"border": "none"}}>
@@ -131,8 +131,8 @@ export default class TAPI extends Component {
     generateTapiAcceptanceGraph(acceptance_rates) {
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{marginTop: "15px"}}>
-                <Card.Body style={{padding: "10px"}}>
-                    <ResponsiveContainer width="100%" height="50%" minWidth={500} minHeight={300}>
+                <Card.Body style={{ padding: 0, height: "45vh" }}>
+                    <ResponsiveContainer width="100%">
                         <ComposedChart data={acceptance_rates} margin={{top: 10, right: 10, left: 10, bottom: 10}} barGap={2}>
                             <CartesianGrid strokeDasharray="3 3"/>
                             <XAxis dataKey="label" tick={false}>
@@ -159,7 +159,7 @@ export default class TAPI extends Component {
         if (scatter_data === "The TAPI did not start yet" || scatter_data === "Could not find TAPI plot") {
             return (
                 <Card className="shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px", width: "100%" }}>
-                    <Card.Body style={{ padding: "10px" }}>
+                    <Card.Body style={{ padding: "10px", height: "25vh" }}>
                         {scatter_data}
                     </Card.Body>
                 </Card>
@@ -168,7 +168,7 @@ export default class TAPI extends Component {
         else {
             return (
                 <Card className="shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px", width: "100%" }}>
-                    <Card.Body style={{ padding: "10px" }}>
+                    <Card.Body style={{ padding: "10px", height: "25vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <img className="img-pixels" src={`data:image/png;base64,${scatter_data}`} alt={"Scatter plot for TAPI of " + title}/>
                     </Card.Body>
                 </Card>
