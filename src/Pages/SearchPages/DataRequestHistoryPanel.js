@@ -10,7 +10,6 @@ import TimeConverter from "../../Services/TimeConverter";
 
 export default class DataRequestHistoryPanel extends Component {
     generateDetailsCard(data) {
-        const bytes_hash_link = "/search/" + data.bytes_hash;
         const RAD_bytes_hash_link = "/search/" + data.RAD_bytes_hash;
 
         return (
@@ -30,10 +29,10 @@ export default class DataRequestHistoryPanel extends Component {
                                 ? <span></span>
                                 : <tr>
                                     <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                        <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Request hash"}
+                                        <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"DRO hash"}
                                     </td>
                                     <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                        <Link to={bytes_hash_link}>{data.bytes_hash}</Link>
+                                        {data.bytes_hash}
                                     </td>
                                 </tr>
                         }
