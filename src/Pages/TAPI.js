@@ -1,7 +1,7 @@
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
-import { ResponsiveContainer, CartesianGrid, ComposedChart, XAxis, YAxis, Label, ReferenceLine, Scatter, ScatterChart, Tooltip, Bar } from "recharts";
+import { ResponsiveContainer, CartesianGrid, ComposedChart, XAxis, YAxis, Label, ReferenceLine, Tooltip, Bar } from "recharts";
 
 import ErrorCard from "../Components/ErrorCard";
 import SpinnerCard from "../Components/SpinnerCard";
@@ -9,34 +9,6 @@ import SpinnerCard from "../Components/SpinnerCard";
 import DataService from "../Services/DataService";
 import Formatter from "../Services/Formatter";
 import TimeConverter from "../Services/TimeConverter";
-
-class BlockTooltip extends PureComponent {
-    render() {
-        const { active, payload, start_epoch } = this.props;
-        if (active && payload && payload.length) {
-            const block = start_epoch + payload[0].payload.x + (27 - payload[0].payload.y) * 960;
-            return (
-                <div className="custom-tooltip">
-                    <p className="label" style={{"padding": 0, "margin": 0}}>{`Block ${block}`}</p>
-                    <p className="label" style={{"padding": 0, "margin": 0}}>{`Accept: ${payload[0].payload.accept}`}</p>
-                </div>
-            );
-        }
-        return null;
-    }
-};
-
-class CustomScatterMarker extends PureComponent {
-    render() {
-        const { cx, cy, color } = this.props;
-        const width = 2, height = 4;
-        return (
-            <svg width={width} height={height} style={{"overflow": "visible"}}>
-                <rect x={cx} y={cy} width={width} height={height} stroke={color} strokeWidth="0" fill={color}/>
-            </svg>
-        );
-    }
-}
 
 export default class TAPI extends Component {
     constructor(props) {
@@ -183,54 +155,25 @@ export default class TAPI extends Component {
         );
     }
 
-    generateTapiAcceptanceScatter(start_epoch, grouped_acceptance) {
-        // Short-circuit for when the TAPI has not started yet
-        if (grouped_acceptance.length === 0)
-        {
+    generateTapiAcceptanceScatter(title, scatter_data) {
+        if (scatter_data === "The TAPI did not start yet" || scatter_data === "Could not find TAPI plot") {
             return (
                 <Card className="shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px", width: "100%" }}>
-                    <Card.Body style={{ padding: "10px" }}/>
+                    <Card.Body style={{ padding: "10px" }}>
+                        {scatter_data}
+                    </Card.Body>
                 </Card>
             );
         }
-
-        // Convert acceptance 32-bit integers to binary
-        var acceptance = [];
-        for (let i = 0; i < grouped_acceptance.length - 1; i++) {
-            let zero_padded_binary_str = grouped_acceptance[i].toString(2);
-            zero_padded_binary_str = "0".repeat(32 - zero_padded_binary_str.length) + zero_padded_binary_str;
-            acceptance.push(...zero_padded_binary_str.split(""));
+        else {
+            return (
+                <Card className="shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px", width: "100%" }}>
+                    <Card.Body style={{ padding: "10px" }}>
+                        <img className="img-pixels" src={`data:image/png;base64,${scatter_data}`} alt={"Scatter plot for TAPI of " + title}/>
+                    </Card.Body>
+                </Card>
+            );
         }
-        acceptance.push(...grouped_acceptance[grouped_acceptance.length - 1].split(""));
-
-        // Create accept and reject (tiled) lists for the scatter plot
-        var accept = [], reject = [];
-        for (let i = 0; i < 28; i++) {
-            for (let j = 0; j < 960; j++) {
-                if (acceptance[i * 960 + j] === "0") {
-                    reject.push({x: j, y: 27-i, accept: "no"})
-                }
-                else if (acceptance[i * 960 + j] === "1") {
-                    accept.push({x: j, y: 27-i, accept: "yes"})
-                }
-            }
-        }
-
-        return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{marginTop: "15px", width: "100%"}}>
-                <Card.Body style={{padding: "10px"}}>
-                    <ResponsiveContainer width="100%" height={150}>
-                        <ScatterChart margin={{top: 20, right: 20, bottom: 20, left: 20}}>
-                            <XAxis dataKey="x" type="number" tick={false} hide={true} height={5} domain={[0, 960]}/>
-                            <YAxis dataKey="y" type="number" tick={false} hide={true} width={5} domain={[0, 28]}/>
-                            <Tooltip content={<BlockTooltip start_epoch={start_epoch}/>}/>
-                            <Scatter data={accept} fill="#0bb1a5" shape={<CustomScatterMarker color={"#0bb1a5"}/>} isAnimationActive={false}/>
-                            <Scatter data={reject} fill="#12243a" shape={<CustomScatterMarker color={"#12243a"}/>} isAnimationActive={false}/>
-                        </ScatterChart>
-                    </ResponsiveContainer>
-                </Card.Body>
-            </Card>
-        );
     }
 
     generateTapiPanels() {
@@ -257,7 +200,7 @@ export default class TAPI extends Component {
                         let tapi = this.state.tapi_data[key];
                         let tapi_details = this.generateTapiDetailsCard(tapi);
                         let tapi_graph = this.generateTapiAcceptanceGraph(tapi["rates"]);
-                        let tapi_scatter = this.generateTapiAcceptanceScatter(tapi["start_epoch"], tapi["accept"])
+                        let tapi_scatter = this.generateTapiAcceptanceScatter(tapi["title"], tapi["plot"]);
                         return (
                             <Tab eventKey={tapi["title"].replace(" ", "_")} title={tapi["title"]}>
                                 <Row>

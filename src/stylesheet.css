@@ -187,3 +187,8 @@ body {
   flex-wrap: wrap;
   width: 100%;
 }
+
+.img-pixels {
+  width: 100%;
+  image-rendering: pixelated;
+}
