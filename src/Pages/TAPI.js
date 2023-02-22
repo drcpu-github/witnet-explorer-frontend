@@ -47,46 +47,16 @@ export default class TAPI extends Component {
             tapi_data: {},
         };
 
-        this.initTapi = this.initTapi.bind(this);
-        this.updateTapi = this.updateTapi.bind(this);
+        this.getTapi = this.getTapi.bind(this);
         this.generateTapiPanels = this.generateTapiPanels.bind(this);
     }
 
-    initTapi() {
-        DataService.initTapi()
+    getTapi() {
+        DataService.getTapi()
         .then(response => {
             this.setState({
                 loading: false,
                 tapi_data: response,
-            });
-        })
-        .catch(e => {
-            console.log(e);
-            this.setState({
-                error_value: "Could not fetch TAPI data!"
-            });
-        });
-    }
-
-    updateTapi() {
-        DataService.updateTapi()
-        .then(response => {
-            // Create new map
-            let tapi_update = {...this.state.tapi_data};
-            // Remove the matching TAPI
-            for (var tapi_key in Object.keys(response)) {
-                for (var key in tapi_update) {
-                    if (key === response[tapi_key]["tapi_id"]) {
-                        tapi_update.delete(key);
-                        break;
-                    }
-                }
-                // Push the updated TAPI
-                tapi_update[response[tapi_key]["tapi_id"]] = response[tapi_key];
-            };
-            this.setState({
-                loading: false,
-                tapi_data: tapi_update,
             });
         })
         .catch(e => {
@@ -312,13 +282,7 @@ export default class TAPI extends Component {
     }
 
     componentDidMount() {
-        this.initTapi();
-        // run every 5 minutes
-        this.interval_id = setInterval(this.updateTapi, 300000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval_id);
+        this.getTapi();
     }
 
     render() {

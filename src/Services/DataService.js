@@ -58,12 +58,8 @@ class DataService {
             return fetch("/api/network?key=" + key).then(response => response.json());
     }
 
-    initTapi() {
-        return fetch("/api/tapi?action=init").then(response => response.json());
-    }
-
-    updateTapi() {
-        return fetch("/api/tapi?action=update").then(response => response.json());
+    getTapi() {
+        return fetch("/api/tapi").then(response => response.json());
     }
 }
 
