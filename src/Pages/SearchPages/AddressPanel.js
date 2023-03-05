@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Container, Image, Spinner, Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Col, Container, Image, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ErrorCard from "../../Components/ErrorCard";
@@ -18,6 +18,7 @@ export default class AddressPanel extends Component {
         this.state = {
             address: props.address,
             address_details: null,
+            address_info: null,
             address_value_transfers: null,
             address_blocks: null,
             address_data_requests_solved: null,
@@ -29,6 +30,7 @@ export default class AddressPanel extends Component {
 
         if (this.state.address !== "") {
             this.loadData(this.state.address, "details");
+            this.loadData(this.state.address, "info");
             this.loadData(this.state.address, "value_transfers");
         }
     }
@@ -57,6 +59,11 @@ export default class AddressPanel extends Component {
             if (tab === "details") {
                 this.setState({
                     address_details: response,
+                });
+            }
+            else if (tab === "info") {
+                this.setState({
+                    address_info: response,
                 });
             }
             else if (tab === "value_transfers") {
@@ -149,6 +156,49 @@ export default class AddressPanel extends Component {
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
                                 {data.label}
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </Container>
+        );
+    }
+
+    generateInfoCard(info) {
+        return (
+            <Container fluid>
+                <Table>
+                    <tbody>
+                        <tr>
+                            <td style={{ "padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap" }}>
+                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Blocks"}
+                            </td>
+                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                                {info.block}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ "padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap" }}>
+                                <FontAwesomeIcon icon={["fas", "coins"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Value transfers"}
+                            </td>
+                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                                {info.value_transfer}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ "padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap" }}>
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests created"}
+                            </td>
+                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                                {info.data_request}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{ "padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap" }}>
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests solved"}
+                            </td>
+                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                                {info.commit}
                             </td>
                         </tr>
                     </tbody>
@@ -531,77 +581,94 @@ export default class AddressPanel extends Component {
     }
 
     render() {
-        const { address_details, address_value_transfers, address_blocks, address_data_requests_solved, address_data_requests_launched, address_reputation, error_value } = this.state;
+        const { address, address_details, address_info, address_value_transfers, address_blocks, address_data_requests_solved, address_data_requests_launched, address_reputation, error_value } = this.state;
 
         if (error_value === "") {
             return (
                 <Container fluid style={{"padding": "0px"}}>
-                    <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
-                        <Card.Body className="p-1">
-                            <Card.Text>
-                                <Container fluid style={{paddingLeft: "0px", paddingRight: "0px", "height": "80px"}}>
-                                    {
-                                        address_details === null
-                                            ? <Spinner animation="border" />
-                                            : this.generateDetailsCard(address_details)
-                                    }
-                                </Container>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
-                        <Card.Body className="p-1">
-                            <Card.Text>
-                                <Tabs defaultActiveKey="value_transfers" id="uncontrolled-tab-example" onSelect={this.handleSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
-                                    <Tab eventKey="value_transfers" title="Transactions">
-                                        <Container fluid style={{height: "50vh"}}>
-                                            {
-                                                address_value_transfers === null
-                                                    ? <Spinner animation="border" />
-                                                    : this.generateValueTransferCard(address_value_transfers)
-                                            }
-                                        </Container>
-                                    </Tab>
-                                    <Tab eventKey="blocks" title="Blocks">
-                                        <Container fluid style={{ height: "50vh" }}>
-                                            {
-                                                address_blocks === null
-                                                    ? <Spinner animation="border" />
-                                                    : this.generateBlocksCard(address_blocks)
-                                            }
-                                        </Container>
-                                    </Tab>
-                                    <Tab eventKey="data_requests_solved" title="Data requests solved">
-                                        <Container fluid style={{ height: "50vh" }}>
-                                            {
-                                                address_data_requests_solved === null
-                                                    ? <Spinner animation="border" />
-                                                    : this.generateDataRequestsSolvedCard(address_data_requests_solved)
-                                            }
-                                        </Container>
-                                    </Tab>
-                                    <Tab eventKey="data_requests_launched" title="Data requests launched">
-                                        <Container fluid style={{ height: "50vh" }}>
-                                            {
-                                                address_data_requests_launched === null
-                                                    ? <Spinner animation="border" />
-                                                    : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
-                                            }
-                                        </Container>
-                                    </Tab>
-                                    <Tab eventKey="reputation" title="Reputation">
-                                        <Container fluid style={{ height: "50vh" }}>
-                                            {
-                                                address_reputation === null
-                                                    ? <Spinner animation="border" />
-                                                    : this.generateReputationCard()
-                                            }
-                                        </Container>
-                                    </Tab>
-                                </Tabs>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                    <Row>
+                        <Col xs={8} className="col mb-2">
+                            <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
+                                <Card.Body className="p-1">
+                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
+                                        {
+                                            address_details === null
+                                                ? <Spinner animation="border" />
+                                                : this.generateDetailsCard(address_details)
+                                        }
+                                    </Container>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col xs={4} className="col mb-2">
+                            <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
+                                <Card.Body className="p-1">
+                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
+                                        {
+                                            address_info === null
+                                                ? <Spinner animation="border" />
+                                                : this.generateInfoCard(address_info[address])
+                                        }
+                                    </Container>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
+                                <Card.Body className="p-1">
+                                    <Tabs defaultActiveKey="value_transfers" id="uncontrolled-tab-example" onSelect={this.handleSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
+                                        <Tab eventKey="value_transfers" title="Transactions">
+                                            <Container fluid style={{height: "50vh"}}>
+                                                {
+                                                    address_value_transfers === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateValueTransferCard(address_value_transfers)
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="blocks" title="Blocks">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    address_blocks === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateBlocksCard(address_blocks)
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="data_requests_solved" title="Data requests solved">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    address_data_requests_solved === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateDataRequestsSolvedCard(address_data_requests_solved)
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="data_requests_launched" title="Data requests launched">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    address_data_requests_launched === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="reputation" title="Reputation">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    address_reputation === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateReputationCard()
+                                                }
+                                            </Container>
+                                        </Tab>
+                                    </Tabs>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
                 </Container>
             );
         }
