@@ -143,6 +143,14 @@ export default class AddressPanel extends Component {
                                 }
                             </td>
                         </tr>
+                        <tr>
+                            <td style={{ "padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap" }}>
+                                <FontAwesomeIcon icon={["far", "id-card"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Label"}
+                            </td>
+                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                                {data.label}
+                            </td>
+                        </tr>
                     </tbody>
                 </Table>
             </Container>
@@ -151,7 +159,7 @@ export default class AddressPanel extends Component {
 
     generateValueTransferCard(value_transfers) {
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit">
@@ -255,7 +263,7 @@ export default class AddressPanel extends Component {
 
     generateBlocksCard(blocks) {
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit">
@@ -338,7 +346,7 @@ export default class AddressPanel extends Component {
 
     generateDataRequestsSolvedCard(data_requests_solved) {
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
@@ -415,7 +423,7 @@ export default class AddressPanel extends Component {
 
     generateDataRequestsLaunchedCard(data_requests_launched) {
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "55vh" }}>
+            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
@@ -503,7 +511,7 @@ export default class AddressPanel extends Component {
     generateReputationCard() {
         if (this.state.address_reputation_type === "image/png") {
             return (
-                <Container fluid style={{ display: "block", maxHeight: "55vh", overflowX: "auto", overflowY: "hidden"}}>
+                <Container fluid style={{ display: "block", maxHeight: "50vh", overflowX: "auto", overflowY: "hidden"}}>
                     <Image
                         src={this.state.address_reputation}
                         id={"reputation-" + this.state.address}
@@ -531,7 +539,7 @@ export default class AddressPanel extends Component {
                     <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                         <Card.Body className="p-1">
                             <Card.Text>
-                                <Container fluid style={{paddingLeft: "0px", paddingRight: "0px", "height": "60px"}}>
+                                <Container fluid style={{paddingLeft: "0px", paddingRight: "0px", "height": "80px"}}>
                                     {
                                         address_details === null
                                             ? <Spinner animation="border" />
@@ -546,7 +554,7 @@ export default class AddressPanel extends Component {
                             <Card.Text>
                                 <Tabs defaultActiveKey="value_transfers" id="uncontrolled-tab-example" onSelect={this.handleSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
                                     <Tab eventKey="value_transfers" title="Transactions">
-                                        <Container fluid style={{height: "55vh"}}>
+                                        <Container fluid style={{height: "50vh"}}>
                                             {
                                                 address_value_transfers === null
                                                     ? <Spinner animation="border" />
@@ -555,7 +563,7 @@ export default class AddressPanel extends Component {
                                         </Container>
                                     </Tab>
                                     <Tab eventKey="blocks" title="Blocks">
-                                        <Container fluid style={{ height: "55vh" }}>
+                                        <Container fluid style={{ height: "50vh" }}>
                                             {
                                                 address_blocks === null
                                                     ? <Spinner animation="border" />
@@ -564,7 +572,7 @@ export default class AddressPanel extends Component {
                                         </Container>
                                     </Tab>
                                     <Tab eventKey="data_requests_solved" title="Data requests solved">
-                                        <Container fluid style={{ height: "55vh" }}>
+                                        <Container fluid style={{ height: "50vh" }}>
                                             {
                                                 address_data_requests_solved === null
                                                     ? <Spinner animation="border" />
@@ -573,7 +581,7 @@ export default class AddressPanel extends Component {
                                         </Container>
                                     </Tab>
                                     <Tab eventKey="data_requests_launched" title="Data requests launched">
-                                        <Container fluid style={{ height: "55vh" }}>
+                                        <Container fluid style={{ height: "50vh" }}>
                                             {
                                                 address_data_requests_launched === null
                                                     ? <Spinner animation="border" />
@@ -582,7 +590,7 @@ export default class AddressPanel extends Component {
                                         </Container>
                                     </Tab>
                                     <Tab eventKey="reputation" title="Reputation">
-                                        <Container fluid style={{ height: "55vh" }}>
+                                        <Container fluid style={{ height: "50vh" }}>
                                             {
                                                 address_reputation === null
                                                     ? <Spinner animation="border" />
