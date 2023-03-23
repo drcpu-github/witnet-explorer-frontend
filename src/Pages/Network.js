@@ -17,6 +17,7 @@ const tab_request_map = {
     "collaterals": "histogram-data-request-collateral",
     "rewards": "histogram-data-request-reward",
     "lie_rates": "histogram-data-request-lie-rate",
+    "supply_burn_rate": "histogram-supply-burn-rate",
     "trs": "histogram-trs-data",
     "value_transfers": "histogram-value-transfers",
     "staking": "percentile-staking-balances",
@@ -242,6 +243,40 @@ export default class Network extends Component {
                             <Area name="No reveal" dataKey="no_reveal" stackId="lie_rate" fill="#12243a" stroke="#12243a" />
                             <Area name="No consensus" dataKey="no_consensus" stackId="lie_rate" fill="#b10b17" stroke="#b10b17" />
                         </AreaChart>
+                    </ResponsiveContainer>
+                </Card.Body>
+            </Card>
+        );
+    }
+
+    generateBurnCard() {
+        const period_data = this.state.period_data;
+        var named_data = this.state.plot_data.map(function (data, idx) {
+            return (
+                {
+                    "epochs": period_data[idx],
+                    "blocks_reverted": data[0],
+                    "data_request_lies": data[1],
+                }
+            );
+        });
+
+        return (
+            <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
+                <Card.Body style={{ padding: 0, height: "70vh" }}>
+                    <ResponsiveContainer width="100%">
+                        <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
+                                <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
+                            </XAxis>
+                            <YAxis width={50}>
+                                <Label value="Amount (WIT)" angle={270} position="left" textAnchor="middle" />
+                            </YAxis>
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} />
+                            <Bar name="Reverts" dataKey="blocks_reverted" stackId="burned" fill="#0bb1a5" stroke="#12243a" />
+                            <Bar name="Lies" dataKey="data_request_lies" stackId="burned" fill="#b10b17" stroke="#b10b17" />
+                        </BarChart>
                     </ResponsiveContainer>
                 </Card.Body>
             </Card>
@@ -566,6 +601,9 @@ export default class Network extends Component {
                 else if (active_tab === "lie_rates") {
                     data_card = this.generateLieCard();
                 }
+                else if (active_tab === "supply_burn_rate") {
+                    data_card = this.generateBurnCard();
+                }
                 else if (active_tab === "value_transfers") {
                     data_card = this.generateValueTransfersCard();
                 }
@@ -622,6 +660,9 @@ export default class Network extends Component {
                         {data_card}
                     </Tab>
                     <Tab eventKey="lie_rates" title="Lie rates">
+                        {data_card}
+                    </Tab>
+                    <Tab eventKey="supply_burn_rate" title="Supply burn">
                         {data_card}
                     </Tab>
                     <Tab eventKey="value_transfers" title="Value transfers">
