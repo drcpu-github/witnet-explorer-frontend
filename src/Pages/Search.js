@@ -200,6 +200,9 @@ export default class Search extends Component{
                 if (search_response.status === "pending" || search_response.status === "unknown hash") {
                     searchResultPanel = this.generateTransactionPanel(search_response);
                 }
+                else if (search_response.status === "error") {
+                    searchResultPanel = this.generateErrorPanel(search_response.error);
+                }
                 // If not, check if it was a block
                 else if (search_response.type === "RnV0dXJlIGVwb2No") {
                     searchResultPanel = this.generateErrorPanel(atob(search_response.value), true);
