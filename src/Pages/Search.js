@@ -161,7 +161,7 @@ export default class Search extends Component{
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                     <Card.Body className="p-3">
                         <Card.Text>
-                            <Table>
+                            <Table style={{"margin": "0px"}}>
                                 <tbody>
                                     <tr style={{"line-height": "20px"}}>
                                         {
