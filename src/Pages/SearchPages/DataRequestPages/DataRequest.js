@@ -115,7 +115,7 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["fas", "trophy"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Reward"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {Formatter.formatWitValue(data_request.witness_reward, 0)}
+                            {Formatter.formatWitValue(data_request.witness_reward, 2)}
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}>
@@ -139,7 +139,7 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Miner fee"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {Formatter.formatWitValue(data_request.miner_fee, 0)}
+                            {Formatter.formatWitValue(data_request.miner_fee, 2)}
                         </td>
                     </tr>
                     <tr style={{ "line-height": "20px" }}>
