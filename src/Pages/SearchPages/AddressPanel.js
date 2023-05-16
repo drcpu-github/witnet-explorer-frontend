@@ -164,7 +164,33 @@ export default class AddressPanel extends Component {
         );
     }
 
-    generateInfoCard(info) {
+    generateInfoCard(address, info) {
+        let blocks, value_transfers, data_requests, commits;
+        if (address in info) {
+            blocks = info[address].block;
+            value_transfers = info[address].value_transfer;
+            data_requests = info[address].data_request;
+            commits = info[address].commit;
+        }
+        else if ("error" in info && info.error === "could not find address") {
+            blocks = 0;
+            value_transfers = 0;
+            data_requests = 0;
+            commits = 0;
+        }
+        else {
+            return (
+                <Container fluid>
+                    <Table>
+                        <tbody>
+                            <tr>
+                                {"Could not fetch address info"}
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Container>
+            );
+        }
         return (
             <Container fluid>
                 <Table>
@@ -174,7 +200,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Blocks"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {info.block}
+                                {blocks}
                             </td>
                         </tr>
                         <tr>
@@ -182,7 +208,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "coins"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Value transfers"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {info.value_transfer}
+                                {value_transfers}
                             </td>
                         </tr>
                         <tr>
@@ -190,7 +216,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests created"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {info.data_request}
+                                {data_requests}
                             </td>
                         </tr>
                         <tr>
@@ -198,7 +224,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests solved"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {info.commit}
+                                {commits}
                             </td>
                         </tr>
                     </tbody>
@@ -607,7 +633,7 @@ export default class AddressPanel extends Component {
                                         {
                                             address_info === null
                                                 ? <Spinner animation="border" />
-                                                : this.generateInfoCard(address_info[address])
+                                                : this.generateInfoCard(address, address_info)
                                         }
                                     </Container>
                                 </Card.Body>
