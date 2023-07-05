@@ -98,7 +98,7 @@ export default class Search extends Component{
                         console.log(e);
                         this.setState({
                             loading: false,
-                            error_value: "Search value not found!"
+                            error_value: "Search value not found"
                         });
                     });
             }
@@ -114,7 +114,7 @@ export default class Search extends Component{
                         console.log(e);
                         this.setState({
                             loading: false,
-                            error_value: "Search value not found!"
+                            error_value: "Search value not found"
                         });
                     });
             }
@@ -143,7 +143,7 @@ export default class Search extends Component{
                                             <FontAwesomeIcon icon={["fas", "wallet"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Status"}
                                         </td>
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                            {data.status}
+                                            {data.message}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -155,7 +155,7 @@ export default class Search extends Component{
         );
     }
 
-    generateErrorPanel(error, suppressError=false) {
+    generateErrorPanel(error) {
         return (
             <Container fluid style={{"padding": "0px"}}>
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
@@ -164,16 +164,12 @@ export default class Search extends Component{
                             <Table style={{"margin": "0px"}}>
                                 <tbody>
                                     <tr style={{"line-height": "20px"}}>
-                                        {
-                                            suppressError ?
-                                                <td style = {{ "border": "none"}}></td> :
-                                                <td class="cell-fit-padding-very-wide" style={{"borderTop": "none"}}>
-                                                    <FontAwesomeIcon icon={["fas", "bolt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Error"}
-                                                </td>
-                                        }
                                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
                                             {error}
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <img src="/sad.png" alt="" width="30%"/>
                                     </tr>
                                 </tbody>
                             </Table>
@@ -197,15 +193,15 @@ export default class Search extends Component{
             }
             else {
                 // Check if the transaction is still pending or if an unknown hash was supplied
-                if (search_response.status === "pending" || search_response.status === "unknown hash") {
+                if (search_response.status === "pending") {
                     searchResultPanel = this.generateTransactionPanel(search_response);
                 }
                 else if (search_response.status === "error") {
-                    searchResultPanel = this.generateErrorPanel(search_response.error);
+                    searchResultPanel = this.generateErrorPanel(search_response.message);
                 }
                 // If not, check if it was a block
                 else if (search_response.type === "RnV0dXJlIGVwb2No") {
-                    searchResultPanel = this.generateErrorPanel(atob(search_response.value), true);
+                    searchResultPanel = this.generateErrorPanel(atob(search_response.value));
                 }
                 // If not, check if it was a block
                 else if (search_response.type === "block") {
