@@ -106,7 +106,7 @@ export default class Info extends Component {
                                         <FontAwesomeIcon icon={['fab', 'osi']} style={{marginRight: "0.25rem"}} size="sm"/>
                                     </span>
                                     <span>
-                                        {"Source code (version 1.4)"}
+                                        {"Source code (version 1.5)"}
                                     </span>
                                 </td>
                             </tr>
