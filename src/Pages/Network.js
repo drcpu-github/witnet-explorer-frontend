@@ -83,10 +83,11 @@ export default class Network extends Component {
 
     generateDataRequestsCard() {
         const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function(data, idx) {
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
+        var named_data = this.state.plot_data.map(function (data, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
+                    "epochs": period_data[0] + period_step * idx,
                     "data_requests_success": data[1],
                     "data_requests_failure": data[0] - data[1],
                 }
@@ -117,11 +118,12 @@ export default class Network extends Component {
 
     generateCompositionCard() {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function(data, idx) {
             if (data[1] + data[2] === 0 || data[0] === 0) {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": period_data[0] + period_step * idx,
                         "composition_http_get": 0,
                         "composition_http_post": 0,
                         "composition_rng": 0,
@@ -131,7 +133,7 @@ export default class Network extends Component {
             else {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": period_data[0] + period_step * idx,
                         "composition_http_get": data[1] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
                         "composition_http_post": data[2] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
                         "composition_rng": data[3] / data[0] * 100,
@@ -165,9 +167,10 @@ export default class Network extends Component {
 
     generateValueMapCard(key, format_wit = false) {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function (data, idx) {
             var data_plus_epoch = data;
-            data_plus_epoch["epochs"] = period_data[idx];
+            data_plus_epoch["epochs"] = period_data[0] + period_step * idx;
             return data_plus_epoch;
         });
 
@@ -200,11 +203,12 @@ export default class Network extends Component {
 
     generateLieCard() {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function (data, idx) {
             if (data[0] === 0) {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": period_data[0] + period_step * idx,
                         "truth": 0,
                         "error": 0,
                         "no_reveal": 0,
@@ -215,7 +219,7 @@ export default class Network extends Component {
             else {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": period_data[0] + period_step * idx,
                         "truth": (data[0] - data.slice(1, 4).reduce((a, b) => a + b)) / data[0] * 100,
                         "error": data[1] / data[0] * 100,
                         "no_reveal": data[2] / data[0] * 100,
@@ -251,10 +255,11 @@ export default class Network extends Component {
 
     generateBurnCard() {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function (data, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
+                    "epochs": period_data[0] + period_step * idx,
                     "blocks_reverted": data[0],
                     "data_request_lies": data[1],
                 }
@@ -285,11 +290,12 @@ export default class Network extends Component {
 
     generateValueTransfersCard() {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function (data, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
-                    "value_transfers": data,
+                    "epochs": period_data[0] + period_step * idx,
+                    "value_transfers": data[0],
                 }
             );
         });
@@ -317,10 +323,11 @@ export default class Network extends Component {
 
     generateTrsCard() {
         const period_data = this.state.period_data;
+        const period_step = (period_data[1] - period_data[0]) / this.state.plot_data.length;
         var named_data = this.state.plot_data.map(function (data, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
+                    "epochs": period_data[0] + period_step * idx,
                     "nodes": data[0],
                     "average_reputation": data[1],
                     "median_reputation": data[2],
