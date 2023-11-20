@@ -54,8 +54,8 @@ export default class Home extends Component{
             this.network_stats_card = this.generateNetworkStats(response.network_stats);
             this.supply_stats_card = this.generateSupplyInfo(response.supply_info);
             this.latest_blocks_card = this.generateLatestBlocks(response.latest_blocks);
-            this.latest_data_requests_card = this.generateHashCard(response.latest_data_requests, ["fas", "align-justify"]);
-            this.latest_value_transfers_card = this.generateHashCard(response.latest_value_transfers, ["fas", "coins"]);
+            this.latest_data_requests_card = this.generateTransactionCard(response.latest_data_requests, ["fas", "align-justify"]);
+            this.latest_value_transfers_card = this.generateTransactionCard(response.latest_value_transfers, ["fas", "coins"]);
 
             this.setState({
                 update_timestamp : TimeConverter.convertUnixTimestamp(response.last_updated, "hour"),
@@ -144,24 +144,24 @@ export default class Home extends Component{
                 <tbody>
                     {
                         blocks.slice(0, this.state.rows_per_card).map(function(block) {
-                            var block_link = "/search/" + block[0];
+                            var block_link = "/search/" + block.hash;
 
                             return (
                                 <tr style={{"line-height": "20px"}}>
                                     <td class="cell-fit cell-truncate" style={{"border": "none", "width": "100%"}}>
                                         <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        <Link to={block_link}>{block[0]}</Link>
+                                        <Link to={block_link}>{block.hash}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"border": "none"}}>
                                         <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        {block[1]}
+                                        {block.data_request}
                                     </td>
                                     <td class="cell-fit" style={{"border": "none"}}>
                                         <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        {block[2]}
+                                        {block.value_transfer}
                                     </td>
                                     <td class="cell-fit-no-padding" style={{"border": "none"}}>
-                                        {TimeConverter.convertUnixTimestamp(block[3], "hour")}
+                                        {TimeConverter.convertUnixTimestamp(block.timestamp, "hour")}
                                     </td>
                                 </tr>
                             );
@@ -172,26 +172,26 @@ export default class Home extends Component{
         );
     }
 
-    generateHashCard(hashes, icon) {
+    generateTransactionCard(transactions, icon) {
         return (
             <Table responsive style={{"marginBottom": "0px"}}>
                 <tbody>
                     {
-                        hashes.slice(0, this.state.rows_per_card).map(function(hash) {
-                            var hash_link = "/search/" + hash[0];
+                        transactions.slice(0, this.state.rows_per_card).map(function(transaction) {
+                            var hash_link = "/search/" + transaction.hash;
 
                             return (
                                 <tr style={{"line-height": "20px"}}>
                                     <td class="cell-fit cell-truncate" style={{"border": "none", "width": "100%"}}>
                                         <FontAwesomeIcon icon={icon} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                        <Link to={hash_link}>{hash[0]}</Link>
+                                        <Link to={hash_link}>{transaction.hash}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"border": "none"}}>
-                                        {TimeConverter.convertUnixTimestamp(hash[1], "hour")}
+                                        {TimeConverter.convertUnixTimestamp(transaction.timestamp, "hour")}
                                     </td>
                                     <td class="cell-fit-no-padding" style={{"border": "none"}}>
                                         {
-                                            hash[2]
+                                            transaction.confirmed
                                                 ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
                                                 : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
                                         }
