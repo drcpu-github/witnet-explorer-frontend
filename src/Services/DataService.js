@@ -32,7 +32,10 @@ class DataService {
     }
 
     getBalances(page = 1) {
-        return fetch("/api/network/balances?page=" + page).then(response => response.json());
+        return fetch("/api/network/balances?page=" + page)
+            .then(response => {
+                return response.json().then(json_response => [response.headers, json_response]);
+            });
     }
 
     getHome() {
