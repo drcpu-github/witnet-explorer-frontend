@@ -78,7 +78,7 @@ class Paginator extends Component {
         }
 
         return (
-            <Pagination style={{float: "right", marginBottom: "0rem"}}>
+            <Pagination size="sm" style={{float: "right", marginBottom: "0rem"}}>
                 <Pagination.Item id={"first"} onClick={() => this.setPage(1)} disabled={paginator.current_page === 1}>
                     {"<<"}
                 </Pagination.Item>
