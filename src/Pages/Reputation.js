@@ -34,7 +34,8 @@ export default class Reputation extends Component{
         DataService.getReputation(epoch)
         .then(response => {
             var new_reputation_rows = this.generateReputationRows(response.reputation, response.total_reputation);
-            this.reputation_chart = this.generateChart(response.reputation, "linear");
+            this.reputation_chart = this.generateReputationChart(response.reputation);
+            this.eligibility_chart = this.generateEligibilityChart(response.reputation);
             this.setState({
                 reputation_rows: new_reputation_rows,
                 total_pages: Math.ceil(response.reputation.length / this.state.rows_per_page),
@@ -53,8 +54,8 @@ export default class Reputation extends Component{
 
     generateReputationRows(reputations, total_reputation) {
         var reputation_rows = reputations.map(function(reputation){
-            var api_link = "/search/" + reputation[0];
-            var reputation_link = <Link to={api_link}>{reputation[0]}</Link>
+            var api_link = "/search/" + reputation.address;
+            var reputation_link = <Link to={api_link}>{reputation.address}</Link>
 
             return (
                 <tr style={{"line-height": "20px"}}>
@@ -62,10 +63,10 @@ export default class Reputation extends Component{
                         {reputation_link}
                     </td>
                     <td className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
-                        {reputation[1]}
+                        {reputation.reputation}
                     </td>
                     <td className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
-                        {reputation[2].toFixed(4) + "%"}
+                        {reputation.eligibility.toFixed(4) + "%"}
                     </td>
                 </tr>
             );
@@ -118,30 +119,40 @@ export default class Reputation extends Component{
         );
     }
 
-    generateChartCard(){
+    generateReputationChart(reputations) {
+        var plot_data = [];
+        reputations.forEach(function(reputation) {
+            plot_data.push({
+                "Address": reputation.address,
+                "Reputation": reputation.reputation,
+            });
+        });
+        return <SingleAreaChart data={plot_data} y_label="Reputation" y_scale="linear"/>;
+    }
+
+    generateEligibilityChart(reputations) {
+        var plot_data = [];
+        reputations.forEach(function(reputation) {
+            plot_data.push({
+                "Address": reputation.address,
+                "Eligibility": reputation.eligibility,
+            });
+        });
+        return <SingleAreaChart data={plot_data} y_label="Eligibility" y_scale="linear" y_percent={true}/>;
+    }
+
+    generateChartCard() {
         return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "85vh"}}>
+            <Card className="shadow p-2 mb-2 bg-white rounded" style={{ height: "85vh" }}>
                 <Card.Body className="pt-3 pb-0">
                     {this.reputation_chart}
+                    {this.eligibility_chart}
                 </Card.Body>
-                <Card.Text style={{paddingLeft: "1.25rem", paddingRight: "1.25rem"}}>
+                <Card.Text style={{ paddingLeft: "1.25rem", paddingRight: "1.25rem" }}>
                     <small className="text-muted">Last updated: {this.state.last_updated}</small>
                 </Card.Text>
             </Card>
         );
-    }
-
-    generateChart(reputations, y_scale) {
-        var i;
-        var plot_reputation_data = [];
-        for (i = 0; i < reputations.length; i++) {
-            var return_value = {
-                "Address": reputations[i][0],
-                "Reputation": reputations[i][1]
-            };
-            plot_reputation_data.push(return_value);
-        }
-        return <SingleAreaChart data={plot_reputation_data} y_label="Reputation" y_scale={y_scale}/>;
     }
 
     updateWindowDimensions() {
@@ -153,15 +164,7 @@ export default class Reputation extends Component{
     }
 
     componentDidMount() {
-        const search = window.location.search;
-        const params = new URLSearchParams(search);
-
-        let epoch = "";
-        if (params.has("epoch")) {
-            epoch = params.get("epoch");
-        }
-
-        this.getReputation(epoch);
+        this.getReputation();
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
@@ -173,33 +176,34 @@ export default class Reputation extends Component{
     render() {
         const { loading, error_value } = this.state;
 
-        let reputation_list_card, reputation_chart_card;
         if (error_value === "") {
-            if (loading) {
-                reputation_list_card = <SpinnerCard height="85vh"/>;
-                reputation_chart_card = <SpinnerCard height="85vh"/>;
-            }
-            else{
-                reputation_list_card = this.generateReputationCard();
-                reputation_chart_card = this.generateChartCard();
-            }
+            return(
+                <Container fluid style={{"paddingLeft": "50px", "paddingRight": "50px"}}>
+                    <Row xs={1} md={2}>
+                        <Col>
+                            {
+                                loading
+                                    ? <SpinnerCard height="85vh" />
+                                    : this.generateReputationCard()
+                            }
+                        </Col>
+                        <Col>
+                            {
+                                loading
+                                    ? <SpinnerCard height="85vh" />
+                                    : this.generateChartCard()
+                            }
+                        </Col>
+                    </Row>
+                </Container>
+            );
         }
         else {
-            reputation_list_card = <ErrorCard errorValue={error_value}/>;
-            reputation_chart_card = <ErrorCard errorValue={error_value}/>;
+            return (
+                <Container fluid style={{ "padding": "0px" }}>
+                    <ErrorCard errorValue={error_value} />;
+                </Container>
+            );
         }
-
-        return(
-            <Container fluid style={{"paddingLeft": "50px", "paddingRight": "50px"}}>
-                <Row xs={1} md={2}>
-                    <Col>
-                        {reputation_list_card}
-                    </Col>
-                    <Col>
-                        {reputation_chart_card}
-                    </Col>
-                </Row>
-            </Container>
-        );
     }
 }
