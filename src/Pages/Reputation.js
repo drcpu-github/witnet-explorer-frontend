@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Label, Tooltip, Area } from 'recharts';
 
 import ErrorCard from "../Components/ErrorCard";
 import Paginator from "../Components/Paginator";
-import SingleAreaChart from "../Components/SingleAreaChart";
 import SpinnerCard from "../Components/SpinnerCard";
 
 import DataService from "../Services/DataService";
@@ -127,7 +127,22 @@ export default class Reputation extends Component{
                 "Reputation": reputation.reputation,
             });
         });
-        return <SingleAreaChart data={plot_data} y_label="Reputation" y_scale="linear"/>;
+
+        return (
+            <ResponsiveContainer width="100%" height="50%">
+                <AreaChart data={plot_data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="Address" tick={false} label="Addresses" />
+                    <YAxis scale="linear" domain={['auto', 'auto']}>
+                        <Label angle={270} position='left' style={{ textAnchor: 'middle' }}>
+                            {"Reputation"}
+                        </Label>
+                    </YAxis>
+                    <Tooltip />
+                    <Area type="monotone" dataKey="Reputation" stroke="#03254c" fill="#03254c" />
+                </AreaChart>
+            </ResponsiveContainer>
+        );
     }
 
     generateEligibilityChart(reputations) {
@@ -138,7 +153,22 @@ export default class Reputation extends Component{
                 "Eligibility": reputation.eligibility,
             });
         });
-        return <SingleAreaChart data={plot_data} y_label="Eligibility" y_scale="linear" y_percent={true}/>;
+
+        return (
+            <ResponsiveContainer width="100%" height="50%">
+                <AreaChart data={plot_data} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Address" tick={false} label="Addresses"/>
+                    <YAxis scale="linear" domain={['auto', 'auto']} tickFormatter={tick => tick + "%"}>
+                        <Label angle={270} position='left' style={{ textAnchor: 'middle' }}>
+                            {"Eligibility"}
+                        </Label>
+                    </YAxis>
+                    <Tooltip />
+                    <Area type="monotone" dataKey="Eligibility" stroke="#03254c" fill="#03254c" />
+                </AreaChart>
+            </ResponsiveContainer>
+        );
     }
 
     generateChartCard() {
