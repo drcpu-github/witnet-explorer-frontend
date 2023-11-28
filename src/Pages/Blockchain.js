@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Container, Spinner, Table } from "react-bootstrap";
+import { Card, Container, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import ErrorCard from "../Components/ErrorCard";
+import Paginator from "../Components/Paginator";
+import SpinnerCard from "../Components/SpinnerCard";
 
 import DataService from "../Services/DataService";
 import Formatter from "../Services/Formatter";
@@ -11,277 +15,182 @@ export default class Reputation extends Component{
     constructor(props) {
         super(props);
 
-        this.handleScroll = this.handleScroll.bind(this);
-        this.updateBlockchain = this.updateBlockchain.bind(this);
-
         this.state = {
             loading: true,
-            appending: false,
-            blocks: [],
+            error_value: "",
+            current_page: 1,
             epochs: [],
-            last_updated: "",
-            last_confirmed_block: 0
+            blockchain_card: null,
         }
+
+        this.getBlockchain = this.getBlockchain.bind(this);
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
     componentDidMount() {
-        this.initBlockchain();
-        // run every 30 seconds
-        this.interval_id = setInterval(this.updateBlockchain, 30000);
+        this.getBlockchain(1);
     }
 
     componentWillUnmount() {
         this.setState({
-            blocks: [],
+            loading: false,
+            error_value: "",
+            current_page: 1,
             epochs: [],
-            last_updated: "",
-            last_confirmed_block: 0
+            blockchain_card: null,
         });
-        clearInterval(this.interval_id);
     }
 
-    initBlockchain() {
-        DataService.getBlockchain("init")
+    getBlockchain(page) {
+        DataService.getBlockchain(page)
         .then(response => {
-            var current_confirmed_block = 0;
-            for (var block = 0; block < response.blockchain.length; block++) {
-                if (response.blockchain[block][10] === true && response.blockchain[block][1] >= current_confirmed_block) {
-                    current_confirmed_block = response.blockchain[block][1];
-                }
-                this.setState({
-                    blocks: [...this.state.blocks, response.blockchain[block]],
-                    epochs: [...this.state.epochs, response.blockchain[block][1]],
-                });
-            }
-            this.blockchain = this.generateBlockchainCard();
+            const pagination_header = JSON.parse(response[0].get("X-Pagination"));
+            const json_response = response[1];
+            var new_blockchain_card = this.generateBlockchainCard(json_response.blockchain, pagination_header.total);
             this.setState({
+                blockchain_card: new_blockchain_card,
                 loading: false,
-                last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "full"),
-                last_confirmed_block: current_confirmed_block
+                error_value: "",
             });
         })
         .catch(e => {
             console.log(e);
+            this.setState({
+                loading: false,
+                error_value: "Could not fetch blockchain!"
+            });
         });
     }
 
-    updateBlockchain() {
-        if (!this.state.loading) {
-            DataService.getBlockchain("append", this.state.last_confirmed_block + 1)
-            .then(response => {
-                // Remove the reverted blocks
-                var reverted = response.reverted;
-                for (var i = 0; i < reverted.length; i++) {
-                    var idx1 = this.state.epochs.indexOf(reverted[i]);
-                    // Update confirmed status
-                    if (idx1 !== -1) {
-                        // Take a local copy
-                        const epochs_copy = this.state.epochs.slice();
-                        const blocks_copy = this.state.blocks.slice();
-                        // Remove the element
-                        epochs_copy.splice(idx1, 1);
-                        blocks_copy.splice(idx1, 1);
-                        // Set state to local copy
-                        this.setState({
-                            epochs: epochs_copy,
-                            blocks: blocks_copy,
-                        });
-                    }
-                }
+    generateBlockchainCard(blocks, total_blocks) {
+        const { current_page } = this.state;
 
-                // Update confirmed status of blocks in the chain
-                var current_confirmed_block = this.state.last_confirmed_block;
-                var blockchain = response.blockchain;
-                for (var j = 0; j < blockchain.length; j++) {
-                    var idx2 = this.state.epochs.indexOf(blockchain[j][1]);
-                    if (idx2 !== -1) {
-                        // Only update confirmed blocks
-                        if (blockchain[j][10] === true) {
-                            // Take a local copy
-                            const blocks_copy = this.state.blocks.slice();
-                            // Modify the confirmed status
-                            blocks_copy[idx2][10] = blockchain[j][10];
-                            // Check for the latest confirmed block
-                            if (blockchain[j][1] >= current_confirmed_block) {
-                                current_confirmed_block = blockchain[j][1];
-                            }
-                            // Set state to local copy
-                            this.setState({
-                                blocks: blocks_copy,
-                            });
-                        }
-                    }
-                }
-
-                // Prepend new blocks
-                for (var k = current_confirmed_block - 1; k >= 0; k--) {
-                    var idx3 = this.state.epochs.indexOf(blockchain[k][1]);
-                    // Update confirmed status
-                    if (idx3 === -1) {
-                        this.setState({
-                            blocks: [blockchain[k], ...this.state.blocks],
-                            epochs: [blockchain[k][1], ...this.state.epochs]
-                        });
-                    }
-                }
-
-                this.blockchain = this.generateBlockchainCard();
-                this.setState({
-                    last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "full"),
-                    last_confirmed_block: current_confirmed_block
-                });
-            })
-            .catch(e => {
-                console.log(e);
-            });
-        }
-    }
-
-    handleScroll(event) {
-        const { scrollHeight, scrollTop, clientHeight } = event.target;
-        const scroll = scrollHeight - scrollTop - clientHeight;
-
-        // If we reached the end of the blockchain, do not send requests anymore
-        if (this.state.epochs[this.state.epochs.length-1] <= 1) {
-            return;
-        }
-
-        // Prevent rounding errors and fetch a bit upfront
-        // Also make sure we are not launching the same request twice by checking the appending value
-        if (this.state.appending === false && scroll <= 100) {
-            this.setState({
-                appending : true
-            });
-
-            DataService.getBlockchain("prepend", this.state.epochs[this.state.epochs.length-1])
-            .then(response => {
-                for (var block = 0; block < response.blockchain.length; block++) {
-                    this.setState({
-                        blocks: [...this.state.blocks, response.blockchain[block]],
-                        epochs: [...this.state.epochs, response.blockchain[block][1]]
-                    });
-                }
-                this.blockchain = this.generateBlockchainCard();
-                this.setState({
-                    appending : false,
-                    last_updated : TimeConverter.convertUnixTimestamp(response.last_updated, "full")
-                });
-            })
-            .catch(e => {
-                console.log(e);
-            });
-        }
-    }
-
-    generateBlockchainCard() {
         return (
-            <Table responsive style={{borderCollapse: "separate", marginBottom: "0rem", borderSpacing: "5px 15px"}}>
-                <tbody style={{display: "block", maxHeight: "85vh", overflow: "auto"}} onScroll={this.handleScroll}>
-                    {
-                        this.state.blocks.map(function(block){
-                            var block_link = "/search/" + block[0];
-                            var address_link = "/search/" + block[3];
+            <Card className="shadow p-2 mb-2 bg-white rounded" style={{ height: "85vh" }}>
+                <Table
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "80vh",
+                        "overflow-y":
+                        "scroll",
+                        "margin-bottom": "0rem",
+                        "border-spacing": "5px 15px"
+                    }}
+                >
+                    <tbody>
+                        {
+                            blocks.map(function (block) {
+                                var block_link = "/search/" + block.hash;
+                                var miner_link = "/search/" + block.miner;
 
-                            return (
-                                <tr class="row-card">
-                                    <td class="cell-fit-card" title="Timestamp" style={{"paddingLeft": "1rem", "paddingRight": "0rem"}}>
-                                        <FontAwesomeIcon icon={["far", "clock"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" title="Timestamp">
-                                        {TimeConverter.convertUnixTimestamp(block[2], "full")}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Epoch">
-                                        <FontAwesomeIcon icon={["fas", "history"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" title="Epoch">
-                                        {block[1]}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Block hash">
-                                        <FontAwesomeIcon icon={["fas", "cubes"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Block hash">
-                                        <Link to={block_link}>{block[0]}</Link>
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Miner">
-                                        <FontAwesomeIcon icon={["fas", "user"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Miner">
-                                        <Link to={address_link}>{block[3]}</Link>
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Fee">
-                                        <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Fee">
-                                        {Formatter.formatWitValue(block[9], 0)}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Value transfer">
-                                        <FontAwesomeIcon icon={["fas", "coins"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Value transfer">
-                                        {block[4]}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Data request">
-                                        <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Data request">
-                                        {block[5]}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Commit">
-                                        <FontAwesomeIcon icon={["far", "handshake"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Commit">
-                                        {block[6]}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Reveal">
-                                        <FontAwesomeIcon icon={["far", "eye"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Reveal">
-                                        {block[7]}
-                                    </td>
-                                    <td class="cell-fit-card no-padding" title="Tally">
-                                        <FontAwesomeIcon icon={["fas", "calculator"]} size="sm"/>
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Tally">
-                                        {block[8]}
-                                    </td>
-                                    <td class="cell-fit-card padding-small" style={{ "textAlign": "center" }} title={block[10] ? "Confirmed" : "Unconfirmed"}>
-                                        {
-                                            block[10]
-                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
-                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
-                                        }
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </Table>
+                                return (
+                                    <tr class="row-card">
+                                        <td class="cell-fit-card" title="Timestamp" style={{ "paddingLeft": "1rem", "paddingRight": "0rem" }}>
+                                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" title="Timestamp">
+                                            {TimeConverter.convertUnixTimestamp(block.timestamp, "full")}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Epoch">
+                                            <FontAwesomeIcon icon={["fas", "history"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" title="Epoch">
+                                            {block.epoch}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Block hash">
+                                            <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Block hash">
+                                            <Link to={block_link}>{block.hash}</Link>
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Miner">
+                                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card cell-truncate padding-small" style={{ "width": "30%" }} title="Miner">
+                                            <Link to={miner_link}>{block.miner}</Link>
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Fee">
+                                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Fee">
+                                            {Formatter.formatWitValue(block.fees, 0)}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Value transfer">
+                                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Value transfer">
+                                            {block.value_transfers}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Data request">
+                                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Data request">
+                                            {block.data_requests}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Commit">
+                                            <FontAwesomeIcon icon={["far", "handshake"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Commit">
+                                            {block.commits}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Reveal">
+                                            <FontAwesomeIcon icon={["far", "eye"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Reveal">
+                                            {block.reveals}
+                                        </td>
+                                        <td class="cell-fit-card no-padding" title="Tally">
+                                            <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" />
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "right" }} title="Tally">
+                                            {block.tallies}
+                                        </td>
+                                        <td class="cell-fit-card padding-small" style={{ "textAlign": "center" }} title={block.confirmed ? "Confirmed" : "Unconfirmed"}>
+                                            {
+                                                block.confirmed
+                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" />
+                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" />
+                                            }
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+                <Card.Text style={{ "padding-top": "0.5rem", "position": "relative" }}>
+                    <Paginator
+                        key={"paginator-" + total_blocks}
+                        items={total_blocks}
+                        itemsPerPage={blocks.length}
+                        pageStart={current_page}
+                        onChangePage={this.onChangePage}
+                    />
+                </Card.Text>
+            </Card>
         );
     }
 
+    onChangePage(paginator) {
+        this.setState({
+            current_page: paginator.current_page,
+        });
+        this.getBlockchain(paginator.current_page);
+    }
+
     render() {
-        const { appending, loading } = this.state;
-
-        if (loading) {
-            this.loading_spinner = <Spinner animation="border"/>;
-        }
-        else {
-            this.loading_spinner = <div></div>;
-        }
-
-        if (appending) {
-            this.appending_spinner = <Spinner animation="border"/>;
-        }
-        else {
-            this.appending_spinner = <div></div>;
-        }
+        const { blockchain_card, error_value, loading } = this.state;
 
         return(
             <Container fluid>
-                {this.loading_spinner}
-                {this.blockchain}
-                {this.appending_spinner}
+                {
+                    loading
+                        ? <SpinnerCard height="85vh" />
+                        : error_value === ""
+                            ? blockchain_card
+                            : <ErrorCard errorValue={error_value}/>
+                }
             </Container>
         );
     }
