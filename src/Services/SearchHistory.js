@@ -16,7 +16,6 @@ class SearchHistory {
                 history.splice(0, 1);
             }
         }
-        console.log(history);
         localStorage.setItem("search-history", JSON.stringify(history));
     }
 
