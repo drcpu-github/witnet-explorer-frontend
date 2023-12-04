@@ -10,17 +10,17 @@ export default class DataRequestReport extends Component {
     render() {
         return (
             <Tabs defaultActiveKey={this.props.data.transaction_type} id="uncontrolled-tab-example">
-                <Tab eventKey="data_request_txn" title="Data request">
-                    <DataRequest data={this.props.data.data_request_txn}/>
+                <Tab eventKey="data_request" title="Data request">
+                    <DataRequest data={this.props.data.data_request}/>
                 </Tab>
-                <Tab eventKey="commit_txn" title="Commit">
-                    <Commit data={this.props.data.commit_txns}/>
+                <Tab eventKey="commit" title="Commit">
+                    <Commit data={this.props.data.commits}/>
                 </Tab>
-                <Tab eventKey="reveal_txn" title="Reveal">
-                    <Reveal data={this.props.data.reveal_txns}/>
+                <Tab eventKey="reveal" title="Reveal">
+                    <Reveal data={this.props.data.reveals}/>
                 </Tab>
-                <Tab eventKey="tally_txn" title="Tally">
-                    <Tally data={this.props.data.tally_txn}/>
+                <Tab eventKey="tally" title="Tally">
+                    <Tally data={this.props.data.tally}/>
                 </Tab>
             </Tabs>
         )

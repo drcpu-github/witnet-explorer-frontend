@@ -23,7 +23,7 @@ class HistoryTypeahead extends Component {
         const { search_value } = this.state;
 
         return (
-            <div className="input-group mb-4">
+            <div className="input-group mb-3">
                 <Typeahead
                     className="form-control"
                     style={{ "padding": 0 }}

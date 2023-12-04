@@ -17,9 +17,9 @@ export default class Commit extends Component {
     }
 
     generateTransactionCard(transaction) {
-        var transaction_link = "/search/" + transaction.txn_hash;
-        var block_link = "/search/" + transaction.block_hash;
-        var address_link = "/search/" + transaction.txn_address;
+        var transaction_link = "/search/" + transaction.hash;
+        var block_link = "/search/" + transaction.block;
+        var address_link = "/search/" + transaction.address;
 
         return (
             <Card className="w-100 shadow p-1 mb-3 ml-1 mr-1 bg-white rounded">
@@ -32,7 +32,7 @@ export default class Commit extends Component {
                                         <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                                     </td>
                                     <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                        <Link to={transaction_link}>{transaction.txn_hash}</Link>
+                                        <Link to={transaction_link}>{transaction.hash}</Link>
                                     </td>
                                 </tr>
                                 <tr style={{"line-height": "20px"}}>
@@ -40,7 +40,7 @@ export default class Commit extends Component {
                                         <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                                     </td>
                                     <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                        <Link to={block_link}>{transaction.block_hash}</Link>
+                                        <Link to={block_link}>{transaction.block}</Link>
                                     </td>
                                 </tr>
                                 <tr style={{"line-height": "20px"}}>
@@ -48,7 +48,7 @@ export default class Commit extends Component {
                                         <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Address"}
                                     </td>
                                     <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                                        <Link to={address_link}>{transaction.txn_address}</Link>
+                                        <Link to={address_link}>{transaction.address}</Link>
                                     </td>
                                 </tr>
                                 <tr style={{"line-height": "20px"}}>
@@ -56,7 +56,7 @@ export default class Commit extends Component {
                                         <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
                                     </td>
                                     <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                        {TimeConverter.convertUnixTimestamp(transaction.time, "full") + " (epoch: " + transaction.epoch + ")"}
+                                        {TimeConverter.convertUnixTimestamp(transaction.timestamp, "full") + " (epoch: " + transaction.epoch + ")"}
                                     </td>
                                 </tr>
                                 <tr style={{"line-height": "20px"}}>
@@ -64,7 +64,11 @@ export default class Commit extends Component {
                                         <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                                     </td>
                                     <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                        {transaction.status}
+                                        {
+                                            transaction.confirmed
+                                                ? "Confirmed"
+                                                : "Mined"
+                                        }
                                     </td>
                                 </tr>
                             </tbody>
@@ -82,7 +86,10 @@ export default class Commit extends Component {
 
         var rows = [];
         for (var idx = 0; idx < transactions.length; idx += 2) {
-            if (transactions.length % 2 === 1 && idx === transactions.length - 1) {
+            if (transactions.length === 1) {
+                rows.push(this.generateTransactionCard(transactions[idx]));
+            }
+            else if (transactions.length % 2 === 1 && idx === transactions.length - 1) {
                 rows.push(
                     <Row className="ml-0 mr-0">
                         <Col>
@@ -109,7 +116,7 @@ export default class Commit extends Component {
         }
 
         return (
-            <Container fluid className="pl-0 pr-0 mt-2" style={{ "display": "block", "overflow": "auto", "maxHeight": "75vh" }}>
+            <Container fluid className="pl-0 pr-0 mt-2" style={{ "display": "block", "overflow-y": "scroll", "max-height": "75vh" }}>
                 {rows}
             </Container>
         );

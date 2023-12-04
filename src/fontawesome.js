@@ -36,6 +36,8 @@ import {
     faLongArrowAltRight,
     faLink,
     faScroll,
+    faHeading,
+    faBold,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -102,4 +104,6 @@ library.add(
     faScroll,
     faFile,
     faIdCard,
+    faHeading,
+    faBold,
 );

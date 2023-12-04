@@ -10,10 +10,10 @@ import TimeConverter from "../../../Services/TimeConverter"
 
 export default class DataRequest extends Component {
      generateTransactionCard(transaction) {
-        var txn_link = "/search/" + transaction.txn_hash;
+        var  transaction_link = "/search/" + transaction.hash;
         var DRO_hash_link = "/search/" + transaction.DRO_bytes_hash;
         var RAD_hash_link = "/search/" + transaction.RAD_bytes_hash;
-        var block_link = "/search/" + transaction.block_hash;
+        var block_link = "/search/" + transaction.block;
         return (
             <Table style={{"marginBottom": "0px"}}>
                 <tbody>
@@ -22,7 +22,7 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                         </td>
                         <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={txn_link}>{transaction.txn_hash}</Link>
+                            <Link to={ transaction_link}>{transaction.hash}</Link>
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}>
@@ -46,11 +46,11 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                         </td>
                         <td class="cell-fit-no-padding cell-truncate" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={block_link}>{transaction.block_hash}</Link>
+                            <Link to={block_link}>{transaction.block}</Link>
                         </td>
                     </tr>
                     {
-                        transaction.addresses.map(function(address, idx){
+                        transaction.input_addresses.map(function(address, idx) {
                             var address_link = "/search/" + address;
                             if (idx === 0) {
                                 return (
@@ -81,7 +81,7 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {TimeConverter.convertUnixTimestamp(transaction.txn_time, "full") + " (epoch: " + transaction.txn_epoch + ")"}
+                            {TimeConverter.convertUnixTimestamp(transaction.timestamp, "full") + " (epoch: " + transaction.epoch + ")"}
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}>
@@ -89,7 +89,11 @@ export default class DataRequest extends Component {
                             <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {transaction.status}
+                            {
+                                transaction.confirmed
+                                    ? "Confirmed"
+                                    : "Mined"
+                            }
                         </td>
                     </tr>
                     <tr style={{"line-height": "20px"}}/>

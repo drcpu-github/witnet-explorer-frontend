@@ -1,21 +1,29 @@
 class DataService {
-    searchHash(hash) {
-        return fetch("/api/search/hash?value=" + hash).then(response => response.json());
+    searchHash(hash, page=1, simple=false) {
+        return fetch("/api/search/hash?value=" + hash + "&page=" + page + "&simple=" + simple)
+            .then(response => {
+                return response.json().then(json_response => [response.headers, json_response]);
+            });
     }
 
-    searchAddress(address, tab="transactions") {
-        if (tab === "info") {
-            return fetch("/api/address/info?address=" + address).then(response => response.json());
+    searchAddress(address, tab = "transactions", page = 1) {
+        if (tab === "details") {
+            return fetch("/api/address/details?address=" + address)
+                .then(response => {
+                    return response.json()
+                });
+        }
+        else if (tab === "info") {
+            return fetch("/api/address/info?addresses=" + address)
+                .then(response => {
+                    return response.json()
+                });
         }
         else {
-            return fetch("/api/address/" + tab + "?address=" + address).then(response => {
-                if (response.headers.get("Content-Type") === "application/json") {
-                    return response.json();
-                }
-                else {
-                    return response.blob();
-                }
-            });
+            return fetch("/api/address/" + tab + "?address=" + address + "&page=" + page)
+                .then(response => {
+                    return response.json().then(json_response => [response.headers, json_response]);
+                });
         }
     }
 

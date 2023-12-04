@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Card, Col, Container, Row, Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Col, Container, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import DataRequestRadScript from "./DataRequestPages/DataRequestRadScript";
+
+import Paginator from "../../Components/Paginator";
 
 import Formatter from "../../Services/Formatter";
 import TimeConverter from "../../Services/TimeConverter";
 
 export default class DataRequestHistoryPanel extends Component {
-    generateDetailsCard(data) {
-        const RAD_bytes_hash_link = "/search/" + data.RAD_bytes_hash;
+    generateDetailsCard(pagination, data) {
+        var RAD_bytes_hash = data.hash_type === "DRO_bytes_hash" ? data.RAD_bytes_hash : data.hash;
+        const RAD_bytes_hash_link = "/search/" + RAD_bytes_hash;
 
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
-                <Table responsive style={{ "marginBottom": "0px", "display": "block", "overflow": "auto", "height": "15vh" }}>
+                <Table responsive style={{ "marginBottom": "0px" }}>
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -25,16 +28,18 @@ export default class DataRequestHistoryPanel extends Component {
                             </td>
                         </tr>
                         {
-                            data.bytes_hash === data.RAD_bytes_hash
-                                ? <span></span>
-                                : <tr>
-                                    <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                        <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"DRO hash"}
-                                    </td>
-                                    <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                        {data.bytes_hash}
-                                    </td>
-                                </tr>
+                            data.hash_type === "DRO_bytes_hash"
+                                ? (
+                                    <tr>
+                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"DRO hash"}
+                                        </td>
+                                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                                            {data.hash}
+                                        </td>
+                                    </tr>
+                                )
+                                : <span></span>
                         }
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -49,11 +54,7 @@ export default class DataRequestHistoryPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "search"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Matches"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                {data.num_data_requests}
-                                {data.num_data_requests > 100
-                                    ? " (" + data.history.length + " most recent are shown)"
-                                    : ""
-                                }
+                                {pagination.total}
                             </td>
                         </tr>
                     </tbody>
@@ -64,8 +65,8 @@ export default class DataRequestHistoryPanel extends Component {
 
     generateParametersCard(data) {
         return (
-            <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
-                <Table responsive style={{ "marginBottom": "0px", "display": "block", "overflow": "auto", "height": "15vh" }}>
+            <Container fluid style={{"padding-left": "0px", "padding-right": "0px"}}>
+                <Table responsive style={{ "marginBottom": "0px" }}>
                     <tbody>
                         <tr>
                             <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
@@ -105,62 +106,60 @@ export default class DataRequestHistoryPanel extends Component {
         );
     }
 
-    generateDataRequestCard(data_request_txns) {
+    generateDataRequestCard(data_requests) {
         return (
-            <Container fluid style={{"marginTop": "1rem", "height": "50vh"}}>
-                <Table hover responsive style={{"display": "block", "overflow": "auto", "height": "50vh"}}>
-                    <thead style={{"border": "none"}}>
+            <Container fluid style={{ "margin": "0.5rem 0 0 0.5rem", "padding-left": "0", "height": "45vh" }}>
+                <Table hover responsive style={{ "display": "block", "overflow-y": "scroll", "height": "45vh" }}>
+                    <thead style={{ "border": "none" }}>
                         <tr class="th-fixed">
-                            <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                                <FontAwesomeIcon icon={["far", "check"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Success"}
+                            <th class="cell-fit-padding-wide" style={{ "textAlign": "center" }}>
+                                <FontAwesomeIcon icon={["far", "check"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Success"}
                             </th>
                             <th class="cell-fit-padding-wide">
-                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
+                                <FontAwesomeIcon icon={["far", "clock"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Time"}
                             </th>
                             <th class="cell-fit-padding-wide">
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Transaction"}
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Transaction"}
                             </th>
-                            <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                                <FontAwesomeIcon icon={["fas", "times"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Errors"}
+                            <th class="cell-fit-padding-wide" style={{ "textAlign": "center" }}>
+                                <FontAwesomeIcon icon={["fas", "times"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Errors"}
                             </th>
-                            <th class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                                <FontAwesomeIcon icon={["fas", "bolt"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Liars"}
+                            <th class="cell-fit-padding-wide" style={{ "textAlign": "center" }}>
+                                <FontAwesomeIcon icon={["fas", "bolt"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Liars"}
                             </th>
                             <th class="cell-fit-no-padding">
-                                <FontAwesomeIcon icon={["far", "eye"]} style={{"marginRight": "0.25rem"}} size="sm"/>{"Result"}
+                                <FontAwesomeIcon icon={["far", "eye"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Result"}
                             </th>
                         </tr>
                     </thead>
                     <tbody style={{"border": "none"}}>
                         {
-                            data_request_txns.map(function(data){
-                                const txn_link = "/search/" + data[4];
+                            data_requests.map(function(data_request){
+                                const transaction_link = "/search/" + data_request.data_request;
 
                                 return (
                                     <tr>
-                                        <td class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
+                                        <td class="cell-fit-padding-wide" style={{ "textAlign": "center" }}>
                                             {
-                                                data[0] === "reverted"
-                                                    ? <FontAwesomeIcon icon={["fas", "exclamation"]} size="sm" fixedWidth/>
-                                                    : data[1] === true
-                                                        ? <FontAwesomeIcon icon={["fas", "check"]} size="sm" fixedWidth/>
-                                                        : <FontAwesomeIcon icon={["fas", "times"]} size="sm" fixedWidth/>
+                                                data_request.success
+                                                    ? <FontAwesomeIcon icon={["fas", "check"]} size="sm" fixedWidth />
+                                                    : <FontAwesomeIcon icon={["fas", "times"]} size="sm" fixedWidth />
                                             }
                                         </td>
-                                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "15%"}}>
-                                            {TimeConverter.convertUnixTimestamp(data[2], "full")}
+                                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "15%" }}>
+                                            {TimeConverter.convertUnixTimestamp(data_request.timestamp, "full")}
                                         </td>
-                                        <td class="cell-fit-padding-wide cell-truncate" style={{"width": "45%"}}>
-                                            <Link to={txn_link}>{data[4]}</Link>
+                                        <td class="cell-fit-padding-wide cell-truncate" style={{ "width": "45%" }}>
+                                            <Link to={transaction_link}>{data_request.data_request}</Link>
                                         </td>
-                                        <td class="cell-fit-padding-wide" style={{"textAlign": "center"}}>
-                                            {data[5]}
+                                        <td class="cell-fit-padding-wide" style={{ "textAlign": "center" }}>
+                                            {data_request.num_errors}
                                         </td>
-                                        <td class="cell-fit-no-padding" style={{"textAlign": "center"}}>
-                                            {data[6]}
+                                        <td class="cell-fit-no-padding" style={{ "textAlign": "center" }}>
+                                            {data_request.num_liars}
                                         </td>
-                                        <td class="cell-fit-no-padding cell-truncate" style={{"width": "25%"}}>
-                                            {data[7]}
+                                        <td class="cell-fit-no-padding cell-truncate" style={{ "width": "25%" }}>
+                                            {data_request.result}
                                         </td>
                                     </tr>
                                 );
@@ -176,17 +175,17 @@ export default class DataRequestHistoryPanel extends Component {
         return (
             <Container fluid style={{"padding": "0px"}}>
                 <Row>
-                    <Col xs={8} className="col mb-2">
-                        <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
+                    <Col xs={8}>
+                        <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                             <Card.Body className="p-1">
                                 <Card.Text>
-                                    {this.generateDetailsCard(this.props.data)}
+                                    {this.generateDetailsCard(this.props.pagination, this.props.data)}
                                 </Card.Text>
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col xs={4} className="col mb-2">
-                        <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
+                    <Col xs={4}>
+                        <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                             <Card.Body className="p-1">
                                 <Card.Text>
                                     {this.generateParametersCard(this.props.data.data_request_parameters)}
@@ -197,21 +196,32 @@ export default class DataRequestHistoryPanel extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <Card className="w-100 shadow p-1 mb-2 bg-white rounded">
+                        <Card className="w-100 shadow p-1 mb-2 bg-white rounded" style={{ "height": "60vh" }}>
                             <Card.Body className="p-1">
-                                <Card.Text>
-                                    <Tabs defaultActiveKey="history" id="uncontrolled-tab-example">
-                                        <Tab eventKey="history" title="History">
-                                            {this.generateDataRequestCard(this.props.data.history)}
-                                        </Tab>
-                                        <Tab eventKey="rad_script" title="RAD script">
-                                            <Container fluid style={{ "marginTop": "1rem", "height": "50vh", "display": "block", "overflow": "auto" }}>
-                                                <DataRequestRadScript data_request={this.props.data.RAD_data}/>
-                                            </Container>
-                                        </Tab>
-                                    </Tabs>
-                                </Card.Text>
+                                <Tabs defaultActiveKey="history" id="uncontrolled-tab-example">
+                                    <Tab eventKey="history" title="History">
+                                        {
+                                            this.props.loading_next_page
+                                                ? <Spinner animation="border" style={{ "margin": "1rem" }} />
+                                                : this.generateDataRequestCard(this.props.data.history)
+                                        }
+                                    </Tab>
+                                    <Tab eventKey="rad_script" title="RAD script">
+                                        <Container fluid style={{ "marginTop": "1rem", "height": "45vh", "display": "block", "overflow-y": "scroll" }}>
+                                            <DataRequestRadScript data_request={this.props.data.RAD_data}/>
+                                        </Container>
+                                    </Tab>
+                                </Tabs>
                             </Card.Body>
+                            <Card.Text style={{ "padding": "0.25rem 0.75rem 0.25rem 0", "position": "relative" }}>
+                                <Paginator
+                                    key={"paginator-" + this.props.pagination.total}
+                                    items={this.props.pagination.total}
+                                    itemsPerPage={this.props.data.history.length}
+                                    pageStart={this.props.current_page}
+                                    onChangePage={this.props.page_callback}
+                                />
+                            </Card.Text>
                         </Card>
                     </Col>
                 </Row>

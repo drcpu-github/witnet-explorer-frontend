@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Card, Container, Form, Table } from "react-bootstrap";
+import { Card, Container, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Formatter from "../../Services/Formatter";
@@ -19,26 +19,26 @@ export default class ValueTransferPanel extends Component {
     }
 
     generateDetailsCard(transaction) {
-        var txn_link = "/search/" + transaction.txn_hash;
-        var block_link = "/search/" + transaction.block_hash;
+        var txn_link = "/search/" + transaction.hash;
+        var block_link = "/search/" + transaction.block;
 
         let transaction_time;
-        if (transaction.txn_time === 0) {
+        if (transaction.timestamp === 0) {
             transaction_time = "";
         }
         else {
-            transaction_time = TimeConverter.convertUnixTimestamp(transaction.txn_time, "full") + " (epoch: " + transaction.txn_epoch + ")";
+            transaction_time = TimeConverter.convertUnixTimestamp(transaction.timestamp, "full") + " (epoch: " + transaction.epoch + ")";
         }
 
         return (
-            <Table>
+            <table>
                 <tbody>
                     <tr>
                         <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
                             <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={txn_link}>{transaction.txn_hash}</Link>
+                            <Link to={txn_link}>{transaction.hash}</Link>
                         </td>
                     </tr>
                     <tr>
@@ -46,7 +46,7 @@ export default class ValueTransferPanel extends Component {
                             <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={block_link}>{transaction.block_hash}</Link>
+                            <Link to={block_link}>{transaction.block}</Link>
                         </td>
                     </tr>
                     <tr>
@@ -90,72 +90,84 @@ export default class ValueTransferPanel extends Component {
                             <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
                         </td>
                         <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {transaction.status}
+                            {
+                                transaction.confirmed
+                                    ? "Confirmed"
+                                    : "Mined"
+                            }
                         </td>
                     </tr>
                 </tbody>
-            </Table>
+            </table>
         );
     }
 
     generateInputOutputAddresses(data, showNanoWitValues) {
         return (
-            <Table>
-                <tbody>
+            <table style={{ "width": "100%", "max-height": "45vh" }}>
+                <tbody
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "max-height": "45vh",
+                        "overflow-y": "scroll",
+                        "margin": "0px",
+                    }}
+                >
                     {
-                        data.input_addresses.map(function(input, idx){
-                            var input_link = "/search/" + input[0];
+                        data.inputs_merged.map(function(input, idx){
+                            var input_link = "/search/" + input.address;
                             var output_link = idx < data.output_addresses.length
-                                ? "/search/" + data.output_addresses[idx][0]
+                                ? "/search/" + data.output_addresses[idx]
                                 : "";
 
                             return (
                                 <tr>
-                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "30%"}}>
-                                        <Link to={input_link}>{input[0]}</Link>
+                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "max-width": "40%"}}>
+                                        <Link to={input_link}>{input.address}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
                                         {
                                             showNanoWitValues
-                                                ? Formatter.formatValue(input[1]) + " nWIT"
-                                                : Formatter.formatWitValue(input[1], 2)
+                                                ? Formatter.formatValue(input.value) + " nWIT"
+                                                : Formatter.formatWitValue(input.value, 2)
                                         }
                                     </td>
-                                    <td class="cell-fit" style={{"borderTop": "none", "textAlign": "center", "width": "10%"}}>
+                                    <td class="cell-fit" style={{"borderTop": "none", "textAlign": "center"}}>
                                         {
-                                            idx  === 0
+                                            idx === 0
                                                 ? <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
                                                 : ""
                                         }
                                     </td>
-                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "30%"}}>
+                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "max-width": "40%"}}>
                                         {
                                             idx < data.output_addresses.length
-                                                ? <Link to={output_link}>{data.output_addresses[idx][0]}</Link>
+                                                ? <Link to={output_link}>{data.output_addresses[idx]}</Link>
                                                 : ""
                                         }
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
                                         {
-                                            idx < data.output_addresses.length
+                                            idx < data.output_values.length
                                                 ? showNanoWitValues
-                                                    ? Formatter.formatValue(data.output_addresses[idx][1]) + " nWIT"
-                                                    : Formatter.formatWitValue(data.output_addresses[idx][1], 2)
+                                                    ? Formatter.formatValue(data.output_values[idx]) + " nWIT"
+                                                    : Formatter.formatWitValue(data.output_values[idx], 2)
                                                 : ""
                                         }
                                     </td>
-                                    <td class="cell-fit" style={{"borderTop": "none", "width": "15%"}}>
+                                    <td class="cell-fit" style={{"borderTop": "none"}}>
                                         {
-                                            idx < data.output_addresses.length
-                                                ? data.output_addresses[idx][3]
+                                            idx < data.timelocks.length
+                                                ? data.timelocks[idx] > Date.now()
                                                     ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                     : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                 : ""
                                         }
                                         {
-                                            idx < data.output_addresses.length
-                                                ? data.output_addresses[idx][3]
-                                                    ? TimeConverter.convertUnixTimestamp(data.output_addresses[idx][2], "full")
+                                            idx < data.timelocks.length
+                                                ? data.timelocks[idx] > Date.now()
+                                                    ? TimeConverter.convertUnixTimestamp(data.timelocks[idx], "full")
                                                     : ""
                                                 : ""
                                         }
@@ -165,33 +177,36 @@ export default class ValueTransferPanel extends Component {
                         })
                     }
                     {
-                        data.output_addresses.slice(data.input_addresses.length, data.output_addresses.length).map(function(output, idx){
-                            var output_link = "/search/" + output[0];
+                        data.output_addresses.slice(data.inputs_merged.length, data.output_addresses.length).map(function(output_address, idx){
+                            // Add the number of inputs to the index to offset for the already displayed outputs
+                            idx += data.inputs_merged.length;
+
+                            var output_link = "/search/" + output_address;
 
                             return (
                                 <tr>
-                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "30%"}}></td>
+                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "max-width": "40%"}}></td>
                                     <td class="cell-fit" style={{"borderTop": "none"}}></td>
-                                    <td class="cell-fit" style={{"borderTop": "none", "width": "10%"}}></td>
-                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "30%"}}>
-                                        <Link to={output_link}>{output[0]}</Link>
+                                    <td class="cell-fit" style={{"borderTop": "none"}}></td>
+                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "max-width": "40%"}}>
+                                        <Link to={output_link}>{output_address}</Link>
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none", "textAlign": "right"}}>
                                         {
                                             showNanoWitValues
-                                                ? Formatter.formatValue(output[1]) + " nWIT"
-                                                : Formatter.formatWitValue(output[1], 2)
+                                                ? Formatter.formatValue(data.output_values[idx]) + " nWIT"
+                                                : Formatter.formatWitValue(data.output_values[idx], 2)
                                         }
                                     </td>
-                                    <td class="cell-fit" style={{"borderTop": "none", "width": "15%"}}>
+                                    <td class="cell-fit" style={{"borderTop": "none"}}>
                                         {
-                                            output[3]
+                                            data.timelocks[idx] > Date.now()
                                                 ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                 : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                         }
                                         {
-                                            output[3]
-                                                ? TimeConverter.convertUnixTimestamp(output[2], "full")
+                                            data.timelocks[idx] > Date.now()
+                                                ? TimeConverter.convertUnixTimestamp(data.timelocks[idx], "full")
                                                 : ""
                                         }
                                     </td>
@@ -200,127 +215,168 @@ export default class ValueTransferPanel extends Component {
                         })
                     }
                 </tbody>
-            </Table>
+            </table>
         );
     }
 
     generateInputOutputUtxos(data, showNanoWitValues) {
+        // Group input utxos by address
+        var grouped_inputs = {};
+        data.input_utxos.forEach(function(utxo) {
+            if (!(utxo.address in grouped_inputs)) {
+                grouped_inputs[utxo.address] = []
+            }
+            grouped_inputs[utxo.address].push({
+                "value": utxo.value,
+                "utxo": utxo.input_utxo.split(":")
+            })
+        });
+
+        // Group output utxos by address
+        var grouped_outputs = {};
+        data.utxos.forEach(function (utxo) {
+            if (!(utxo.address in grouped_outputs)) {
+                grouped_outputs[utxo.address] = []
+            }
+            grouped_outputs[utxo.address].push({
+                "value": utxo.value,
+                "timelocked": utxo.locked,
+                "timelock": utxo.timelock
+            })
+        });
+
         let output_idx = 0;
-
         return (
-            <table style={{"width": "100%"}}>
-                <tbody>
-                    <tr>
-                        <td style={{"verticalAlign": "top"}}>
-                            <table style={{"width": "100%"}}>
-                                <tbody>
-                                    {
-                                        Object.keys(data.input_utxos).map(function(key){
-                                            var input_address = key;
-                                            var input_address_link = <Link to={"/search/" + input_address}>{input_address}</Link>;
+            <div
+                style={{
+                    "display": "block",
+                    "overflow-y": "scroll",
+                    "max-height": "45vh",
+                    "width": "100%",
+                }}
+            >
+                <table style={{ "width": "100%"}}>
+                    <tbody
+                        style={{
+                            "border-collapse": "separate",
+                            "margin": "0px",
+                            "width": "100%",
+                        }}
+                    >
+                        <tr style={{ "max-width": "100%" }} >
+                            <td style={{ "max-width": "50%", "verticalAlign": "top" }}>
+                                <table>
+                                    <tbody>
+                                        {
+                                            Object.keys(grouped_inputs).map(function(address) {
+                                                var input_address_link = <Link to={"/search/" + address}>{address}</Link>;
 
-                                            var input_utxo_rows = data.input_utxos[key].map(function(input){
-                                                var input_value = showNanoWitValues
-                                                    ? Formatter.formatValue(input[0]) + " nWIT"
-                                                    : Formatter.formatWitValue(input[0], 2);
-                                                var input_utxo_link = <Link to={"/search/" + input[1]}>{input[2] + ":" + input[1]}</Link>;
-                                                return (
+                                                var input_utxo_rows = grouped_inputs[address].map(function(input){
+                                                    var input_value = showNanoWitValues
+                                                        ? Formatter.formatValue(input.value) + " nWIT"
+                                                        : Formatter.formatWitValue(input.value, 2);
+                                                    var input_utxo_link = (
+                                                        <Link to={"/search/" + input.utxo[0]}>
+                                                            {input.utxo[1] + ":" + input.utxo[0]}
+                                                        </Link>
+                                                    );
+                                                    return (
+                                                        <tr>
+                                                            <td class="cell-fit padding-horizontal-wide cell-truncate" style={{ "borderTop": "none" }}>
+                                                                {input_utxo_link}
+                                                            </td>
+                                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none", "textAlign": "right"}}>
+                                                                {input_value}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                });
+
+                                                return ([
                                                     <tr>
-                                                        <td class="cell-fit padding-horizontal-wide cell-truncate" style={{"borderTop": "none", "width": "80%"}}>
-                                                            {input_utxo_link}
+                                                        <td class="cell-fit cell-truncate" style={{ "borderTop": "none", "width": "100%" }}>
+                                                            {input_address_link}
                                                         </td>
-                                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none", "textAlign": "right"}}>
-                                                            {input_value}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            });
+                                                        <td class="cell-fit" style={{"borderTop": "none"}}/>
+                                                        <td class="cell-fit" style={{"borderTop": "none"}}/>
+                                                    </tr>,
+                                                    input_utxo_rows
+                                                ]);
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style={{"verticalAlign": "top"}}>
+                                <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
+                            </td>
+                            <td class="padding-horizontal" style={{ "max-width": "50%", "verticalAlign": "top" }}>
+                                <table>
+                                    <tbody>
+                                        {
+                                            Object.keys(grouped_outputs).map(function(address){
+                                                var output_address_link = <Link to={"/search/" + address}>{address}</Link>;
 
-                                            return ([
-                                                <tr>
-                                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "80%"}}>
-                                                        {input_address_link}
-                                                    </td>
-                                                    <td class="cell-fit" style={{"borderTop": "none"}}/>
-                                                    <td class="cell-fit" style={{"borderTop": "none"}}/>
-                                                </tr>,
-                                                input_utxo_rows
-                                            ]);
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </td>
-                        <td style={{"verticalAlign": "top"}}>
-                            <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
-                        </td>
-                        <td class="padding-horizontal" style={{"verticalAlign": "top"}}>
-                            <table style={{"width": "100%"}}>
-                                <tbody>
-                                    {
-                                        Object.keys(data.output_utxos).map(function(key){
-                                            var output_address = key;
-                                            var output_address_link = <Link to={"/search/" + output_address}>{output_address}</Link>;
+                                                var output_utxo_rows = grouped_outputs[address].map(function(output){
+                                                    var output_text = output_idx + ":" + data.hash;
+                                                    var output_value = showNanoWitValues
+                                                        ? Formatter.formatValue(output.value) + " nWIT"
+                                                        : Formatter.formatWitValue(output.value, 2);
+                                                    var output_timelock = output.timelocked
+                                                        ? TimeConverter.convertUnixTimestamp(output.timelock, "full")
+                                                        : "";
+                                                    var output_timelocked = output.timelocked
+                                                        ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                                                        : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>;
 
-                                            var output_utxo_rows = data.output_utxos[key].map(function(output){
-                                                var output_text = output_idx + ":" + data.txn_hash;
-                                                var output_value = showNanoWitValues
-                                                    ? Formatter.formatValue(output[0]) + " nWIT"
-                                                    : Formatter.formatWitValue(output[0], 2);
-                                                var output_timelock = output[2]
-                                                    ? TimeConverter.convertUnixTimestamp(output[1], "full")
-                                                    : "";
-                                                var output_timelocked = output[2]
-                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>;
+                                                    output_idx = output_idx + 1;
 
-                                                output_idx = output_idx + 1;
+                                                    return (
+                                                        <tr>
+                                                            <td class="cell-fit padding-horizontal-wide cell-truncate" style={{ "borderTop": "none" }}>
+                                                                {output_text}
+                                                            </td>
+                                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none", "textAlign": "right"}}>
+                                                                {output_value}
+                                                            </td>
+                                                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
+                                                                {output_timelocked}
+                                                                {output_timelock}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                });
 
-                                                return (
+                                                return ([
                                                     <tr>
-                                                        <td class="cell-fit padding-horizontal-wide cell-truncate" style={{"borderTop": "none", "width": "70%"}}>
-                                                            {output_text}
+                                                        <td class="cell-fit cell-truncate" style={{ "borderTop": "none", "width": "100%" }}>
+                                                            {output_address_link}
                                                         </td>
-                                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none", "textAlign": "right"}}>
-                                                            {output_value}
-                                                        </td>
-                                                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                                            {output_timelocked}
-                                                            {output_timelock}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            });
-
-                                            return ([
-                                                <tr>
-                                                    <td class="cell-fit cell-truncate" style={{"borderTop": "none", "width": "70%"}}>
-                                                        {output_address_link}
-                                                    </td>
-                                                    <td class="cell-fit" style={{"borderTop": "none"}}/>
-                                                    <td class="cell-fit" style={{"borderTop": "none"}}/>
-                                                </tr>,
-                                                output_utxo_rows
-                                            ]);
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                                        <td class="cell-fit" style={{"borderTop": "none"}}/>
+                                                        <td class="cell-fit" style={{"borderTop": "none"}}/>
+                                                    </tr>,
+                                                    output_utxo_rows
+                                                ]);
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         );
     }
 
     generateUtxoCheck() {
         return (
-            <Form>
+            <Form style={{ "padding-top": "5px" }}>
                 <Form.Check
                     id="showUtxos"
                     inline={true}
                     checked={this.state.showUtxos}
-                    onChange={checked => {
+                    onChange={() => {
                         this.setState({ showUtxos: !this.state.showUtxos })
                     }}
                     label="Show UTXO's"
@@ -336,7 +392,7 @@ export default class ValueTransferPanel extends Component {
                     id="showNanoWitValues"
                     inline={true}
                     checked={this.state.showNanoWitValues}
-                    onChange={checked => {
+                    onChange={() => {
                         this.setState({ showNanoWitValues: !this.state.showNanoWitValues })
                     }}
                     label="Show values in nWIT"
@@ -347,11 +403,11 @@ export default class ValueTransferPanel extends Component {
 
     render() {
         return (
-            <Container fluid style={{"padding": "0px"}}>
-                <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
-                    <Card.Body className="p-3">
-                        <Card.Text>
-                            <Container fluid style={{display: "block", maxHeight: "75vh", overflow: "auto" }}>
+            <Container fluid style={{ "padding": "0px", "max-height": "80vh" }}>
+                <Card className="w-100 shadow p-1 mb-2 bg-white rounded" style={{ "max-height": "80vh" }}>
+                    <Card.Body className="p-2" style={{ "max-height": "75vh" }}>
+                        <Card.Text style={{ "max-height": "75vh" }}>
+                            <Container fluid style={{ "max-height": "75vh" }}>
                                 {
                                     this.generateDetailsCard(this.props.data)
                                 }

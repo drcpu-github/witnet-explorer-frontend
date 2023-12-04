@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Card, Col, Container, Image, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
+import { Card, Col, Container, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ErrorCard from "../../Components/ErrorCard";
+import Paginator from "../../Components/Paginator";
 
 import DataService from "../../Services/DataService";
 import Formatter from "../../Services/Formatter";
@@ -13,94 +14,102 @@ export default class AddressPanel extends Component {
         super(props);
 
         this.loadData = this.loadData.bind(this);
-        this.handleSelect = this.handleSelect.bind(this);
+        this.handleTabSelect = this.handleTabSelect.bind(this);
+        this.onChangePage = this.onChangePage.bind(this);
 
         this.state = {
             address: props.address,
-            address_details: null,
-            address_info: null,
-            address_value_transfers: null,
-            address_blocks: null,
-            address_data_requests_solved: null,
-            address_data_requests_launched: null,
-            address_reputation: null,
-            address_reputation_type: null,
+            details: null,
+            info: null,
+            value_transfers_pagination: null,
+            value_transfers: null,
+            blocks_pagination: null,
+            blocks: null,
+            mints_pagination: null,
+            mints: null,
+            data_requests_solved_pagination: null,
+            data_requests_solved: null,
+            data_requests_created_pagination: null,
+            data_requests_created: null,
+            current_page: 1,
+            current_tab: "value-transfers",
             error_value: "",
         };
 
         if (this.state.address !== "") {
-            this.loadData(this.state.address, "details");
-            this.loadData(this.state.address, "info");
-            this.loadData(this.state.address, "value_transfers");
+            this.loadData(this.state.address, "details", 1);
+            this.loadData(this.state.address, "info", 1);
+            this.loadData(this.state.address, "value-transfers", 1);
         }
     }
 
-    handleSelect(tab) {
-        if (tab === "value_transfers" && this.state.address_value_transfers === null) {
-            this.loadData(this.state.address, "value_transfers");
+    handleTabSelect(tab) {
+        this.setState({
+            current_page: 1,
+            current_tab: tab,
+        });
+
+        if (tab === "value-transfers" && this.state.value_transfers === null) {
+            this.loadData(this.state.address, "value-transfers", 1);
         }
-        else if (tab === "blocks" && this.state.address_blocks === null) {
-            this.loadData(this.state.address, "blocks");
+        else if (tab === "blocks" && this.state.blocks === null) {
+            this.loadData(this.state.address, "blocks", 1);
         }
-        else if (tab === "data_requests_solved" && this.state.address_data_requests_solved === null) {
-            this.loadData(this.state.address, "data_requests_solved");
+        else if (tab === "mints" && this.state.mints === null) {
+            this.loadData(this.state.address, "mints", 1);
         }
-        else if (tab === "data_requests_launched" && this.state.address_data_requests_launched === null) {
-            this.loadData(this.state.address, "data_requests_launched");
+        else if (tab === "data-requests-solved" && this.state.data_requests_solved === null) {
+            this.loadData(this.state.address, "data-requests-solved", 1);
         }
-        else if (tab === "reputation" && this.state.address_reputation === null) {
-            this.loadData(this.state.address, "reputation");
+        else if (tab === "data-requests-created" && this.state.data_requests_created === null) {
+            this.loadData(this.state.address, "data-requests-created", 1);
         }
     }
 
-    loadData(address, tab) {
-        DataService.searchAddress(address, tab)
+    loadData(address, tab, page) {
+        DataService.searchAddress(address, tab, page)
         .then(response => {
             if (tab === "details") {
                 this.setState({
-                    address_details: response,
+                    details: response,
                 });
             }
             else if (tab === "info") {
-                this.setState({
-                    address_info: response,
-                });
+                if (response.length === 1) {
+                    this.setState({
+                        info: response[0],
+                    });
+                }
             }
-            else if (tab === "value_transfers") {
+            else if (tab === "value-transfers") {
                 this.setState({
-                    address_value_transfers: response.value_transfers,
+                    value_transfers_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    value_transfers: response[1],
                 });
             }
             else if (tab === "blocks") {
                 this.setState({
-                    address_blocks: response.blocks,
+                    blocks_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    blocks: response[1],
                 });
             }
-            else if (tab === "data_requests_solved") {
+            else if (tab === "mints") {
                 this.setState({
-                    address_data_requests_solved: response.data_requests_solved,
+                    mints_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    mints: response[1],
                 });
             }
-            else if (tab === "data_requests_launched") {
+            else if (tab === "data-requests-solved") {
                 this.setState({
-                    address_data_requests_launched: response.data_requests_launched,
+                    data_requests_solved_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    data_requests_solved: response[1],
                 });
             }
-            else if (tab === "reputation") {
-                // A proper image was returned
-                if (response.type === "image/png") {
-                    this.setState({
-                        address_reputation: URL.createObjectURL(response),
-                        address_reputation_type: response.type,
-                    });
-                }
-                // A JSON object with an error message was returned
-                else {
-                    this.setState({
-                        address_reputation: response.error,
-                        address_reputation_type: response.type,
-                    });
-                }
+            else if (tab === "data-requests-created") {
+                this.setState({
+                    data_requests_created_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    data_requests_created: response[1],
+                });
             }
         })
         .catch(e => {
@@ -111,8 +120,20 @@ export default class AddressPanel extends Component {
         });
     }
 
-    generateDetailsCard(data) {
-        var address_link = "/search/" + data.address;
+    onChangePage(paginator) {
+        this.setState({
+            current_page: paginator.current_page,
+        });
+
+        if (this.state.current_page !== paginator.current_page) {
+            this.loadData(this.state.address, this.state.current_tab, paginator.current_page);
+        }
+    }
+
+    generateDetailsCard() {
+        const { details } = this.state;
+
+        var address_link = "/search/" + this.state.address;
         return (
             <Container fluid>
                 <Table>
@@ -122,7 +143,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "user"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Account"}
                             </td>
                             <td style={{"padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap"}}>
-                                <a href={address_link}>{data.address}</a>
+                                <a href={address_link}>{this.state.address}</a>
                             </td>
                         </tr>
                         <tr>
@@ -131,9 +152,9 @@ export default class AddressPanel extends Component {
                             </td>
                             <td style={{"padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap"}}>
                                 {
-                                    data.balance === "Could not retrieve balance"
-                                        ? data.balance
-                                        : Formatter.formatWitValue(data.balance)
+                                    details.balance === "Could not retrieve balance"
+                                        ? details.balance
+                                        : Formatter.formatWitValue(details.balance)
                                 }
                             </td>
                         </tr>
@@ -142,11 +163,11 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "star"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Reputation"}
                             </td>
                             <td style={{"padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap"}}>
-                                {data.reputation}
+                                {details.reputation}
                                 {
-                                    data.eligibility === "Could not retrieve eligibility"
-                                        ? " (" + data.eligibility + ")"
-                                        : " (" + (data.eligibility / data.total_reputation * 100).toFixed(2) + "%)"
+                                    details.eligibility === "Could not retrieve eligibility"
+                                        ? " (" + details.eligibility + ")"
+                                        : " (" + (details.eligibility / details.total_reputation * 100).toFixed(2) + "%)"
                                 }
                             </td>
                         </tr>
@@ -155,7 +176,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["far", "id-card"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Label"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {data.label}
+                                {details.label}
                             </td>
                         </tr>
                     </tbody>
@@ -164,33 +185,23 @@ export default class AddressPanel extends Component {
         );
     }
 
-    generateInfoCard(address, info) {
-        let blocks, value_transfers, data_requests, commits;
-        if (address in info) {
-            blocks = info[address].block;
-            value_transfers = info[address].value_transfer;
-            data_requests = info[address].data_request;
-            commits = info[address].commit;
-        }
-        else if ("error" in info && info.error === "could not find address") {
-            blocks = 0;
-            value_transfers = 0;
-            data_requests = 0;
-            commits = 0;
-        }
-        else {
+    generateInfoCard() {
+        const { info } = this.state;
+
+        if (info === null) {
             return (
                 <Container fluid>
                     <Table>
                         <tbody>
                             <tr>
-                                {"Could not fetch address info"}
+                                {"No address info found"}
                             </tr>
                         </tbody>
                     </Table>
                 </Container>
             );
         }
+
         return (
             <Container fluid>
                 <Table>
@@ -200,7 +211,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Blocks"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {blocks}
+                                {info.block}
                             </td>
                         </tr>
                         <tr>
@@ -208,7 +219,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "coins"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Value transfers"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {value_transfers}
+                                {info.value_transfer}
                             </td>
                         </tr>
                         <tr>
@@ -216,7 +227,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests created"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {data_requests}
+                                {info.data_request}
                             </td>
                         </tr>
                         <tr>
@@ -224,7 +235,7 @@ export default class AddressPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" fixedWidth style={{ "marginRight": "0.25rem" }} />{"Data requests solved"}
                             </td>
                             <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
-                                {commits}
+                                {info.commit}
                             </td>
                         </tr>
                     </tbody>
@@ -233,196 +244,317 @@ export default class AddressPanel extends Component {
         );
     }
 
-    generateValueTransferCard(value_transfers) {
-        return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
-                <thead>
-                    <tr class="th-fixed">
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
-                        </th>
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
-                        </th>
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Source"}
-                        </th>
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Destination"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Fee"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Priority"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Locked"}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        value_transfers.map(function(value_transfer, idx){
-                            const txn_link = "/search/" + value_transfer[1];
-                            const source_link = "/search/" + value_transfer[4];
-                            const destination_link = "/search/" + value_transfer[5];
+    generateValueTransferCard() {
+        const { value_transfers_pagination, value_transfers } = this.state;
+        var total_value_transfers = value_transfers_pagination.total;
 
-                            let icon;
-                            if (value_transfer[10] ===  true) { // reverted
-                                icon = <FontAwesomeIcon icon={["fas", "exclamation"]} size="sm" style={{"marginRight": "0.25rem"}}/>
-                            }
-                            else {
+        return (
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
+                    <thead>
+                        <tr class="th-fixed">
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
+                            </th>
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
+                            </th>
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Source"}
+                            </th>
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Destination"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Fee"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["fas", "tachometer-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Priority"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Locked"}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            value_transfers.map(function(value_transfer){
+                                const txn_link = "/search/" + value_transfer.hash;
+                                const source_link = "/search/" + value_transfer.input_addresses[0];
+                                const destination_link = "/search/" + value_transfer.output_addresses[0];
+
+                                let icon;
                                 // Merge or split transaction to the same address
-                                if (value_transfer[0] === 0) {
+                                if (value_transfer.direction === "self") {
                                     icon = <FontAwesomeIcon icon={["fas", "equals"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
                                 // Incoming transaction
-                                else if (value_transfer[0] === 1) {
+                                else if (value_transfer.direction === "in") {
                                     icon = <FontAwesomeIcon icon={["fas", "plus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
                                 // Outgoing transaction
-                                else if  (value_transfer[0] === 2) {
+                                else if (value_transfer.direction === "out") {
                                     icon = <FontAwesomeIcon icon={["fas", "minus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                 }
-                            }
 
-                            return (
-                                <tr>
-                                    <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
-                                        {icon}<a href={txn_link}>{value_transfer[1]}</a>
-                                    </td>
-                                    <td class="cell-fit">
-                                        {TimeConverter.convertUnixTimestamp(value_transfer[3], "full")}
-                                    </td>
-                                    <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
-                                        {
-                                            value_transfer[4].includes("multiple") || value_transfer[4].includes("genesis")
-                                                ? value_transfer[4]
-                                                : <a href={source_link}>{value_transfer[4]}</a>
-                                        }
-                                    </td>
-                                    <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
-                                        {
-                                            value_transfer[5].includes("multiple") || value_transfer[5].includes("genesis")
-                                                ? value_transfer[5]
-                                                : <a href={destination_link}>{value_transfer[5]}</a>
-                                        }
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(value_transfer[6], 2)}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(value_transfer[7], 2)}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatValue(value_transfer[8], 0)}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {
-                                            value_transfer[9]
-                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
-                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
-                                        }
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </Table>
+                                return (
+                                    <tr>
+                                        <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
+                                            {icon}<a href={txn_link}>{value_transfer.hash}</a>
+                                        </td>
+                                        <td class="cell-fit">
+                                            {TimeConverter.convertUnixTimestamp(value_transfer.timestamp, "full")}
+                                        </td>
+                                        <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
+                                            {
+                                                value_transfer.input_addresses.length === 1
+                                                    ? <a href={source_link}>{value_transfer.input_addresses[0]}</a>
+                                                    : value_transfer.input_addresses.length > 1
+                                                        ? "multiple addresses"
+                                                        : "genesis"
+                                            }
+                                        </td>
+                                        <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
+                                            {
+                                                value_transfer.output_addresses.length === 1
+                                                    ? <a href={destination_link}>{value_transfer.output_addresses[0]}</a>
+                                                    : "multiple addresses"
+                                            }
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {Formatter.formatWitValue(value_transfer.value, 2)}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {Formatter.formatWitValue(value_transfer.fee, 2)}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {Formatter.formatValue(value_transfer.priority, 0)}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {
+                                                value_transfer.locked
+                                                    ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
+                                                    : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
+                                            }
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+                <Paginator
+                    key={"paginator-" + total_value_transfers}
+                    items={total_value_transfers}
+                    itemsPerPage={value_transfers.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container>
         );
     }
 
-    generateBlocksCard(blocks) {
-        return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
-                <thead>
-                    <tr class="th-fixed">
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Block"}
-                        </th>
-                        <th class="cell-fit">
-                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "history"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Epoch"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Reward"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "right"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Fees"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value transfer"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Data request"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["far", "handshake"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Commit"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["far", "eye"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Reveal"}
-                        </th>
-                        <th class="cell-fit" style={{"textAlign": "center"}}>
-                            <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Tally"}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        blocks.map(function(block, idx){
-                            const block_link = "/search/" + block[0];
+    generateBlocksCard() {
+        const { blocks_pagination, blocks } = this.state;
+        var total_blocks = blocks_pagination.total;
 
-                            return (
-                                <tr>
-                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
-                                        <a href={block_link}>{block[0]}</a>
-                                    </td>
-                                    <td class="cell-fit">
-                                        {TimeConverter.convertUnixTimestamp(block[1], "full")}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {block[2]}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(block[3])}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(block[4])}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {block[5]}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {block[6]}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {block[7]}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {block[8]}
-                                    </td>
-                                    <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {block[9]}
-                                    </td>
-                                </tr>
-                            );
-                        })
-                    }
-                </tbody>
-            </Table>
+        return (
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
+                    <thead>
+                        <tr class="th-fixed">
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Block"}
+                            </th>
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["fas", "history"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Epoch"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Reward"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "right"}}>
+                                <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Fees"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value transfer"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Data request"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["far", "handshake"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Commit"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["far", "eye"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Reveal"}
+                            </th>
+                            <th class="cell-fit" style={{"textAlign": "center"}}>
+                                <FontAwesomeIcon icon={["fas", "calculator"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Tally"}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            blocks.map(function(block) {
+                                const block_link = "/search/" + block.hash;
+
+                                return (
+                                    <tr>
+                                        <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                            <a href={block_link}>{block.hash}</a>
+                                        </td>
+                                        <td class="cell-fit">
+                                            {TimeConverter.convertUnixTimestamp(block.timestamp, "full")}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {block.epoch}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {Formatter.formatWitValue(block.block_reward)}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "right"}}>
+                                            {Formatter.formatWitValue(block.block_fees)}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {block.value_transfers}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {block.data_requests}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {block.commits}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {block.reveals}
+                                        </td>
+                                        <td class="cell-fit" style={{"textAlign": "center"}}>
+                                            {block.tallies}
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+                <Paginator
+                    key={"paginator-" + total_blocks}
+                    items={total_blocks}
+                    itemsPerPage={blocks.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container>
         );
     }
 
-    generateDataRequestsSolvedCard(data_requests_solved) {
+    generateMintsCard() {
+        const { mints_pagination, mints } = this.state;
+        var total_mints = mints_pagination.total;
+
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
+                    <thead>
+                        <tr class="th-fixed">
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{ "marginRight": "0.25rem" }} />{"Transaction"}
+                            </th>
+                            <th class="cell-fit">
+                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{ "marginRight": "0.25rem" }} />{"Timestamp"}
+                            </th>
+                            <th class="cell-fit" style={{ "textAlign": "right" }}>
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{ "marginRight": "0.25rem" }} />{"Miner"}
+                            </th>
+                            <th class="cell-fit" style={{ "textAlign": "right" }}>
+                                <FontAwesomeIcon icon={["fas", "trophy"]} size="sm" style={{ "marginRight": "0.25rem" }} />{"Value"}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            mints.map(function (mint) {
+                                const mint_link = "/search/" + mint.hash;
+                                const miner_link = "/search/" + mint.miner;
+
+                                return (
+                                    <tr>
+                                        <td class="cell-fit cell-truncate" style={{ "width": "50%" }}>
+                                            <a href={mint_link}>{mint.hash}</a>
+                                        </td>
+                                        <td class="cell-fit">
+                                            {TimeConverter.convertUnixTimestamp(mint.timestamp, "full")}
+                                        </td>
+                                        <td class="cell-fit">
+                                            <a href={miner_link}>{mint.miner}</a>
+                                        </td>
+                                        <td class="cell-fit" style={{ "textAlign": "right" }}>
+                                            {Formatter.formatWitValue(mint.output_value)}
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </Table>
+                <Paginator
+                    key={"paginator-" + total_mints}
+                    items={total_mints}
+                    itemsPerPage={mints.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container>
+        );
+    }
+
+    generateDataRequestsSolvedCard() {
+        const { data_requests_solved_pagination, data_requests_solved } = this.state;
+        var total_data_requests_solved = data_requests_solved_pagination.total;
+
+        return (
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
@@ -451,39 +583,39 @@ export default class AddressPanel extends Component {
                 <tbody>
                     {
                         data_requests_solved.map(function(data_request_solved, idx){
-                            const data_request_link = "/search/" + data_request_solved[1];
+                            const data_request_link = "/search/" + data_request_solved.hash;
 
                             return (
                                 <tr>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
-                                            data_request_solved[0]
+                                            data_request_solved.success
                                                 ? <FontAwesomeIcon icon={["fas", "check"]} size="sm"/>
                                                 : <FontAwesomeIcon icon={["fas", "times"]} size="sm"/>
                                         }
                                     </td>
                                     <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
-                                        <a href={data_request_link}>{data_request_solved[1]}</a>
+                                        <a href={data_request_link}>{data_request_solved.hash}</a>
                                     </td>
                                     <td class="cell-fit">
-                                        {TimeConverter.convertUnixTimestamp(data_request_solved[3], "full")}
+                                        {TimeConverter.convertUnixTimestamp(data_request_solved.timestamp, "full")}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(data_request_solved[4])}
+                                        {Formatter.formatWitValue(data_request_solved.collateral)}
                                     </td>
                                     <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
-                                        {data_request_solved[6]}
+                                        {data_request_solved.reveal}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
-                                            data_request_solved[7]
+                                            data_request_solved.error
                                                 ? <FontAwesomeIcon icon={["fas", "times"]} size="sm"/>
                                                 : ""
                                         }
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
-                                            data_request_solved[8]
+                                            data_request_solved.liar
                                                 ? <FontAwesomeIcon icon={["fas", "bolt"]} size="sm"/>
                                                 : ""
                                         }
@@ -494,12 +626,33 @@ export default class AddressPanel extends Component {
                     }
                 </tbody>
             </Table>
+                <Paginator
+                    key={"paginator-" + total_data_requests_solved}
+                    items={total_data_requests_solved}
+                    itemsPerPage={data_requests_solved.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container >
         );
     }
 
-    generateDataRequestsLaunchedCard(data_requests_launched) {
+    generateDataRequestsCreatedCard() {
+        const { data_requests_created_pagination, data_requests_created } = this.state;
+        var total_data_requests_created = data_requests_created_pagination.total;
+
         return (
-            <Table hover responsive style={{ "borderCollapse": "separate", "display": "block", "overflow": "auto", "height": "50vh" }}>
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
                 <thead>
                     <tr class="th-fixed">
                         <th class="cell-fit" style={{"textAlign": "center"}}>
@@ -536,44 +689,44 @@ export default class AddressPanel extends Component {
                 </thead>
                 <tbody>
                     {
-                        data_requests_launched.map(function(data_request_launched, idx){
-                            const data_request_link = "/search/" + data_request_launched[1];
+                        data_requests_created.map(function(data_request_created, idx){
+                            const data_request_link = "/search/" + data_request_created.hash;
 
                             return (
                                 <tr>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {
-                                            data_request_launched[0]
+                                            data_request_created.success
                                                 ? <FontAwesomeIcon icon={["fas", "check"]} size="sm"/>
                                                 : <FontAwesomeIcon icon={["fas", "times"]} size="sm"/>
                                         }
                                     </td>
                                     <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
-                                        <a href={data_request_link}>{data_request_launched[1]}</a>
+                                        <a href={data_request_link}>{data_request_created.hash}</a>
                                     </td>
                                     <td class="cell-fit" style={{"width": "20%"}}>
-                                        {TimeConverter.convertUnixTimestamp(data_request_launched[3], "full")}
+                                        {TimeConverter.convertUnixTimestamp(data_request_created.timestamp, "full")}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(data_request_launched[4])}
+                                        {Formatter.formatWitValue(data_request_created.total_fee)}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {data_request_launched[5]}
+                                        {data_request_created.witnesses}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "right"}}>
-                                        {Formatter.formatWitValue(data_request_launched[6])}
+                                        {Formatter.formatWitValue(data_request_created.collateral)}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {data_request_launched[7] + "%"}
+                                        {data_request_created.consensus + "%"}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {data_request_launched[8]}
+                                        {data_request_created.num_errors}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {data_request_launched[9]}
+                                        {data_request_created.num_liars}
                                     </td>
                                     <td class="cell-fit cell-truncate" style={{"width": "20%"}}>
-                                        {data_request_launched[10]}
+                                        {data_request_created.result}
                                     </td>
                                 </tr>
                             );
@@ -581,33 +734,19 @@ export default class AddressPanel extends Component {
                     }
                 </tbody>
             </Table>
+                <Paginator
+                    key={"paginator-" + total_data_requests_created}
+                    items={total_data_requests_created}
+                    itemsPerPage={data_requests_created.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container >
         );
     }
 
-    generateReputationCard() {
-        if (this.state.address_reputation_type === "image/png") {
-            return (
-                <Container fluid style={{ display: "block", maxHeight: "50vh", overflowX: "auto", overflowY: "hidden"}}>
-                    <Image
-                        src={this.state.address_reputation}
-                        id={"reputation-" + this.state.address}
-                        alt={"Reputation plot for " + this.state.address}
-                        style={{ maxHeight: "54vh" }}
-                    />
-                </Container>
-            );
-        }
-        else {
-            return (
-                <Container fluid>
-                    {this.state.address_reputation}
-                </Container>
-            );
-        }
-    }
-
     render() {
-        const { address, address_details, address_info, address_value_transfers, address_blocks, address_data_requests_solved, address_data_requests_launched, address_reputation, error_value } = this.state;
+        const { details, info, error_value } = this.state;
 
         if (error_value === "") {
             return (
@@ -618,9 +757,9 @@ export default class AddressPanel extends Component {
                                 <Card.Body className="p-1">
                                     <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
                                         {
-                                            address_details === null
+                                            details === null
                                                 ? <Spinner animation="border" />
-                                                : this.generateDetailsCard(address_details)
+                                                : this.generateDetailsCard(details)
                                         }
                                     </Container>
                                 </Card.Body>
@@ -631,9 +770,9 @@ export default class AddressPanel extends Component {
                                 <Card.Body className="p-1">
                                     <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
                                         {
-                                            address_info === null
+                                            info === null
                                                 ? <Spinner animation="border" />
-                                                : this.generateInfoCard(address, address_info)
+                                                : this.generateInfoCard(info)
                                         }
                                     </Container>
                                 </Card.Body>
@@ -644,49 +783,49 @@ export default class AddressPanel extends Component {
                         <Col>
                             <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                                 <Card.Body className="p-1">
-                                    <Tabs defaultActiveKey="value_transfers" id="uncontrolled-tab-example" onSelect={this.handleSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
-                                        <Tab eventKey="value_transfers" title="Transactions">
+                                    <Tabs defaultActiveKey="value-transfers" id="uncontrolled-tab-example" onSelect={this.handleTabSelect} style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
+                                        <Tab eventKey="value-transfers" title="Transactions">
                                             <Container fluid style={{height: "50vh"}}>
                                                 {
-                                                    address_value_transfers === null
+                                                    this.state.value_transfers === null
                                                         ? <Spinner animation="border" />
-                                                        : this.generateValueTransferCard(address_value_transfers)
+                                                        : this.generateValueTransferCard()
                                                 }
                                             </Container>
                                         </Tab>
                                         <Tab eventKey="blocks" title="Blocks">
                                             <Container fluid style={{ height: "50vh" }}>
                                                 {
-                                                    address_blocks === null
+                                                    this.state.blocks === null
                                                         ? <Spinner animation="border" />
-                                                        : this.generateBlocksCard(address_blocks)
+                                                        : this.generateBlocksCard()
                                                 }
                                             </Container>
                                         </Tab>
-                                        <Tab eventKey="data_requests_solved" title="Data requests solved">
+                                        <Tab eventKey="mints" title="Mints">
                                             <Container fluid style={{ height: "50vh" }}>
                                                 {
-                                                    address_data_requests_solved === null
+                                                    this.state.mints === null
                                                         ? <Spinner animation="border" />
-                                                        : this.generateDataRequestsSolvedCard(address_data_requests_solved)
+                                                        : this.generateMintsCard()
                                                 }
                                             </Container>
                                         </Tab>
-                                        <Tab eventKey="data_requests_launched" title="Data requests launched">
+                                        <Tab eventKey="data-requests-solved" title="Data requests solved">
                                             <Container fluid style={{ height: "50vh" }}>
                                                 {
-                                                    address_data_requests_launched === null
+                                                    this.state.data_requests_solved === null
                                                         ? <Spinner animation="border" />
-                                                        : this.generateDataRequestsLaunchedCard(address_data_requests_launched)
+                                                        : this.generateDataRequestsSolvedCard()
                                                 }
                                             </Container>
                                         </Tab>
-                                        <Tab eventKey="reputation" title="Reputation">
+                                        <Tab eventKey="data-requests-created" title="Data requests launched">
                                             <Container fluid style={{ height: "50vh" }}>
                                                 {
-                                                    address_reputation === null
+                                                    this.state.data_requests_created === null
                                                         ? <Spinner animation="border" />
-                                                        : this.generateReputationCard()
+                                                        : this.generateDataRequestsCreatedCard()
                                                 }
                                             </Container>
                                         </Tab>

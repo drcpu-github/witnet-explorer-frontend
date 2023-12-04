@@ -8,48 +8,60 @@ import TimeConverter from "../../Services/TimeConverter";
 
 export default class MintPanel extends Component {
     generateDetailsCard(data) {
-        var block_link = "/search/" + data.block_hash;
-        var txn_link = "/search/" + data.txn_hash;
+        var transaction_link = "/search/" + data.hash;
+        var miner_link = "/search/" + data.miner;
+        var block_link = "/search/" + data.block;
 
         return (
-            <Table style={{ "borderCollapse": "separate", "marginBottom": "0px" }}>
-                <tbody style={{ display: "block", maxHeight: "75vh", overflow: "auto" }}>
+            <Table style={{ "border-collapse": "separate", "margin-bottom": "0px" }}>
+                <tbody style={{ "display": "block", "maxHeight": "75vh", "overflow-y": "scroll" }}>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Transaction"}
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={block_link}>{data.block_hash}</Link>
+                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                            <Link to={transaction_link}>{data.hash}</Link>
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["fas", "user"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Miner"}
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            <Link to={txn_link}>{data.txn_hash}</Link>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
-                        </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {TimeConverter.convertUnixTimestamp(data.txn_time, "full") + " (epoch: " + data.txn_epoch + ")"}
+                        <td style={{ "padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap" }}>
+                            <a href={miner_link}>{data.miner}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Block"}
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                            {data.status}
+                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                            <Link to={block_link}>{data.block}</Link>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["far", "clock"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Time"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                            {TimeConverter.convertUnixTimestamp(data.timestamp, "full") + " (epoch: " + data.epoch + ")"}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                            <FontAwesomeIcon icon={["fas", "check"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Status"}
+                        </td>
+                        <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "100%" }}>
+                            {
+                                data.confirmed
+                                    ? "Confirmed"
+                                    : "Mined"
+                            }
                         </td>
                     </tr>
                     {
-                        data.mint_outputs.map(function(output, idx){
-                            var address_link = "/search/" + output[0];
-                            console.log(Formatter.formatWitValue(output[1], 2).padStart(10, " "));
+                        data.output_addresses.map(function (address, idx){
+                            var address_link = "/search/" + address;
                             return (
                                 <tr>
                                     <td class="cell-fit-padding-wide">
@@ -60,14 +72,14 @@ export default class MintPanel extends Component {
                                         }
                                     </td>
                                     <td class="cell-fit-no-padding">
-                                        <span style={{"white-space": "pre"}}>
-                                            {Formatter.formatWitValue(output[1], 2).padStart(10, " ")}
+                                        <span style={{ "white-space": "pre" }}>
+                                            {Formatter.formatWitValue(data.output_values[idx], 2).padStart(10, " ")}
                                         </span>
-                                        <span style={{"paddingLeft": "20px"}}>
-                                            <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg"/>
+                                        <span style={{ "paddingLeft": "20px" }}>
+                                            <FontAwesomeIcon icon={["fas", "long-arrow-alt-right"]} size="lg" />
                                         </span>
-                                        <span style={{"paddingLeft": "20px"}}>
-                                            <Link to={address_link}>{output[0]}</Link>
+                                        <span style={{ "paddingLeft": "20px" }}>
+                                            <Link to={address_link}>{address}</Link>
                                         </span>
                                     </td>
                                 </tr>
