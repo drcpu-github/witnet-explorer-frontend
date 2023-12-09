@@ -17,8 +17,7 @@ const tab_request_map = {
     "collaterals": "histogram-data-request-collateral",
     "rewards": "histogram-data-request-reward",
     "lie_rates": "histogram-data-request-lie-rate",
-    "supply_burn_rate": "histogram-supply-burn-rate",
-    "trs": "histogram-trs-data",
+    "supply_burn_rate": "histogram-burn-rate",
     "value_transfers": "histogram-value-transfers",
     "staking": "percentile-staking-balances",
     "miners": "top-100-miners",
@@ -45,10 +44,7 @@ export default class Network extends Component {
             start_epoch: null,
             stop_epoch: null,
             error_value: null,
-            period_data: null,
-            aggregation: null,
-            values: null,
-            plot_data: null,
+            data: null,
             last_updated: null,
             active_tab: "data_requests",
         }
@@ -66,10 +62,7 @@ export default class Network extends Component {
             this.setState({
                 loading: false,
                 error_value: null,
-                period_data: response.period,
-                aggregation: response.aggregation,
-                values: response.values,
-                plot_data: response.data,
+                data: response,
                 last_updated: TimeConverter.convertUnixTimestamp(response.last_updated, "hour"),
             });
         })
@@ -82,13 +75,14 @@ export default class Network extends Component {
     }
 
     generateDataRequestsCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function(data, idx) {
+        const { data } = this.state;
+
+        var named_data = data.histogram_data_requests.map(function(histogram, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
-                    "data_requests_success": data[1],
-                    "data_requests_failure": data[0] - data[1],
+                    "epochs": data.start_epoch + data.histogram_period * idx,
+                    "data_requests_success": histogram.total - histogram.failure,
+                    "data_requests_failure": histogram.failure,
                 }
             );
         });
@@ -105,7 +99,7 @@ export default class Network extends Component {
                             <YAxis width={50}>
                                 <Label  value="Amount" angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} />
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)} />
                             <Bar name="Success" dataKey="data_requests_success" stackId="data_requests" fill="#0bb1a5" stroke="#0bb1a5" />
                             <Bar name="Failure" dataKey="data_requests_failure" stackId="data_requests" fill="#b10b17" stroke="#b10b17" />
                         </BarChart>
@@ -116,12 +110,13 @@ export default class Network extends Component {
     }
 
     generateCompositionCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function(data, idx) {
-            if (data[1] + data[2] === 0 || data[0] === 0) {
+        const { data } = this.state;
+
+        var named_data = data.histogram_data_request_composition.map(function (histogram, idx) {
+            if (histogram.http_get + histogram.http_post === 0 || histogram.total === 0) {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": data.start_epoch + data.histogram_period * idx,
                         "composition_http_get": 0,
                         "composition_http_post": 0,
                         "composition_rng": 0,
@@ -131,10 +126,10 @@ export default class Network extends Component {
             else {
                 return (
                     {
-                        "epochs": period_data[idx],
-                        "composition_http_get": data[1] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
-                        "composition_http_post": data[2] / (data[1] + data[2]) * (data[0] - data[3]) / data[0] * 100,
-                        "composition_rng": data[3] / data[0] * 100,
+                        "epochs": data.start_epoch + data.histogram_period * idx,
+                        "composition_http_get": histogram.http_get / (histogram.http_get + histogram.http_post) * (histogram.total - histogram.rng) / histogram.total * 100,
+                        "composition_http_post": histogram.http_post / (histogram.http_get + histogram.http_post) * (histogram.total - histogram.rng) / histogram.total * 100,
+                        "composition_rng": histogram.rng / histogram.total * 100,
                     }
                 );
             }
@@ -152,7 +147,7 @@ export default class Network extends Component {
                             <YAxis width={40} ticks={[0, 20, 40, 60, 80, 100]} domain={[0, 100]} tickFormatter={value => { return value + "%" }}>
                                 <Label value="Ratio" angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} formatter={(value) => value.toFixed(2) + "%"} />
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)} formatter={(value) => value.toFixed(2) + "%"} />
                             <Area name="HTTP-GET" dataKey="composition_http_get" stackId="composition" fill="#0bb1a5" stroke="#0bb1a5" />
                             <Area name="HTTP-POST" dataKey="composition_http_post" stackId="composition" fill="#53378c" stroke="#53378c" />
                             <Area name="RNG" dataKey="composition_rng" stackId="composition" fill="#12243a" stroke="#12243a" />
@@ -164,10 +159,29 @@ export default class Network extends Component {
     }
 
     generateValueMapCard(key, format_wit = false) {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function (data, idx) {
-            var data_plus_epoch = data;
-            data_plus_epoch["epochs"] = period_data[idx];
+        const { data } = this.state;
+
+        let plot_data;
+        if (key === "Witnesses") {
+            plot_data = data.histogram_data_request_witness;
+        }
+        else if (key === "Collateral") {
+            plot_data = data.histogram_data_request_collateral;
+        }
+        else if (key === "Reward") {
+            plot_data = data.histogram_data_request_reward;
+        }
+
+        // Get all unique keys
+        var unique_keys = new Set();
+        plot_data.forEach(entry => {
+            Object.keys(entry).forEach(key => unique_keys.add(parseInt(key)));
+        });
+        var keys = [...unique_keys].sort(function (a, b) { return a - b; });
+
+        var named_data = plot_data.map(function (histogram, idx) {
+            var data_plus_epoch = histogram;
+            data_plus_epoch["epochs"] = data.start_epoch + data.histogram_period * idx;
             return data_plus_epoch;
         });
 
@@ -183,11 +197,21 @@ export default class Network extends Component {
                             <YAxis width={50}>
                                 <Label value={key} angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)}/>
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)}/>
                             {
-                                this.state.values.map(function(value, idx){
+                                keys.map(function(value, idx){
                                     return (
-                                        <Bar name={format_wit ? Formatter.formatWitValue(value) : value + " " + key.toLowerCase()} dataKey={value} stackId="stack" fill={colors[idx % colors.length]} stroke={colors[idx % colors.length]} />
+                                        <Bar
+                                            name={
+                                                format_wit
+                                                    ? Formatter.formatWitValue(value)
+                                                    : value + " " + key.toLowerCase()
+                                            }
+                                            dataKey={value}
+                                            stackId="stack"
+                                            fill={colors[idx % colors.length]}
+                                            stroke={colors[idx % colors.length]}
+                                        />
                                     );
                                 })
                             }
@@ -199,12 +223,13 @@ export default class Network extends Component {
     }
 
     generateLieCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function (data, idx) {
-            if (data[0] === 0) {
+        const { data } = this.state;
+
+        var named_data = data.histogram_data_request_lie_rate.map(function (histogram, idx) {
+            if (histogram.witnessing_acts === 0) {
                 return (
                     {
-                        "epochs": period_data[idx],
+                        "epochs": data.start_epoch + data.histogram_period * idx,
                         "truth": 0,
                         "error": 0,
                         "no_reveal": 0,
@@ -215,11 +240,11 @@ export default class Network extends Component {
             else {
                 return (
                     {
-                        "epochs": period_data[idx],
-                        "truth": (data[0] - data.slice(1, 4).reduce((a, b) => a + b)) / data[0] * 100,
-                        "error": data[1] / data[0] * 100,
-                        "no_reveal": data[2] / data[0] * 100,
-                        "no_consensus": data[3] / data[0] * 100,
+                        "epochs": data.start_epoch + data.histogram_period * idx,
+                        "truth": (histogram.witnessing_acts - histogram.errors - histogram.no_reveal_lies - histogram.out_of_consensus_lies) / histogram.witnessing_acts * 100,
+                        "error": histogram.errors / histogram.witnessing_acts * 100,
+                        "no_reveal": histogram.no_reveal_lies / histogram.witnessing_acts * 100,
+                        "no_consensus": histogram.out_of_consensus_lies / histogram.witnessing_acts * 100,
                     }
                 );
             }
@@ -237,7 +262,7 @@ export default class Network extends Component {
                             <YAxis width={40} ticks={[0, 20, 40, 60, 80, 100]} domain={[0, 100]} tickFormatter={value => { return value + "%" }}>
                                 <Label value="Ratio" angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} formatter={(value) => value.toFixed(2) + "%"} />
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)} formatter={(value) => value.toFixed(2) + "%"} />
                             <Area name="Truth" dataKey="truth" stackId="lie_rate" fill="#0bb1a5" stroke="#0bb1a5" />
                             <Area name="Error" dataKey="error" stackId="lie_rate" fill="#53378c" stroke="#53378c" />
                             <Area name="No reveal" dataKey="no_reveal" stackId="lie_rate" fill="#12243a" stroke="#12243a" />
@@ -250,13 +275,14 @@ export default class Network extends Component {
     }
 
     generateBurnCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function (data, idx) {
+        const { data } = this.state;
+
+        var named_data = data.histogram_burn_rate.map(function (histogram, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
-                    "blocks_reverted": data[0],
-                    "data_request_lies": data[1],
+                    "epochs": data.start_epoch + data.histogram_period * idx,
+                    "blocks_reverted": Math.floor(histogram.reverted / 1E9),
+                    "data_request_lies": Math.floor(histogram.lies / 1E9),
                 }
             );
         });
@@ -273,8 +299,8 @@ export default class Network extends Component {
                             <YAxis width={50}>
                                 <Label value="Amount (WIT)" angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} />
-                            <Bar name="Reverts" dataKey="blocks_reverted" stackId="burned" fill="#0bb1a5" stroke="#12243a" />
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)} />
+                            <Bar name="Reverts" dataKey="blocks_reverted" stackId="burned" fill="#0bb1a5" stroke="#0bb1a5" />
                             <Bar name="Lies" dataKey="data_request_lies" stackId="burned" fill="#b10b17" stroke="#b10b17" />
                         </BarChart>
                     </ResponsiveContainer>
@@ -284,12 +310,13 @@ export default class Network extends Component {
     }
 
     generateValueTransfersCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function (data, idx) {
+        const { data } = this.state;
+
+        var named_data = data.histogram_value_transfers.map(function (histogram, idx) {
             return (
                 {
-                    "epochs": period_data[idx],
-                    "value_transfers": data,
+                    "epochs": data.start_epoch + data.histogram_period * idx,
+                    "value_transfers": histogram.value_transfers,
                 }
             );
         });
@@ -306,64 +333,10 @@ export default class Network extends Component {
                             <YAxis width={50}>
                                 <Label value="Amount" angle={270} position="left" textAnchor="middle" />
                             </YAxis>
-                            <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} />
+                            <Tooltip labelFormatter={(value) => value + " - " + (value + data.histogram_period - 1)} />
                             <Bar name="Value transfers" dataKey="value_transfers" fill="#0bb1a5" stroke="#0bb1a5" />
                         </BarChart>
                     </ResponsiveContainer>
-                </Card.Body>
-            </Card>
-        );
-    }
-
-    generateTrsCard() {
-        const period_data = this.state.period_data;
-        var named_data = this.state.plot_data.map(function (data, idx) {
-            return (
-                {
-                    "epochs": period_data[idx],
-                    "nodes": data[0],
-                    "average_reputation": data[1],
-                    "median_reputation": data[2],
-                    "maximum_reputation": data[3],
-                }
-            );
-        });
-
-        return (
-            <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body class="flex-container" style={{ padding: 0 }}>
-                    <div style={{ "box-sizing": "border-box", "width": "33%", height: "70vh" }}>
-                        <ResponsiveContainer width="100%">
-                            <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
-                                    <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
-                                </XAxis>
-                                <YAxis width={50}>
-                                    <Label value="Nodes" angle={270} position="left" textAnchor="middle" />
-                                </YAxis>
-                                <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} formatter={(value) => value.toFixed(0)} />
-                                <Bar name="Nodes" dataKey="nodes" fill="#0bb1a5" stroke="#0bb1a5" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div style={{ "box-sizing": "border-box", "width": "calc(66% - 40px)", "margin-left": "40px", height: "70vh" }}>
-                        <ResponsiveContainer width="100%">
-                            <BarChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }} barGap={2}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="epochs" height={50} angle={-45} textAnchor="end" interval="preserveStart" tickFormatter={value => { return Formatter.formatValueSuffix(value, 2, false) }}>
-                                    <Label value="Epochs" position="insideBottom" textAnchor="middle" dy={15} />
-                                </XAxis>
-                                <YAxis width={50} scale="log" domain={['auto', 'auto']}>
-                                    <Label value="Reputation" angle={270} position="left" textAnchor="middle" />
-                                </YAxis>
-                                <Tooltip labelFormatter={(value) => value + " - " + (value + this.state.aggregation - 1)} formatter={(value) => value.toFixed(0)} />
-                                <Bar name="Average" dataKey="average_reputation" fill="#0bb1a5" stroke="#0bb1a5" />
-                                <Bar name="Median" dataKey="median_reputation" fill="#53378c" stroke="#53378c" />
-                                <Bar name="Maximum" dataKey="maximum_reputation" fill="#12243a" stroke="#12243a" />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
                 </Card.Body>
             </Card>
         );
@@ -391,12 +364,13 @@ export default class Network extends Component {
     }
 
     generateStakingCard() {
-        const value_data = this.state.values;
-        var named_data = this.state.plot_data["ars"].map(function (data, idx) {
+        const { data } = this.state;
+
+        var named_data = data.staking.ars.map(function (balance, idx) {
             return (
                 {
-                    "percentile": value_data[idx],
-                    "balance": data,
+                    "percentile": data.staking.percentiles[idx],
+                    "balance": balance,
                 }
             );
         });
@@ -422,12 +396,22 @@ export default class Network extends Component {
         );
     }
 
-    generateMinersSolversCard(address_type, amount_type) {
-        var named_data = this.state.plot_data.map(function (data) {
+    generateMinersCard(address_type, amount_type) {
+        const { data } = this.state;
+
+        let miner_data;
+        if (amount_type === "Blocks") {
+            miner_data = data.top_100_miners;
+        }
+        else {
+            miner_data = data.top_100_data_request_solvers
+        }
+
+        var named_data = miner_data.map(function (miner) {
             return (
                 {
-                    "address": data[0],
-                    "amount": data[1],
+                    "address": miner.address,
+                    "amount": miner.amount,
                 }
             );
         });
@@ -464,17 +448,14 @@ export default class Network extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.plot_data.map(function(table_row) {
-                                        var address = table_row[0];
-                                        var amount = table_row[1];
-
+                                    miner_data.map(function(table_row) {
                                         return (
                                             <tr>
                                                 <td class="cell-fit cell-truncate" style={{ "width": "100%" }}>
-                                                    {address}
+                                                    {table_row.address}
                                                 </td>
                                                 <td class="cell-fit" style={{ "textAlign": "right" }}>
-                                                    {amount}
+                                                    {table_row.amount}
                                                 </td>
                                             </tr>
                                         );
@@ -489,25 +470,27 @@ export default class Network extends Component {
     }
 
     generateRollbackCard() {
+        const { data } = this.state;
+
         return (
             <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
                 <Card.Body style={{ padding: 0, height: "70vh" }}>
                     <Table hover responsive style={{ "border-collapse": "separate", "display": "block", "height": "70vh", "overflow-y": "scroll", "margin": "0px" }}>
                         <thead>
                             <tr class="th-fixed">
-                                <th style={{ "textAlign": "center", "border": "none", "padding": "0px 0px 0px 20px"}}>
+                                <th style={{ "textAlign": "left", "border": "none", "padding": "0px 0px 0px 20px"}}>
                                     <FontAwesomeIcon icon={['fas', 'history']} style={{ "marginRight": "0.25rem" }} size="sm" />
                                     {"Timestamp"}
                                 </th>
-                                <th style={{ "textAlign": "center", "border": "none", "padding": "0px 0px 0px 20px" }}>
+                                <th style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
                                     <FontAwesomeIcon icon={['fas', 'history']} style={{ "marginRight": "0.25rem" }} size="sm" />
                                     {"Start epoch"}
                                 </th>
-                                <th style={{ "textAlign": "center", "border": "none", "padding": "0px 0px 0px 20px" }}>
+                                <th style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
                                     <FontAwesomeIcon icon={['fas', 'history']} style={{ "marginRight": "0.25rem" }} size="sm" />
                                     {"Stop epoch"}
                                 </th>
-                                <th style={{ "textAlign": "center", "border": "none", "padding": "0px 0px 0px 20px" }}>
+                                <th style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
                                     <FontAwesomeIcon icon={['fas', 'cubes']} style={{ "marginRight": "0.25rem" }} size="sm" />
                                     {"Length"}
                                 </th>
@@ -515,20 +498,20 @@ export default class Network extends Component {
                         </thead>
                         <tbody style={{ "border": "none" }}>
                             {
-                                this.state.plot_data.map(function (data) {
+                                data.list_rollbacks.map(function (rollback) {
                                     return (
                                         <tr>
                                             <td style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
-                                                {TimeConverter.convertUnixTimestamp(data[0], "full")}
+                                                {TimeConverter.convertUnixTimestamp(rollback.timestamp, "full")}
                                             </td>
                                             <td style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
-                                                {data[1].toLocaleString("en-GB")}
+                                                {rollback.epoch_from.toLocaleString("en-GB")}
                                             </td>
                                             <td style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
-                                                {data[2].toLocaleString("en-GB")}
+                                                {rollback.epoch_to.toLocaleString("en-GB")}
                                             </td>
                                             <td style={{ "textAlign": "right", "border": "none", "padding": "0px 0px 0px 20px" }}>
-                                                {data[3].toLocaleString("en-GB")}
+                                                {rollback.length.toLocaleString("en-GB")}
                                             </td>
                                         </tr>
                                     );
@@ -607,17 +590,14 @@ export default class Network extends Component {
                 else if (active_tab === "value_transfers") {
                     data_card = this.generateValueTransfersCard();
                 }
-                else if (active_tab === "trs") {
-                    data_card = this.generateTrsCard();
-                }
                 else if (active_tab === "staking") {
                     data_card = this.generateStakingCard();
                 }
                 else if (active_tab === "miners") {
-                    data_card = this.generateMinersSolversCard("Miner", "Blocks");
+                    data_card = this.generateMinersCard("Miner", "Blocks");
                 }
                 else if (active_tab === "solvers") {
-                    data_card = this.generateMinersSolversCard("Solver", "Data requests");
+                    data_card = this.generateMinersCard("Solver", "Data requests");
                 }
                 else if (active_tab === "rollbacks") {
                     data_card = this.generateRollbackCard();
@@ -666,9 +646,6 @@ export default class Network extends Component {
                         {data_card}
                     </Tab>
                     <Tab eventKey="value_transfers" title="Value transfers">
-                        {data_card}
-                    </Tab>
-                    <Tab eventKey="trs" title="TRS">
                         {data_card}
                     </Tab>
                     <Tab eventKey="staking" title="Staking">
