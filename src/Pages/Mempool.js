@@ -94,20 +94,20 @@ export default class Mempool extends Component {
         var mapped_fees = {0: 0};
         var bar_fees = new Set();
         if (fees.length > 9) {
-            var boundary = fees.length / 9;
+            var bucket = fees.length / 9;
             fees.forEach(function(fee, idx){
-                var boundary_fee = fees[Math.floor((Math.floor(idx / boundary) + 1) * boundary - 1)];
-                bar_fees.add(boundary_fee);
-                mapped_fees[fee] = boundary_fee;
+                var bucket_fee = parseInt(fees[Math.floor((Math.floor(idx / bucket) + 1) * bucket - 1)]);
+                bar_fees.add(bucket_fee);
+                mapped_fees[fee] = bucket_fee;
             });
         }
         else {
             fees.forEach(function(fee) {
-                bar_fees.add(fee);
-                mapped_fees[fee] = fee;
+                bar_fees.add(parseInt(fee));
+                mapped_fees[fee] = parseInt(fee);
             });
         }
-        bar_fees = [...bar_fees].sort();
+        bar_fees = [...bar_fees].sort(function (a, b) { return a - b; });
 
         // Build a bar for each bucketized fee
         var bars = bar_fees.map(function (fee, idx) {
