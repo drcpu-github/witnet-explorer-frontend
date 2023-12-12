@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                 {
                     payload.reverse().map(function (txn_fee) {
                         return (
-                            <p className="label" style={{ "margin": 0 }}>{`${txn_fee.value} transaction(s) with priority ${txn_fee.name}`}</p>
+                            <p className="label" style={{ "margin": 0 }}>{`${txn_fee.value} transaction(s) with priority <= ${txn_fee.name}`}</p>
                         );
                     })
                 }
