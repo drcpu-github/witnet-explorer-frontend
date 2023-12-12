@@ -46,7 +46,11 @@ export default class DataRequestHistoryPanel extends Component {
                                 <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"RAD hash"}
                             </td>
                             <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
-                                <Link to={RAD_bytes_hash_link}>{data.RAD_bytes_hash}</Link>
+                                {
+                                    data.hash_type === "DRO_bytes_hash"
+                                        ? <Link to={RAD_bytes_hash_link}>{RAD_bytes_hash}</Link>
+                                        : RAD_bytes_hash
+                                }
                             </td>
                         </tr>
                         <tr>
