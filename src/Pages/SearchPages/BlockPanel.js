@@ -228,7 +228,7 @@ export default class BlockPanel extends Component {
                             <FontAwesomeIcon icon={["fas", "trophy"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Reward"}
                         </th>
                         <th class="cell-fit-no-padding" style={{ "textAlign": "right" }}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Total fee"}
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{ "marginRight": "0.25rem" }} size="sm" />{"Miner fee"}
                         </th>
                     </tr>
                 </thead>
