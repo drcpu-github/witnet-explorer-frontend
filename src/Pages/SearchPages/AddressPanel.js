@@ -820,7 +820,7 @@ export default class AddressPanel extends Component {
                                                 }
                                             </Container>
                                         </Tab>
-                                        <Tab eventKey="data-requests-created" title="Data requests launched">
+                                        <Tab eventKey="data-requests-created" title="Data requests created">
                                             <Container fluid style={{ height: "50vh" }}>
                                                 {
                                                     this.state.data_requests_created === null
