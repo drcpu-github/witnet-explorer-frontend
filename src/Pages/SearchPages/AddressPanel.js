@@ -717,7 +717,7 @@ export default class AddressPanel extends Component {
                                         {Formatter.formatWitValue(data_request_created.collateral)}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
-                                        {data_request_created.consensus + "%"}
+                                        {data_request_created.consensus_percentage + "%"}
                                     </td>
                                     <td class="cell-fit" style={{"textAlign": "center"}}>
                                         {data_request_created.num_errors}
