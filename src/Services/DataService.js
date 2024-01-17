@@ -59,11 +59,11 @@ class DataService {
 
     getNetwork(key, start_epoch, stop_epoch) {
         if (start_epoch !== null && stop_epoch !== null)
-            return fetch("/api/network?/statisticskey=" + key + "&start-epoch=" + start_epoch + "&stop-epoch=" + stop_epoch).then(response => response.json());
+            return fetch("/api/network/statistics?key=" + key + "&start_epoch=" + start_epoch + "&stop_epoch=" + stop_epoch).then(response => response.json());
         else if (start_epoch !== null)
-            return fetch("/api/network/statistics?key=" + key + "&start-epoch=" + start_epoch).then(response => response.json());
+            return fetch("/api/network/statistics?key=" + key + "&start_epoch=" + start_epoch).then(response => response.json());
         else if (stop_epoch !== null)
-            return fetch("/api/network/statistics?key=" + key + "&stop-epoch=" + stop_epoch).then(response => response.json());
+            return fetch("/api/network/statistics?key=" + key + "&stop_epoch=" + stop_epoch).then(response => response.json());
         else
             return fetch("/api/network/statistics?key=" + key).then(response => response.json());
     }
