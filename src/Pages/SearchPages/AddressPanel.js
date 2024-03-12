@@ -80,6 +80,17 @@ export default class AddressPanel extends Component {
                         info: response[0],
                     });
                 }
+                else
+                {
+                    this.setState({
+                        info: {
+                            "block": 0,
+                            "value_transfer": 0,
+                            "data_request": 0,
+                            "commit": 0,
+                        },
+                    });
+                }
             }
             else if (tab === "value-transfers") {
                 this.setState({
@@ -187,20 +198,6 @@ export default class AddressPanel extends Component {
 
     generateInfoCard() {
         const { info } = this.state;
-
-        if (info === null) {
-            return (
-                <Container fluid>
-                    <Table>
-                        <tbody>
-                            <tr>
-                                {"No address info found"}
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Container>
-            );
-        }
 
         return (
             <Container fluid>
