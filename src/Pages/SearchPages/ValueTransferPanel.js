@@ -159,14 +159,14 @@ export default class ValueTransferPanel extends Component {
                                     <td class="cell-fit" style={{"borderTop": "none"}}>
                                         {
                                             idx < data.timelocks.length
-                                                ? data.timelocks[idx] > Date.now()
+                                                ? data.timelocks[idx] > Math.floor(Date.now() / 1000)
                                                     ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                     : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                 : ""
                                         }
                                         {
                                             idx < data.timelocks.length
-                                                ? data.timelocks[idx] > Date.now()
+                                                ? data.timelocks[idx] > Math.floor(Date.now() / 1000)
                                                     ? TimeConverter.convertUnixTimestamp(data.timelocks[idx], "full")
                                                     : ""
                                                 : ""
@@ -200,12 +200,12 @@ export default class ValueTransferPanel extends Component {
                                     </td>
                                     <td class="cell-fit" style={{"borderTop": "none"}}>
                                         {
-                                            data.timelocks[idx] > Date.now()
+                                            data.timelocks[idx] > Math.floor(Date.now() / 1000)
                                                 ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                                 : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm" style={{"marginRight": "0.25rem"}}/>
                                         }
                                         {
-                                            data.timelocks[idx] > Date.now()
+                                            data.timelocks[idx] > Math.floor(Date.now() / 1000)
                                                 ? TimeConverter.convertUnixTimestamp(data.timelocks[idx], "full")
                                                 : ""
                                         }
