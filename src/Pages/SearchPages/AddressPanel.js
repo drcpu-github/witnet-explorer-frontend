@@ -137,6 +137,9 @@ export default class AddressPanel extends Component {
         });
 
         if (this.state.current_page !== paginator.current_page) {
+            this.setState({
+                [this.state.current_tab.replace("-", "_")]: null,
+            });
             this.loadData(this.state.address, this.state.current_tab, paginator.current_page);
         }
     }
