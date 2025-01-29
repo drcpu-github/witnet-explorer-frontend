@@ -58,14 +58,14 @@ export default class Reputation extends Component{
             var reputation_link = <Link to={api_link}>{reputation.address}</Link>
 
             return (
-                <tr style={{"line-height": "20px"}}>
-                    <td className="cell-fit cell-truncate" style={{"width": "60%"}}>
+                <tr>
+                    <td className="custom-td cell-truncate">
                         {reputation_link}
                     </td>
-                    <td className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
+                    <td className="custom-td">
                         {reputation.reputation}
                     </td>
-                    <td className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
+                    <td className="custom-td">
                         {reputation.eligibility.toFixed(4) + "%"}
                     </td>
                 </tr>
@@ -86,34 +86,35 @@ export default class Reputation extends Component{
         var row_stop = this.state.current_page * this.state.rows_per_page;
 
         return (
-            <Card className="shadow p-2 mb-2 bg-white rounded" style={{height: "85vh"}}>
-                <Card.Body className="pt-3 pb-0">
-                    <Card.Text>
-                        <Table hover responsive>
-                            <thead>
-                                <tr style={{"line-height": "25px"}}>
-                                    <th className="cell-fit" style={{"width": "60%"}}>
-                                        {"Addresses " + (row_start + 1) + " to " + row_stop}
-                                    </th>
-                                    <th className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
-                                        {"Reputation"}
-                                    </th>
-                                    <th className="cell-fit" style={{"textAlign": "center", "width": "20%"}}>
-                                        {"Eligibility"}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.reputation_rows.slice(row_start, row_stop)}
-                            </tbody>
-                        </Table>
-                    </Card.Text>
+            <Card className="shadow bg-white mb-4 rounded">
+                <Card.Body>
+                <Table responsive>
+                    
+                    <thead>
+                        <tr style={{"line-height": "25px"}}>
+                            <th className="custom-td">
+                                {"Addresses " + (row_start + 1) + " to " + row_stop}
+                            </th>
+                            <th className="custom-td">
+                                {"Reputation"}
+                            </th>
+                            <th className="custom-td">
+                                {"Eligibility"}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.reputation_rows.slice(row_start, row_stop)}
+                    </tbody>
+                </Table>
+                <div className="card-section-spacer">
+                    <Paginator key={"paginator-" + this.state.reputation_rows.length} items={this.state.reputation_rows.length} itemsPerPage={this.state.rows_per_page} pageStart={this.state.current_page} onChangePage={this.onChangePage}/>
+                </div>
                 </Card.Body>
-                <Card.Text style={{paddingLeft: "1.25rem", paddingRight: "1.25rem", position: "relative"}}>
-                    <small className="text-muted" style={{position: "absolute", bottom: 0}}>
+                <Card.Text className="card-bottom-info">
+                    <small>
                         Last updated: {this.state.last_updated}
                     </small>
-                    <Paginator key={"paginator-" + this.state.reputation_rows.length} items={this.state.reputation_rows.length} itemsPerPage={this.state.rows_per_page} pageStart={this.state.current_page} onChangePage={this.onChangePage}/>
                 </Card.Text>
             </Card>
         );
@@ -178,8 +179,8 @@ export default class Reputation extends Component{
                     {this.reputation_chart}
                     {this.eligibility_chart}
                 </Card.Body>
-                <Card.Text style={{ paddingLeft: "1.25rem", paddingRight: "1.25rem" }}>
-                    <small className="text-muted">Last updated: {this.state.last_updated}</small>
+                <Card.Text className="card-bottom-info">
+                    <small>Last updated: {this.state.last_updated}</small>
                 </Card.Text>
             </Card>
         );
@@ -189,7 +190,7 @@ export default class Reputation extends Component{
         this.setState({
             window_width: window.innerWidth,
             window_height: window.innerHeight,
-            rows_per_page: Math.floor(window.innerHeight * 0.7 / 20)
+            rows_per_page: Math.floor(window.innerHeight * 0.7 / 25)
         });
     }
 

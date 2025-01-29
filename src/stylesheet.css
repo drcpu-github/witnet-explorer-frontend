@@ -6,9 +6,8 @@
 }
 
 html, body {
-  overflow-y: hidden;
-  overflow-x: hidden;
   font-family: "courier-prime-v1-latin-regular";
+  overscroll-behavior: none;
 }
 
 body {
@@ -82,13 +81,6 @@ body {
     padding-right: 0px !important;
     width: 1px;
     white-space: nowrap;
-    border: none;
-}
-
-.cell-truncate {
-    max-width: 1px;
-    text-overflow: ellipsis;
-    overflow: hidden;
     border: none;
 }
 
@@ -166,21 +158,6 @@ body {
     background: #ffffff;
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.2);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
-}
-
 .flex-container {
     box-sizing: border-box;
     display: flex;
@@ -191,4 +168,78 @@ body {
 .img-pixels {
     width: 100%;
     image-rendering: pixelated;
+}
+
+.card-section-spacer {
+    margin-top: 1rem;
+}
+
+.card-bottom-info {
+    margin: 0rem 0.75rem 0.25rem 0.75rem;
+    padding-bottom: 0.5rem;
+    opacity: 0.8;
+
+}
+
+/* Table custom style */
+
+.custom-td {
+    border: none;
+    white-space: nowrap;
+}
+.custom-td:last-child {
+    width: 100%;
+   text-align: right;
+   padding-right: 0rem;
+}
+
+.table {
+    margin-bottom: 0px;
+}
+.table-responsive {
+    height: max-content;
+    max-height: 93%;
+}
+.table>:not(caption)>*>* { 
+    padding: 0.15rem 0.25rem;
+    padding-right: 0.5rem;
+}
+.td-icon {
+    margin-right: 0.5rem;
+}
+
+/* Home Cards Layout */
+
+.home-card {
+    height: 70vh;
+}
+.home-card>.card-body {
+    height: 0%;
+}
+.home-table {
+    height: max-content;
+    max-height: 100%;
+}
+.home-table>tbody {
+    height: max-content;
+    max-height: 93%;
+}
+.card-body {
+    height: max-content;
+    max-height: 100%;
+    overflow-x: auto;
+}
+
+.cell-truncate {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border: none;
+    min-width: 25%;
+    max-width: 1px
+}
+
+@media (max-width: 700px) {
+    .home-card {
+        height: max-content;
+    }
 }

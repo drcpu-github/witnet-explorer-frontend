@@ -11,66 +11,73 @@ export default class BlockPanel extends Component {
         var block_link = "/search/" + data.hash;
         var miner_link = "/search/" + miner;
         return (
-            <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px", "height": "80px"}}>
-                <Table>
+                <Table responsive>
                     <tbody>
                         <tr>
-                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
-                                <FontAwesomeIcon icon={["fas", "cubes"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Block"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "70%" }}>
+                            <td className="custom-td">{"Block"}</td>
+                            <td className="custom-td">
                                 <Link to={block_link}>{data.hash}</Link>
                             </td>
-                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
-                                <FontAwesomeIcon icon={["fas", "align-justify"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Data request weight"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                            <td className="custom-td">{"Data request weight"}</td>
+                            <td className="custom-td text-start">
                                 {data.data_request_weight}
                             </td>
                         </tr>
                         <tr>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Time"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["far", "clock"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
+                            <td className="custom-td">{"Time"}</td>
+                            <td className="custom-td">
                                 {TimeConverter.convertUnixTimestamp(data.timestamp, "full") + " (epoch: " + data.epoch + ")"}
                             </td>
-                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
-                                <FontAwesomeIcon icon={["fas", "coins"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Value transfer weight"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "coins"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                            <td className="custom-td">
+                                {"Value transfer weight"}
+                            </td>
+                            <td className="custom-td text-start">
                                 {data.value_transfer_weight}
                             </td>
                         </tr>
                         <tr>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "user"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Miner"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
+                            <td className="custom-td">{"Miner"}</td>
+                            <td className="custom-td">
                                 <Link to={miner_link}>{miner}</Link>
                             </td>
-                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
-                                <FontAwesomeIcon icon={["fas", "feather"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Block weight"}
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "feather"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{ "borderTop": "none", "width": "30%" }}>
+                            <td className="custom-td">{"Block weight"}</td>
+                            <td className="custom-td text-start">
                                 {data.weight}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                                <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
+                        {/* <tr>
+                            <td className="custom-td">
+                                <FontAwesomeIcon icon={["fas", "check"]} size="sm" />
                             </td>
-                            <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "70%"}}>
+                            <td className="custom-td">{"Status"}</td>
+                            <td className="custom-td">
                                 {
                                     data.confirmed
                                         ? "Confirmed"
                                         : "Mined"
                                 }
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </Table>
-            </Container>
         );
     }
 
@@ -493,9 +500,7 @@ export default class BlockPanel extends Component {
             <Container fluid style={{"padding": "0px"}}>
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                     <Card.Body className="p-1">
-                        <Card.Text>
-                            {this.generateDetailsCard(data.details, data.transactions.mint.miner)}
-                        </Card.Text>
+                        {this.generateDetailsCard(data.details, data.transactions.mint.miner)}
                     </Card.Body>
                 </Card>
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">

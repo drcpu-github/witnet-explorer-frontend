@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Card, Container, Form } from "react-bootstrap";
+import { Card, Container, Form, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Formatter from "../../Services/Formatter";
@@ -31,29 +31,32 @@ export default class ValueTransferPanel extends Component {
         }
 
         return (
-            <table>
+            <Table responsive>
                 <tbody>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "align-justify"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Transaction"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Transaction"}</td>
+                        <td className="custom-td text-start">
                             <Link to={txn_link}>{transaction.hash}</Link>
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "cubes"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Block"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["fas", "cubes"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Block"}</td>
+                        <td className="custom-td text-start">
                             <Link to={block_link}>{transaction.block}</Link>
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Fee"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["far", "money-bill-alt"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Fee"}</td>
+                        <td className="custom-td text-start">
                             {
                                 this.state.showNanoWitValues
                                     ? Formatter.formatValue(transaction.fee) + " nWIT"
@@ -62,34 +65,38 @@ export default class ValueTransferPanel extends Component {
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "feather"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Weight"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["fas", "feather"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Weight"}</td>
+                        <td className="custom-td text-start">
                             {Formatter.formatValue(transaction.weight, 0)}
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Priority"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["fas", "tachometer-alt"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Priority"}</td>
+                        <td className="custom-td text-start">
                             {Formatter.formatValue(transaction.priority, 0)}
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["far", "clock"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Timestamp"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Timestamp"}</td>
+                        <td className="custom-td text-start">
                             {transaction_time}
                         </td>
                     </tr>
                     <tr>
-                        <td class="cell-fit-padding-wide" style={{"borderTop": "none"}}>
-                            <FontAwesomeIcon icon={["fas", "check"]} style={{"marginRight": "0.25rem"}} size="sm" fixedWidth/>{"Status"}
+                        <td className="custom-td">
+                            <FontAwesomeIcon icon={["fas", "check"]} size="sm" />
                         </td>
-                        <td class="cell-fit-no-padding" style={{"borderTop": "none", "width": "100%"}}>
+                        <td className="custom-td">{"Status"}</td>
+                        <td className="custom-td text-start">
                             {
                                 transaction.confirmed
                                     ? "Confirmed"
@@ -98,13 +105,13 @@ export default class ValueTransferPanel extends Component {
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </Table>
         );
     }
 
     generateInputOutputAddresses(data, showNanoWitValues) {
         return (
-            <table style={{ "width": "100%", "max-height": "45vh" }}>
+            <Table className="card-section-spacer" responsive>
                 <tbody
                     style={{
                         "border-collapse": "separate",
@@ -122,7 +129,7 @@ export default class ValueTransferPanel extends Component {
                                 : "";
 
                             return (
-                                <tr>
+                                <tr className="card-section-spacer">
                                     <td class="cell-fit cell-truncate" style={{"borderTop": "none", "max-width": "40%"}}>
                                         <Link to={input_link}>{input.address}</Link>
                                     </td>
@@ -215,7 +222,7 @@ export default class ValueTransferPanel extends Component {
                         })
                     }
                 </tbody>
-            </table>
+            </Table>
         );
     }
 
@@ -371,7 +378,7 @@ export default class ValueTransferPanel extends Component {
 
     generateUtxoCheck() {
         return (
-            <Form style={{ "padding-top": "5px" }}>
+            <Form style={{ "padding-top": "5px" }} className="card-section-spacer">
                 <Form.Check
                     id="showUtxos"
                     inline={true}
@@ -406,8 +413,6 @@ export default class ValueTransferPanel extends Component {
             <Container fluid style={{ "padding": "0px", "max-height": "80vh" }}>
                 <Card className="w-100 shadow p-1 mb-2 bg-white rounded" style={{ "max-height": "80vh" }}>
                     <Card.Body className="p-2" style={{ "max-height": "75vh" }}>
-                        <Card.Text style={{ "max-height": "75vh" }}>
-                            <Container fluid style={{ "max-height": "75vh" }}>
                                 {
                                     this.generateDetailsCard(this.props.data)
                                 }
@@ -422,8 +427,6 @@ export default class ValueTransferPanel extends Component {
                                 {
                                     this.generateNanoWitValuesCheck()
                                 }
-                            </Container>
-                        </Card.Text>
                     </Card.Body>
                 </Card>
             </Container>
