@@ -75,7 +75,7 @@ export default class BlockPanel extends Component {
     }
 
     generateMintCard(mint) {
-        var mint_link = "/search/" + mint.txn_hash;
+        var mint_link = "/search/" + mint.hash;
         return (
             <Container fluid style={{"paddingLeft": "0px", "paddingRight": "0px"}}>
                 <Table>
@@ -236,11 +236,7 @@ export default class BlockPanel extends Component {
                     {
                         data_requests.map(function(data_request){
                             const transaction_link = "/search/" + data_request.hash;
-                            const requester_link = (
-                                data_request.input_addresses.length === 1
-                                    ? "/search/" + data_request.input_addresses[0]
-                                    : ""
-                            );
+                            const requester_link = "/search/" + data_request.requester;
 
                             return (
                                 <tr>
@@ -248,11 +244,7 @@ export default class BlockPanel extends Component {
                                         <Link to={transaction_link}>{data_request.hash}</Link>
                                     </td>
                                     <td class="cell-fit-padding-wide cell-truncate" style={{ "width": "30%" }}>
-                                        {
-                                            data_request.input_addresses.length === 1
-                                                ? <Link to={requester_link}>{data_request.input_addresses[0]}</Link>
-                                                : "(multiple requesters)"
-                                        }
+                                        <Link to={requester_link}>{data_request.requester}</Link>
                                     </td>
                                     <td class="cell-fit-padding-wide" style={{"textAlign": "right"}}>
                                         {Formatter.formatWitValue(data_request.collateral, 2)}
