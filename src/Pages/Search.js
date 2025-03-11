@@ -53,7 +53,7 @@ export default class Search extends Component{
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.match.params.hash !== this.props.match.params.hash){
+        if (prevProps.match.params.hash !== this.props.match.params.hash) {
             this.searchValue(this.props.match.params.hash);
         }
     }
@@ -216,7 +216,7 @@ export default class Search extends Component{
             else if (loading) {
                 searchResultPanel = <Spinner animation="border" />;
             }
-            else {
+            else if (search_response !== null) {
                 if (search_response.response_type === "pending") {
                     searchResultPanel = this.generateTransactionPanel(search_response);
                 }
@@ -270,6 +270,9 @@ export default class Search extends Component{
                 else if (search_response.response_type === "tally") {
                     searchResultPanel = <Tally data={search_response.tally} />;
                 }
+            }
+            else {
+                searchResultPanel = <div/>;
             }
         }
         else {
