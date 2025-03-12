@@ -38,6 +38,10 @@ import {
     faScroll,
     faHeading,
     faBold,
+    faCubesStacked,
+    faCirclePlus,
+    faCircleMinus,
+    faNetworkWired,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -106,4 +110,8 @@ library.add(
     faIdCard,
     faHeading,
     faBold,
+    faCubesStacked,
+    faCirclePlus,
+    faCircleMinus,
+    faNetworkWired,
 );

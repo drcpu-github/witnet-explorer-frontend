@@ -22,8 +22,11 @@ class HistoryTypeahead extends Component {
     render() {
         const { search_value } = this.state;
 
+        var lPad = Object.hasOwn(this.props, "lPad") ? this.props.lPad : "0px";
+        var rPad = Object.hasOwn(this.props, "rPad") ? this.props.rPad : "0px";
+
         return (
-            <div className="input-group mb-3">
+            <div className="input-group mb-3" style={{ "padding-left": lPad,  "padding-right": rPad }}>
                 <Typeahead
                     className="form-control"
                     style={{ "padding": 0 }}

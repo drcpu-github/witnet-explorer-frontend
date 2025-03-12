@@ -21,7 +21,7 @@ class TimeConverter {
             return hours + ':' + minutes + ':' + seconds;
         }
         else if (type === "day") {
-            return day + "/" + month + "/" + year;
+            return day + "/" + month;
         }
     }
 }
