@@ -481,6 +481,10 @@ export default class BlockPanel extends Component {
             ? "1 tally"
             : data.transactions.tally.length + " tallies";
 
+        var default_tab = data.transactions.mint.output_values.length !== 0
+            ? "mint"
+            : "value_transfer";
+
         return (
             <Container fluid style={{"padding": "0px"}}>
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
@@ -493,12 +497,18 @@ export default class BlockPanel extends Component {
                 <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                     <Card.Body className="p-1">
                         <Card.Text>
-                            <Tabs defaultActiveKey="mint" id="uncontrolled-tab-example" style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
-                                <Tab eventKey="mint" title="Mint">
-                                    <Container fluid style={{ "display": "block", "height": "55vh", "overflow-y": "scroll" }}>
-                                        {this.generateMintCard(data.transactions.mint)}
-                                    </Container>
-                                </Tab>
+                            <Tabs defaultActiveKey={default_tab} id="uncontrolled-tab-example" style={{"paddingLeft": "1rem", "paddingBottom": "1rem"}}>
+                                {
+                                    data.transactions.mint.output_values.length !== 0
+                                        ? (
+                                            <Tab eventKey="mint" title="Mint">
+                                                <Container fluid style={{ "display": "block", "height": "55vh", "overflow-y": "scroll" }}>
+                                                    {this.generateMintCard(data.transactions.mint)}
+                                                </Container>
+                                            </Tab>
+                                        )
+                                        : <div />
+                                }
                                 <Tab eventKey="value_transfer" title={value_transfer_tab_title}>
                                     <Container fluid style={{ "display": "block", "height": "55vh", "overflow-y": "scroll" }}>
                                         {this.generateValueTransferCard(data.transactions.value_transfer)}
