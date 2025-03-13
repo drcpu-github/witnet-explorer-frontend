@@ -174,14 +174,25 @@ export default class AddressPanel extends Component {
                         </tr>
                         <tr>
                             <td style={{"padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap"}}>
-                                <FontAwesomeIcon icon={["fas", "star"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Reputation"}
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Validator"}
                             </td>
                             <td style={{"padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap"}}>
-                                {details.reputation}
                                 {
-                                    details.eligibility === "Could not retrieve eligibility"
-                                        ? " (" + details.eligibility + ")"
-                                        : " (" + (details.eligibility / details.total_reputation * 100).toFixed(2) + "%)"
+                                    details.staked_validator === "Could not retrieve validator staked balance"
+                                        ? details.staked_validator
+                                        : Formatter.formatWitValue(details.staked_validator)
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{"padding": "0px", "paddingRight": "2rem", "border": "none", "whiteSpace": "nowrap"}}>
+                                <FontAwesomeIcon icon={["fas", "user"]} size="sm" fixedWidth style={{"marginRight": "0.25rem"}}/>{"Withdrawer"}
+                            </td>
+                            <td style={{"padding": "0px", "border": "none", "width": "100%", "whiteSpace": "nowrap"}}>
+                                {
+                                    details.staked_withdrawer === "Could not retrieve withdrawer staked balance"
+                                        ? details.staked_withdrawer
+                                        : Formatter.formatWitValue(details.staked_withdrawer)
                                 }
                             </td>
                         </tr>
@@ -755,7 +766,7 @@ export default class AddressPanel extends Component {
                         <Col xs={8} className="col mb-2">
                             <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                                 <Card.Body className="p-1">
-                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
+                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "100px" }}>
                                         {
                                             details === null
                                                 ? <Spinner animation="border" />
@@ -768,7 +779,7 @@ export default class AddressPanel extends Component {
                         <Col xs={4} className="col mb-2">
                             <Card className="w-100 shadow p-1 mb-3 bg-white rounded">
                                 <Card.Body className="p-1">
-                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "80px" }}>
+                                    <Container fluid style={{ paddingLeft: "0px", paddingRight: "0px", "height": "100px" }}>
                                         {
                                             info === null
                                                 ? <Spinner animation="border" />
