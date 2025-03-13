@@ -17,6 +17,8 @@ import DataRequestHistoryPanel from "./SearchPages/DataRequestHistoryPanel"
 import MintPanel from "./SearchPages/MintPanel"
 import RadHistoryPanel from "./SearchPages/RadHistoryPanel"
 import ValueTransferPanel from "./SearchPages/ValueTransferPanel"
+import StakePanel from "./SearchPages/StakePanel"
+import UnstakePanel from "./SearchPages/UnstakePanel"
 
 import DataService from "../Services/DataService";
 
@@ -269,6 +271,12 @@ export default class Search extends Component{
                 }
                 else if (search_response.response_type === "tally") {
                     searchResultPanel = <Tally data={search_response.tally} />;
+                }
+                else if (search_response.response_type === "stake") {
+                    searchResultPanel = <StakePanel data={search_response.stake} />;
+                }
+                else if (search_response.response_type === "unstake") {
+                    searchResultPanel = <UnstakePanel data={search_response.unstake} />;
                 }
             }
             else {
