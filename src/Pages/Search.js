@@ -75,10 +75,28 @@ export default class Search extends Component{
     searchValue(value, page=1, loading="") {
         var simple = new URLSearchParams(window.location.search).get("simple") || false;
 
-        if (value.startsWith("wit1")) {
+        const network_type = process.env.REACT_APP_NETWORK;
+
+        if (network_type === "MAINNET" && value.startsWith("wit1")) {
             this.setState({
                 search_value: value,
                 searching_address: true,
+            });
+        }
+        else if (network_type === "TESTNET" && value.startsWith("twit1")) {
+            this.setState({
+                search_value: value,
+                searching_address: true,
+            });
+        }
+        else if (network_type === "MAINNET" && value.startsWith("twit1")) {
+            this.setState({
+                error_value: "Tried searching for a testnet address when the explorer is configured for mainnet",
+            });
+        }
+        else if (network_type === "TESTNET" && value.startsWith("wit1")) {
+            this.setState({
+                error_value: "Tried searching for a mainnet address when the explorer is configured for testnet",
             });
         }
         else {
