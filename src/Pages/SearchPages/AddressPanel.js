@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Spinner, Tab, Table, Tabs } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -31,6 +32,10 @@ export default class AddressPanel extends Component {
             data_requests_solved: null,
             data_requests_created_pagination: null,
             data_requests_created: null,
+            stakes_pagination: null,
+            stakes: null,
+            unstakes_pagination: null,
+            unstakes: null,
             current_page: 1,
             current_tab: "value-transfers",
             error_value: "",
@@ -63,6 +68,12 @@ export default class AddressPanel extends Component {
         }
         else if (tab === "data-requests-created" && this.state.data_requests_created === null) {
             this.loadData(this.state.address, "data-requests-created", 1);
+        }
+        else if (tab === "stakes" && this.state.stakes === null) {
+            this.loadData(this.state.address, "stakes", 1);
+        }
+        else if (tab === "unstakes" && this.state.unstakes === null) {
+            this.loadData(this.state.address, "unstakes", 1);
         }
     }
 
@@ -120,6 +131,18 @@ export default class AddressPanel extends Component {
                 this.setState({
                     data_requests_created_pagination: JSON.parse(response[0].get("X-Pagination")),
                     data_requests_created: response[1],
+                });
+            }
+            else if (tab === "stakes") {
+                this.setState({
+                    stakes_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    stakes: response[1],
+                });
+            }
+            else if (tab === "unstakes") {
+                this.setState({
+                    unstakes_pagination: JSON.parse(response[0].get("X-Pagination")),
+                    unstakes: response[1],
                 });
             }
         })
@@ -756,6 +779,206 @@ export default class AddressPanel extends Component {
         );
     }
 
+    generateStakesCard() {
+        const { stakes_pagination, stakes } = this.state;
+        var total_stakes = stakes_pagination.total;
+
+        return (
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
+                <thead>
+                    <tr class="th-fixed">
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Validator"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Withdrawer"}
+                        </th>
+                        <th class="cell-fit" style={{"textAlign": "right"}}>
+                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value"}
+                        </th>
+                        <th class="cell-fit" style={{"textAlign": "center"}}>
+                            <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Locked"}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        stakes.map(function(stake){
+                            const stake_link = "/search/" + stake.hash;
+                            const validator_link = "/search/" + stake.validator;
+                            const withdrawer_link = "/search/" + stake.withdrawer;
+
+                            let icon;
+                            // Stake transaction to this validator from the validator address
+                            if (stake.direction === "self") {
+                                icon = <FontAwesomeIcon icon={["fas", "equals"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+                            // Stake transaction to this validator from another set of addresses
+                            else if (stake.direction === "in") {
+                                icon = <FontAwesomeIcon icon={["fas", "plus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+                            // Stake transaction sent from this address to another validator
+                            else if (stake.direction === "out") {
+                                icon = <FontAwesomeIcon icon={["fas", "minus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+
+                            return (
+                                <tr>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        {icon}<a href={stake_link}>{stake.hash}</a>
+                                    </td>
+                                    <td class="cell-fit" style={{"width": "10%"}}>
+                                        {TimeConverter.convertUnixTimestamp(stake.timestamp, "full")}
+                                    </td>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        <Link to={validator_link}>{stake.validator}</Link>
+                                    </td>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        <Link to={withdrawer_link}>{stake.withdrawer}</Link>
+                                    </td>
+                                    <td class="cell-fit" style={{"textAlign": "right"}}>
+                                        {Formatter.formatWitValue(stake.stake_value)}
+                                    </td>
+                                    <td class="cell-fit" style={{"textAlign": "center"}}>
+                                        {
+                                            stake.locked
+                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
+                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
+                                        }
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
+                </tbody>
+            </Table>
+                <Paginator
+                    key={"paginator-" + total_stakes}
+                    items={total_stakes}
+                    itemsPerPage={stakes.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container >
+        );
+    }
+
+    generateUnstakesCard() {
+        const { unstakes_pagination, unstakes } = this.state;
+        var total_unstakes = unstakes_pagination.total;
+
+        return (
+            <Container fluid style={{ height: "50vh", "padding": "0" }}>
+                <Table
+                    hover
+                    responsive
+                    style={{
+                        "border-collapse": "separate",
+                        "display": "block",
+                        "height": "45vh",
+                        "overflow-y": "scroll"
+                    }}
+                >
+                <thead>
+                    <tr class="th-fixed">
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "align-justify"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Transaction"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["far", "clock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Timestamp"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Validator"}
+                        </th>
+                        <th class="cell-fit">
+                            <FontAwesomeIcon icon={["fas", "user"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Withdrawer"}
+                        </th>
+                        <th class="cell-fit" style={{"textAlign": "right"}}>
+                            <FontAwesomeIcon icon={["fas", "coins"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Value"}
+                        </th>
+                        <th class="cell-fit" style={{"textAlign": "center"}}>
+                            <FontAwesomeIcon icon={["fas", "lock"]} size="sm" style={{"marginRight": "0.25rem"}}/>{"Locked"}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        unstakes.map(function(unstake){
+                            const unstake_link = "/search/" + unstake.hash;
+                            const validator_link = "/search/" + unstake.validator;
+                            const withdrawer_link = "/search/" + unstake.withdrawer;
+
+                            let icon;
+                            // Unstake transaction from this validator to the validator address
+                            if (unstake.direction === "self") {
+                                icon = <FontAwesomeIcon icon={["fas", "equals"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+                            // Unstake transaction from a validator to this address
+                            else if (unstake.direction === "in") {
+                                icon = <FontAwesomeIcon icon={["fas", "plus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+                            // Unstake transaction from this validator to another address
+                            else if (unstake.direction === "out") {
+                                icon = <FontAwesomeIcon icon={["fas", "minus"]} size="sm" style={{"marginRight": "0.25rem"}}/>
+                            }
+
+                            return (
+                                <tr>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        {icon}<a href={unstake_link}>{unstake.hash}</a>
+                                    </td>
+                                    <td class="cell-fit" style={{"width": "10%"}}>
+                                        {TimeConverter.convertUnixTimestamp(unstake.timestamp, "full")}
+                                    </td>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        <Link to={validator_link}>{unstake.validator}</Link>
+                                    </td>
+                                    <td class="cell-fit cell-truncate" style={{"width": "30%"}}>
+                                        <Link to={withdrawer_link}>{unstake.withdrawer}</Link>
+                                    </td>
+                                    <td class="cell-fit" style={{"textAlign": "right"}}>
+                                        {Formatter.formatWitValue(unstake.unstake_value)}
+                                    </td>
+                                    <td class="cell-fit" style={{"textAlign": "center"}}>
+                                        {
+                                            unstake.locked
+                                                ? <FontAwesomeIcon icon={["fas", "lock"]} size="sm"/>
+                                                : <FontAwesomeIcon icon={["fas", "unlock"]} size="sm"/>
+                                        }
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
+                </tbody>
+            </Table>
+                <Paginator
+                    key={"paginator-" + total_unstakes}
+                    items={total_unstakes}
+                    itemsPerPage={unstakes.length}
+                    pageStart={this.state.current_page}
+                    onChangePage={this.onChangePage}
+                />
+            </Container >
+        );
+    }
+
     render() {
         const { details, info, error_value } = this.state;
 
@@ -837,6 +1060,24 @@ export default class AddressPanel extends Component {
                                                     this.state.data_requests_created === null
                                                         ? <Spinner animation="border" />
                                                         : this.generateDataRequestsCreatedCard()
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="stakes" title="Stakes">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    this.state.stakes === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateStakesCard()
+                                                }
+                                            </Container>
+                                        </Tab>
+                                        <Tab eventKey="unstakes" title="Unstakes">
+                                            <Container fluid style={{ height: "50vh" }}>
+                                                {
+                                                    this.state.unstakes === null
+                                                        ? <Spinner animation="border" />
+                                                        : this.generateUnstakesCard()
                                                 }
                                             </Container>
                                         </Tab>
