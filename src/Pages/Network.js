@@ -19,7 +19,6 @@ const tab_request_map = {
     "lie_rates": "histogram-data-request-lie-rate",
     "supply_burn_rate": "histogram-burn-rate",
     "value_transfers": "histogram-value-transfers",
-    "staking": "percentile-staking-balances",
     "miners": "top-100-miners",
     "solvers": "top-100-data-request-solvers",
     "rollbacks": "list-rollbacks",
@@ -363,39 +362,6 @@ export default class Network extends Component {
         }
     }
 
-    generateStakingCard() {
-        const { data } = this.state;
-
-        var named_data = data.staking.ars.map(function (balance, idx) {
-            return (
-                {
-                    "percentile": data.staking.percentiles[idx],
-                    "balance": balance,
-                }
-            );
-        });
-
-        return (
-            <Card className="h-100 shadow p-2 mb-2 bg-white rounded" style={{ marginTop: "15px" }}>
-                <Card.Body style={{ padding: 0, height: "70vh" }}>
-                    <ResponsiveContainer width="100%">
-                        <AreaChart data={named_data} margin={{ top: 10, right: 10, left: 10, bottom: 30 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="percentile" angle={-45} textAnchor="end" interval={1} tickFormatter={value => value + "%"}>
-                                <Label value="Percentile" position="insideBottom" textAnchor="middle" dy={20} />
-                            </XAxis>
-                            <YAxis width={100} tickFormatter={value => { return Formatter.formatWitValue(value, 0) }} scale="log" domain={['auto', 'auto']}>
-                                <Label value="Staked balance" angle={270} position="left" textAnchor="middle" />
-                            </YAxis>
-                            <Tooltip labelFormatter={this.percentileFormat} formatter={(value) => Formatter.formatWitValue(value, 2)}/>
-                            <Area type="monotone" name="ARS" dataKey="balance" fill="#0bb1a5" stroke="#0bb1a5" />
-                        </AreaChart>
-                    </ResponsiveContainer>
-                </Card.Body>
-            </Card >
-        );
-    }
-
     generateMinersCard(address_type, amount_type) {
         const { data } = this.state;
 
@@ -590,9 +556,6 @@ export default class Network extends Component {
                 else if (active_tab === "value_transfers") {
                     data_card = this.generateValueTransfersCard();
                 }
-                else if (active_tab === "staking") {
-                    data_card = this.generateStakingCard();
-                }
                 else if (active_tab === "miners") {
                     data_card = this.generateMinersCard("Miner", "Blocks");
                 }
@@ -646,9 +609,6 @@ export default class Network extends Component {
                         {data_card}
                     </Tab>
                     <Tab eventKey="value_transfers" title="Value transfers">
-                        {data_card}
-                    </Tab>
-                    <Tab eventKey="staking" title="Staking">
                         {data_card}
                     </Tab>
                     <Tab eventKey="miners" title="Miners">
