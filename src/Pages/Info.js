@@ -15,7 +15,7 @@ export default class Info extends Component {
                                         <FontAwesomeIcon icon={['fas', 'desktop']} style={{marginRight: "0.25rem"}} size="sm"/>
                                     </span>
                                     <span>
-                                        {"Official website and overview"}
+                                        {"Official website"}
                                     </span>
                                 </td>
                             </tr>
@@ -29,7 +29,7 @@ export default class Info extends Component {
                             <tr>
                                 <td class="cell-fit" style={{border: "none"}}>
                                     <span style={{paddingLeft: "3rem"}}>
-                                        <a href={"https://witnet.io/about"}>{"https://witnet.io/about"}</a>
+                                        <a href={"https://docs.witnet.io"}>{"https://docs.witnet.io"}</a>
                                     </span>
                                 </td>
                             </tr>
@@ -40,7 +40,7 @@ export default class Info extends Component {
                                         <FontAwesomeIcon icon={['fas', 'wallet']} style={{marginRight: "0.25rem"}} size="sm"/>
                                     </span>
                                     <span>
-                                        {"Official desktop wallet for Linux, Mac and Windows"}
+                                        {"Official wallets for Linux, Mac and Windows"}
                                     </span>
                                 </td>
                             </tr>
@@ -51,21 +51,10 @@ export default class Info extends Component {
                                     </span>
                                 </td>
                             </tr>
-                            <tr/>
-                            <tr>
-                                <td class="cell-fit" style={{border: "none"}}>
-                                    <span>
-                                        <FontAwesomeIcon icon={['fas', 'book']} style={{marginRight: "0.25rem"}} size="sm"/>
-                                    </span>
-                                    <span>
-                                        {"Community maintained documentation"}
-                                    </span>
-                                </td>
-                            </tr>
                             <tr>
                                 <td class="cell-fit" style={{border: "none"}}>
                                     <span style={{paddingLeft: "3rem"}}>
-                                        <a href={"https://docs.witnet.io"}>{"https://docs.witnet.io"}</a>
+                                        <a href={"https://mywitwallet.com"}>{"https://mywitwallet.com"}</a>
                                     </span>
                                 </td>
                             </tr>
