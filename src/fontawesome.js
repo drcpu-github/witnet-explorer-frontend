@@ -42,6 +42,9 @@ import {
     faCirclePlus,
     faCircleMinus,
     faNetworkWired,
+    faSort,
+    faSortUp,
+    faSortDown
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -114,4 +117,7 @@ library.add(
     faCirclePlus,
     faCircleMinus,
     faNetworkWired,
+    faSort,
+    faSortUp,
+    faSortDown
 );
