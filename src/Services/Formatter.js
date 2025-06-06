@@ -68,19 +68,19 @@ class Formatter {
     }
 
     formatWitValue(value, decimals) {
-        if (value < 1000) {
+        if (Math.abs(value) < 1000) {
             return value.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
               }) + " nWIT";
         }
-        else if (value < 1000000){
+        else if (Math.abs(value) < 1000000){
             return (Math.floor(value / 10) / 100).toLocaleString(undefined, {
                 minimumFractionDigits: decimals,
                 maximumFractionDigits: decimals
               }) + " uWIT";
         }
-        else if (value < 1000000000){
+        else if (Math.abs(value) < 1000000000){
             return (Math.floor(value / 10000) / 100).toLocaleString(undefined, {
                 minimumFractionDigits: decimals,
                 maximumFractionDigits: decimals
