@@ -38,8 +38,8 @@ class DataService {
             });
     }
 
-    getReputation() {
-        return fetch("/api/network/reputation").then(response => response.json());
+    getStakes() {
+        return fetch("/api/network/stakes").then(response => response.json());
     }
 
     getBalances(page = 1) {

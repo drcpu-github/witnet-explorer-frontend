@@ -7,7 +7,7 @@ import Search from './Pages/Search';
 import Blockchain from './Pages/Blockchain';
 import Mempool from './Pages/Mempool';
 import Network from './Pages/Network';
-import Reputation from './Pages/Reputation';
+import Staking from './Pages/Staking';
 import Balances from './Pages/Balances';
 import TAPI from './Pages/TAPI';
 import Info from './Pages/Info';
@@ -31,7 +31,7 @@ class WitnetExplorer extends React.Component{
                                     <Nav.Link href="/blockchain">Blockchain</Nav.Link>
                                     <Nav.Link href="/mempool">Mempool</Nav.Link>
                                     <Nav.Link href="/network">Network</Nav.Link>
-                                    <Nav.Link href="/reputation">Reputation</Nav.Link>
+                                    <Nav.Link href="/staking">Staking</Nav.Link>
                                     <Nav.Link href="/balances">Balances</Nav.Link>
                                     <Nav.Link href="/tapi">TAPI</Nav.Link>
                                     <Nav.Link href="/info">Info</Nav.Link>
@@ -46,7 +46,7 @@ class WitnetExplorer extends React.Component{
                                 <Route path="/blockchain" component={Blockchain}/>
                                 <Route path="/mempool" component={Mempool}/>
                                 <Route path="/network" component={Network}/>
-                                <Route path="/reputation" component={Reputation}/>
+                                <Route path="/staking" component={Staking}/>
                                 <Route path="/balances" component={Balances}/>
                                 <Route path="/tapi" component={TAPI}/>
                                 <Route path="/info" component={Info}/>

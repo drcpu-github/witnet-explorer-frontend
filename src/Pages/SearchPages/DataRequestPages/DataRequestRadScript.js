@@ -48,17 +48,19 @@ export default class DataRequestRadScript extends Component {
                             </tr>
                         );
                     }
-                    // Add script
-                    retrieval.push(
-                        <tr style={{ "line-height": "20px" }}>
-                            <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
-                                <FontAwesomeIcon icon={["fas", "scroll"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Script"}
-                            </td>
-                            <td style={{ "padding": "0px", "border": "none", "width": "100%", "word-break": "break-all" }}>
-                                {data.script}
-                            </td>
-                        </tr>
-                    );
+                    // Add script if any
+                    if (data.script !== "") {
+                        retrieval.push(
+                            <tr style={{ "line-height": "20px" }}>
+                                <td class="cell-fit-padding-wide" style={{ "borderTop": "none" }}>
+                                    <FontAwesomeIcon icon={["fas", "scroll"]} style={{ "marginRight": "0.25rem" }} size="sm" fixedWidth />{"Script"}
+                                </td>
+                                <td style={{ "padding": "0px", "border": "none", "width": "100%", "word-break": "break-all" }}>
+                                    {data.script}
+                                </td>
+                            </tr>
+                        );
+                    }
                     return retrieval;
                 }
                 else if (data.kind === "RNG") {

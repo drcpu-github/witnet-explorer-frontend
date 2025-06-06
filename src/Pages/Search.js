@@ -17,6 +17,8 @@ import DataRequestHistoryPanel from "./SearchPages/DataRequestHistoryPanel"
 import MintPanel from "./SearchPages/MintPanel"
 import RadHistoryPanel from "./SearchPages/RadHistoryPanel"
 import ValueTransferPanel from "./SearchPages/ValueTransferPanel"
+import StakePanel from "./SearchPages/StakePanel"
+import UnstakePanel from "./SearchPages/UnstakePanel"
 
 import DataService from "../Services/DataService";
 
@@ -53,7 +55,7 @@ export default class Search extends Component{
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.match.params.hash !== this.props.match.params.hash){
+        if (prevProps.match.params.hash !== this.props.match.params.hash) {
             this.searchValue(this.props.match.params.hash);
         }
     }
@@ -73,10 +75,28 @@ export default class Search extends Component{
     searchValue(value, page=1, loading="") {
         var simple = new URLSearchParams(window.location.search).get("simple") || false;
 
-        if (value.startsWith("wit1")) {
+        const network_type = process.env.REACT_APP_NETWORK;
+
+        if (network_type === "MAINNET" && value.startsWith("wit1")) {
             this.setState({
                 search_value: value,
                 searching_address: true,
+            });
+        }
+        else if (network_type === "TESTNET" && value.startsWith("twit1")) {
+            this.setState({
+                search_value: value,
+                searching_address: true,
+            });
+        }
+        else if (network_type === "MAINNET" && value.startsWith("twit1")) {
+            this.setState({
+                error_value: "Tried searching for a testnet address when the explorer is configured for mainnet",
+            });
+        }
+        else if (network_type === "TESTNET" && value.startsWith("wit1")) {
+            this.setState({
+                error_value: "Tried searching for a mainnet address when the explorer is configured for testnet",
             });
         }
         else {
@@ -216,7 +236,7 @@ export default class Search extends Component{
             else if (loading) {
                 searchResultPanel = <Spinner animation="border" />;
             }
-            else {
+            else if (search_response !== null) {
                 if (search_response.response_type === "pending") {
                     searchResultPanel = this.generateTransactionPanel(search_response);
                 }
@@ -270,6 +290,15 @@ export default class Search extends Component{
                 else if (search_response.response_type === "tally") {
                     searchResultPanel = <Tally data={search_response.tally} />;
                 }
+                else if (search_response.response_type === "stake") {
+                    searchResultPanel = <StakePanel data={search_response.stake} />;
+                }
+                else if (search_response.response_type === "unstake") {
+                    searchResultPanel = <UnstakePanel data={search_response.unstake} />;
+                }
+            }
+            else {
+                searchResultPanel = <div/>;
             }
         }
         else {

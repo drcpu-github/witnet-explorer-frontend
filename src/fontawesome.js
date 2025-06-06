@@ -38,6 +38,13 @@ import {
     faScroll,
     faHeading,
     faBold,
+    faCubesStacked,
+    faCirclePlus,
+    faCircleMinus,
+    faNetworkWired,
+    faSort,
+    faSortUp,
+    faSortDown
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -106,4 +113,11 @@ library.add(
     faIdCard,
     faHeading,
     faBold,
+    faCubesStacked,
+    faCirclePlus,
+    faCircleMinus,
+    faNetworkWired,
+    faSort,
+    faSortUp,
+    faSortDown
 );

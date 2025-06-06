@@ -6,22 +6,22 @@ class TimeConverter {
 
         var date = new Date(unix_timestamp * 1000);
 
-        var hours = "0" + date.getHours();
-        var minutes = "0" + date.getMinutes();
-        var seconds = "0" + date.getSeconds();
+        var hours = String(date.getHours()).padStart(2, "0");
+        var minutes = String(date.getMinutes()).padStart(2, "0");
+        var seconds = String(date.getSeconds()).padStart(2, "0");
 
-        var day = "0" + date.getDate();
-        var month = "0" + (date.getMonth() + 1);
+        var day = String(date.getDate()).padStart(2, "0");
+        var month = String(date.getMonth() + 1).padStart(2, "0");
         var year = date.getFullYear();
 
         if (type === "full") {
-            return hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + " " + day.substr(-2) + "/" + month.substr(-2) + "/" + year;
+            return hours + ':' + minutes + ':' + seconds + " " + day + "/" + month + "/" + year;
         }
         else if (type === "hour") {
-            return hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            return hours + ':' + minutes + ':' + seconds;
         }
         else if (type === "day") {
-            return day.substr(-2) + "/" + month.substr(-2) + "/" + year;
+            return day + "/" + month;
         }
     }
 }
