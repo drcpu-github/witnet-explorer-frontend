@@ -174,6 +174,8 @@ export default class Home extends Component {
             }
         });
 
+        var minimum_staked = Math.min(...staked.map(({ staked }) => staked));
+
         return (
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={staked} margin={{ top: 10, right: 10, left: 10, bottom: 40 }}>
@@ -187,8 +189,8 @@ export default class Home extends Component {
                     />
                     <YAxis
                         scale="linear"
-                        domain={["auto", "auto"]}
-                        tickFormatter={(tick) => Formatter.formatValueSuffix(tick / 1e9, 2)}
+                        domain={[minimum_staked * 0.95, "auto"]}
+                        tickFormatter={(tick) => Formatter.formatValueSuffix(tick / 1e9, 0)}
                     />
                     <Tooltip
                         labelFormatter={(value) => TimeConverter.convertUnixTimestamp(value, "full")}
